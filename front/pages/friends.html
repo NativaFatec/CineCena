@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <!-- Base -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Conecta Fatec | Amizades</title>
+
+  <!-- Bootstrap -->
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  />
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="../assets/css/style.css" />
+</head>
+
+<body class="theme-light">
+
+  <!-- Tema -->
+  <button id="themeToggle" class="theme-toggle-btn page-theme-toggle" type="button" aria-label="Alternar tema">
+    ☽
+  </button>
+
+  <main class="feed-page">
+    <div class="feed-layout">
+
+      <!-- Sidebar desktop -->
+      <aside class="sidebar desktop-sidebar">
+
+        <a href="feed.html" class="sidebar-logo">
+          <img
+            src="../assets/img/logo-light.png"
+            alt="Logo Conecta Fatec"
+            class="sidebar-logo-img logo-light"
+          />
+
+          <img
+            src="../assets/img/logo-dark.png"
+            alt="Logo Conecta Fatec"
+            class="sidebar-logo-img logo-dark"
+          />
+        </a>
+
+        <nav class="sidebar-nav">
+          <a href="feed.html" class="sidebar-link">Feed</a>
+          <a href="profile.html" class="sidebar-link">Perfil</a>
+          <a href="communities.html" class="sidebar-link">Comunidades</a>
+          <a href="friends.html" class="sidebar-link active">Amizades</a>
+          <a href="#" class="sidebar-link">Notificações</a>
+          <a href="#" class="sidebar-link">Configurações</a>
+        </nav>
+
+        <button
+          class="new-post-btn"
+          type="button"
+          data-bs-toggle="modal"
+          data-bs-target="#newPostModal"
+        >
+          Novo post
+        </button>
+
+        <a href="profile.html" class="logged-user">
+          <div class="user-avatar">
+            KR
+          </div>
+
+          <div>
+            <strong>Kevin Ramos</strong>
+            <span>@kevin.dev</span>
+          </div>
+        </a>
+
+      </aside>
+
+      <!-- Topbar mobile -->
+      <header class="mobile-topbar">
+        <a href="feed.html" class="mobile-topbar-logo">
+          <img
+            src="../assets/img/logo-light.png"
+            alt="Logo Conecta Fatec"
+            class="sidebar-logo-img logo-light"
+          />
+
+          <img
+            src="../assets/img/logo-dark.png"
+            alt="Logo Conecta Fatec"
+            class="sidebar-logo-img logo-dark"
+          />
+        </a>
+
+        <button
+          class="mobile-menu-btn"
+          type="button"
+          data-bs-toggle="offcanvas"
+          data-bs-target="#mobileMenu"
+          aria-controls="mobileMenu"
+          aria-label="Abrir menu"
+        >
+          ☰
+        </button>
+      </header>
+
+      <!-- Menu mobile -->
+      <div
+        class="offcanvas offcanvas-end mobile-offcanvas"
+        tabindex="-1"
+        id="mobileMenu"
+        aria-labelledby="mobileMenuLabel"
+      >
+        <div class="offcanvas-header">
+          <h2 class="offcanvas-title" id="mobileMenuLabel">Menu</h2>
+
+          <button
+            type="button"
+            class="btn-close mobile-offcanvas-close"
+            data-bs-dismiss="offcanvas"
+            aria-label="Fechar"
+          ></button>
+        </div>
+
+        <div class="offcanvas-body">
+          <nav class="mobile-nav">
+            <a href="feed.html" class="sidebar-link">Feed</a>
+            <a href="profile.html" class="sidebar-link">Perfil</a>
+            <a href="communities.html" class="sidebar-link">Comunidades</a>
+            <a href="friends.html" class="sidebar-link active">Amizades</a>
+            <a href="#" class="sidebar-link">Notificações</a>
+            <a href="#" class="sidebar-link">Configurações</a>
+          </nav>
+
+          <button id="mobileThemeToggle" class="mobile-theme-btn" type="button">
+            Alterar tema <span>☽</span>
+          </button>
+
+          <button
+            class="new-post-btn mobile-new-post-btn"
+            type="button"
+            data-bs-toggle="modal"
+            data-bs-target="#newPostModal"
+          >
+            Novo post
+          </button>
+
+          <a href="profile.html" class="logged-user mobile-logged-user">
+            <div class="user-avatar">
+              KR
+            </div>
+
+            <div>
+              <strong>Kevin Ramos</strong>
+              <span>@kevin.dev</span>
+            </div>
+          </a>
+        </div>
+      </div>
+
+      <!-- Amizades -->
+      <section class="feed-content friends-content">
+
+        <header class="feed-header communities-hero">
+          <div class="communities-hero-content">
+            <span class="feed-kicker">Amizades</span>
+            <h1>Conexões acadêmicas</h1>
+            <p>
+              Encontre colegas, acompanhe seus amigos e descubra novos alunos para se conectar.
+            </p>
+          </div>
+        </header>
+
+        <div class="communities-layout">
+
+          <!-- Status -->
+          <section class="communities-summary-card">
+            <div>
+              <h2>Status de amizades</h2>
+
+              <div class="communities-summary-text">
+                <p>Você possui <strong>1 amizade ativa</strong>.</p>
+                <p>Existe <strong>1 solicitação enviada</strong> aguardando resposta.</p>
+                <p>Há <strong>8 usuários</strong> visíveis nesta vitrine.</p>
+                <p>As ações desta página são apenas demonstrativas.</p>
+              </div>
+            </div>
+          </section>
+
+          <!-- Meus amigos -->
+          <section class="communities-section">
+            <div class="communities-section-header">
+              <div>
+                <h2>Minhas amizades</h2>
+                <p>Usuários que já fazem parte da sua rede.</p>
+              </div>
+            </div>
+
+            <div class="friends-grid">
+
+              <article class="friend-card">
+                <a href="profileuser.html" class="friend-card-avatar user-avatar user-avatar-alt">
+                  MB
+                </a>
+
+                <div class="friend-card-body">
+                  <a href="profileuser.html" class="friend-card-name">
+                    Matheus Bertelli
+                  </a>
+
+                  <span>@m.bertelli</span>
+
+                  <p>
+                    Estudante interessado em desenvolvimento web, responsividade e projetos colaborativos.
+                  </p>
+
+                  <button type="button" class="friend-card-btn remove-friend-btn">
+                    Remover amizade
+                  </button>
+                </div>
+              </article>
+
+            </div>
+          </section>
+
+          <!-- Solicitações -->
+          <section class="communities-section">
+            <div class="communities-section-header">
+              <div>
+                <h2>Solicitações enviadas</h2>
+                <p>Pedidos de amizade que ainda não foram respondidos.</p>
+              </div>
+            </div>
+
+            <div class="friends-grid">
+
+              <article class="friend-card">
+                <div class="friend-card-avatar user-avatar static-avatar static-avatar-red">
+                  DF
+                </div>
+
+                <div class="friend-card-body">
+                  <strong class="friend-card-name">Davi Farias</strong>
+                  <span>@davi.farias</span>
+
+                  <p>
+                    Criador da comunidade Desenvolvimento Web e participante ativo nos projetos acadêmicos.
+                  </p>
+
+                  <button type="button" class="friend-card-btn cancel-request-btn">
+                    Cancelar solicitação
+                  </button>
+                </div>
+              </article>
+
+            </div>
+          </section>
+
+
+          <!-- Explorar -->
+          <section class="communities-section">
+            <div class="communities-section-header">
+              <div>
+                <h2>Explorar novas amizades</h2>
+                <p>Usuários que você ainda pode adicionar à sua rede.</p>
+              </div>
+            </div>
+
+            <div class="friends-grid">
+
+              <article class="friend-card">
+                <div class="friend-card-avatar user-avatar static-avatar static-avatar-orange">
+                  AN
+                </div>
+
+                <div class="friend-card-body">
+                  <strong class="friend-card-name">Augusto Neres</strong>
+                  <span>@augusto.neres</span>
+
+                  <p>
+                    Participa das comunidades Eu Amo Cinema e Desenvolvimento Web.
+                  </p>
+
+                  <button type="button" class="friend-card-btn">
+                    Adicionar amigo
+                  </button>
+                </div>
+              </article>
+
+              <article class="friend-card">
+                <div class="friend-card-avatar user-avatar static-avatar static-avatar-indigo">
+                  LA
+                </div>
+
+                <div class="friend-card-body">
+                  <strong class="friend-card-name">Lucas Augusto</strong>
+                  <span>@lucas.augusto</span>
+
+                  <p>
+                    Interessado em Django, APIs e organização de projetos web.
+                  </p>
+
+                  <button type="button" class="friend-card-btn">
+                    Adicionar amigo
+                  </button>
+                </div>
+              </article>
+
+              <article class="friend-card">
+                <div class="friend-card-avatar user-avatar static-avatar static-avatar-brown">
+                  PB
+                </div>
+
+                <div class="friend-card-body">
+                  <strong class="friend-card-name">Pedro Benetti</strong>
+                  <span>@pedro.benetti</span>
+
+                  <p>
+                    Aluno focado em banco de dados, SQL e projetos acadêmicos.
+                  </p>
+
+                  <button type="button" class="friend-card-btn">
+                    Adicionar amigo
+                  </button>
+                </div>
+              </article>
+
+              <article class="friend-card">
+                <div class="friend-card-avatar user-avatar static-avatar static-avatar-teal">
+                  JV
+                </div>
+
+                <div class="friend-card-body">
+                  <strong class="friend-card-name">José Victor</strong>
+                  <span>@jose.victor</span>
+
+                  <p>
+                    Curte desenvolvimento web, comunidades e estudos em grupo.
+                  </p>
+
+                  <button type="button" class="friend-card-btn">
+                    Adicionar amigo
+                  </button>
+                </div>
+              </article>
+
+              <article class="friend-card">
+                <div class="friend-card-avatar user-avatar static-avatar static-avatar-green">
+                  GA
+                </div>
+
+                <div class="friend-card-body">
+                  <strong class="friend-card-name">Gustavo Avelino</strong>
+                  <span>@gustavo.avelino</span>
+
+                  <p>
+                    Participante da comunidade Desenvolvimento Web.
+                  </p>
+
+                  <button type="button" class="friend-card-btn">
+                    Adicionar amigo
+                  </button>
+                </div>
+              </article>
+
+            </div>
+          </section>
+
+        </div>
+
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Modal: novo post -->
+  <div
+    class="modal fade"
+    id="newPostModal"
+    tabindex="-1"
+    aria-labelledby="newPostModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content post-modal-content">
+
+        <div class="modal-header post-modal-header">
+          <h2 class="modal-title fs-5" id="newPostModalLabel">
+            Criar novo post
+          </h2>
+
+          <button
+            type="button"
+            class="btn-close post-modal-close"
+            data-bs-dismiss="modal"
+            aria-label="Fechar"
+          ></button>
+        </div>
+
+        <div class="modal-body post-modal-body">
+
+          <div class="create-post-modal-area">
+            <div class="user-avatar">
+              KR
+            </div>
+
+            <textarea
+              rows="5"
+              maxlength="200"
+              placeholder="O que você está pensando?"
+            ></textarea>
+          </div>
+
+          <p class="post-modal-warning">
+            Esta é uma versão visual. Nenhum post será publicado de verdade.
+          </p>
+
+        </div>
+
+        <div class="modal-footer post-modal-footer">
+          <button type="button" class="modal-cancel-btn" data-bs-dismiss="modal">
+            Cancelar
+          </button>
+
+          <button type="button" class="modal-publish-btn" data-bs-dismiss="modal">
+            Publicar
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+  </script>
+
+  <script src="../assets/js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <!-- Base -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Conecta Fatec | Comunidades</title>
+
+  <!-- Bootstrap -->
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  />
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="../assets/css/style.css" />
+</head>
+
+<body class="theme-light">
+
+  <!-- Tema -->
+  <button id="themeToggle" class="theme-toggle-btn page-theme-toggle" type="button" aria-label="Alternar tema">
+    ☽
+  </button>
+
+  <main class="feed-page">
+    <div class="feed-layout">
+
+      <!-- Sidebar desktop -->
+      <aside class="sidebar desktop-sidebar">
+
+        <a href="feed.html" class="sidebar-logo">
+          <img
+            src="../assets/img/logo-light.png"
+            alt="Logo Conecta Fatec"
+            class="sidebar-logo-img logo-light"
+          />
+
+          <img
+            src="../assets/img/logo-dark.png"
+            alt="Logo Conecta Fatec"
+            class="sidebar-logo-img logo-dark"
+          />
+        </a>
+
+        <nav class="sidebar-nav">
+          <a href="feed.html" class="sidebar-link">Feed</a>
+          <a href="profile.html" class="sidebar-link">Perfil</a>
+          <a href="communities.html" class="sidebar-link active">Comunidades</a>
+          <a href="friends.html" class="sidebar-link">Amizades</a>
+          <a href="#" class="sidebar-link">Notificações</a>
+          <a href="#" class="sidebar-link">Configurações</a>
+        </nav>
+
+        <button
+          class="new-post-btn"
+          type="button"
+          data-bs-toggle="modal"
+          data-bs-target="#newPostModal"
+        >
+          Novo post
+        </button>
+
+        <a href="profile.html" class="logged-user">
+          <div class="user-avatar">
+            KR
+          </div>
+
+          <div>
+            <strong>Kevin Ramos</strong>
+            <span>@kevin.dev</span>
+          </div>
+        </a>
+
+      </aside>
+
+      <!-- Topbar mobile -->
+      <header class="mobile-topbar">
+        <a href="feed.html" class="mobile-topbar-logo">
+          <img
+            src="../assets/img/logo-light.png"
+            alt="Logo Conecta Fatec"
+            class="sidebar-logo-img logo-light"
+          />
+
+          <img
+            src="../assets/img/logo-dark.png"
+            alt="Logo Conecta Fatec"
+            class="sidebar-logo-img logo-dark"
+          />
+        </a>
+
+        <button
+          class="mobile-menu-btn"
+          type="button"
+          data-bs-toggle="offcanvas"
+          data-bs-target="#mobileMenu"
+          aria-controls="mobileMenu"
+          aria-label="Abrir menu"
+        >
+          ☰
+        </button>
+      </header>
+
+      <!-- Menu mobile -->
+      <div
+        class="offcanvas offcanvas-end mobile-offcanvas"
+        tabindex="-1"
+        id="mobileMenu"
+        aria-labelledby="mobileMenuLabel"
+      >
+        <div class="offcanvas-header">
+          <h2 class="offcanvas-title" id="mobileMenuLabel">Menu</h2>
+
+          <button
+            type="button"
+            class="btn-close mobile-offcanvas-close"
+            data-bs-dismiss="offcanvas"
+            aria-label="Fechar"
+          ></button>
+        </div>
+
+        <div class="offcanvas-body">
+          <nav class="mobile-nav">
+            <a href="feed.html" class="sidebar-link">Feed</a>
+            <a href="profile.html" class="sidebar-link">Perfil</a>
+            <a href="communities.html" class="sidebar-link active">Comunidades</a>
+            <a href="friends.html" class="sidebar-link">Amizades</a>
+            <a href="#" class="sidebar-link">Notificações</a>
+            <a href="#" class="sidebar-link">Configurações</a>
+          </nav>
+
+          <button id="mobileThemeToggle" class="mobile-theme-btn" type="button">
+            Alterar tema <span>☽</span>
+          </button>
+
+          <button
+            class="new-post-btn mobile-new-post-btn"
+            type="button"
+            data-bs-toggle="modal"
+            data-bs-target="#newPostModal"
+          >
+            Novo post
+          </button>
+
+          <a href="profile.html" class="logged-user mobile-logged-user">
+            <div class="user-avatar">
+              KR
+            </div>
+
+            <div>
+              <strong>Kevin Ramos</strong>
+              <span>@kevin.dev</span>
+            </div>
+          </a>
+        </div>
+      </div>
+
+      <!-- Comunidades -->
+      <section class="feed-content communities-content">
+
+        <header class="feed-header communities-hero">
+        <div class="communities-hero-content">
+            <span class="feed-kicker">Comunidades</span>
+            <h1>Comunidades</h1>
+            <p>
+            Participe de espaços criados por alunos para trocar ideias, projetos,
+            materiais e interesses em comum.
+            </p>
+
+            <div
+            class="community-create-box"
+            role="button"
+            tabindex="0"
+            data-bs-toggle="modal"
+            data-bs-target="#newCommunityModal"
+            >
+            <div class="community-create-box-text">
+                <strong>Criar nova comunidade</strong>
+                <span>
+                Organize um espaço para reunir alunos com interesses em comum.
+                </span>
+            </div>
+
+            <button
+                class="community-create-box-btn"
+                type="button"
+            >
+                Criar comunidade
+            </button>
+            </div>
+        </div>
+        </header>
+
+        <div class="communities-layout">
+
+          <!-- Resumo -->
+            <section class="communities-summary-card">
+            <div>
+                <h2>Status de comunidades</h2>
+
+                <div class="communities-summary-text">
+                <p>Você participa de <strong>2 comunidades</strong>.</p>
+                <p>Você criou <strong>1 comunidade</strong>.</p>
+                <p>O limite de criação nesta vitrine é de <strong>3 comunidades</strong>.</p>
+                <p>Atualmente o Conecta Fatec possui cerca de <strong>5 comunidades</strong>.</p>
+                </div>
+            </div>
+            </section>
+
+          <!-- Minhas comunidades -->
+          <section class="communities-section">
+            <div class="communities-section-header">
+              <div>
+                <h2>Minhas comunidades</h2>
+                <p>Comunidades que você criou ou participa.</p>
+              </div>
+            </div>
+
+            <div class="communities-grid">
+
+              <article class="community-card">
+                <div class="community-card-avatar">
+                  EC
+                </div>
+
+                <div class="community-card-body">
+                  <span class="community-card-tag">Criada por você</span>
+
+                  <h3>Eu Amo Cinema</h3>
+
+                  <p>
+                    Espaço para conversar sobre filmes, listas, críticas e recomendações
+                    entre alunos da Fatec.
+                  </p>
+
+                  <div class="community-card-meta">
+                    <span>12 participantes</span>
+                    <span>4 posts</span>
+                  </div>
+
+                  <a href="community_1.html" class="community-card-btn">
+                    Ver comunidade
+                  </a>
+                </div>
+              </article>
+
+              <article class="community-card">
+                <div class="community-card-avatar community-card-avatar-alt">
+                  DW
+                </div>
+
+                <div class="community-card-body">
+                  <span class="community-card-tag">Participante</span>
+
+                  <h3>Desenvolvimento Web</h3>
+
+                  <p>
+                    Comunidade para trocar materiais, dúvidas e projetos sobre HTML, CSS,
+                    JavaScript, Bootstrap e backend.
+                  </p>
+
+                  <div class="community-card-meta">
+                    <span>8 participantes</span>
+                    <span>5 posts</span>
+                  </div>
+
+                  <a href="community_2.html" class="community-card-btn">
+                    Ver comunidade
+                  </a>
+                </div>
+              </article>
+
+            </div>
+          </section>
+
+          <!-- Explorar -->
+          <section class="communities-section">
+            <div class="communities-section-header">
+              <div>
+                <h2>Explorar comunidades</h2>
+                <p>Encontre novos grupos para participar.</p>
+              </div>
+            </div>
+
+            <div class="communities-grid">
+
+              <article class="community-card">
+                <div class="community-card-avatar community-card-avatar-python">
+                  PY
+                </div>
+
+                <div class="community-card-body">
+                  <span class="community-card-tag">Aberta</span>
+
+                  <h3>Python Fatec</h3>
+
+                  <p>
+                    Grupo para estudar Python, Django, automações e projetos acadêmicos
+                    usando programação.
+                  </p>
+
+                  <div class="community-card-meta">
+                    <span>19 participantes</span>
+                    <span>6 posts</span>
+                  </div>
+
+                  <button type="button" class="community-card-btn fake-action-btn">
+                    Entrar
+                  </button>
+                </div>
+              </article>
+
+              <article class="community-card">
+                <div class="community-card-avatar community-card-avatar-db">
+                  BD
+                </div>
+
+                <div class="community-card-body">
+                  <span class="community-card-tag">Aberta</span>
+
+                  <h3>Banco de Dados</h3>
+
+                  <p>
+                    Espaço para discutir modelagem, SQL, MongoDB, exercícios e materiais
+                    de estudo.
+                  </p>
+
+                  <div class="community-card-meta">
+                    <span>15 participantes</span>
+                    <span>3 posts</span>
+                  </div>
+
+                  <button type="button" class="community-card-btn fake-action-btn">
+                    Entrar
+                  </button>
+                </div>
+              </article>
+
+              <article class="community-card">
+                <div class="community-card-avatar community-card-avatar-projects">
+                  PA
+                </div>
+
+                <div class="community-card-body">
+                  <span class="community-card-tag">Aberta</span>
+
+                  <h3>Projetos Acadêmicos</h3>
+
+                  <p>
+                    Comunidade para divulgar ideias, encontrar colegas e organizar trabalhos
+                    em grupo.
+                  </p>
+
+                  <div class="community-card-meta">
+                    <span>34 participantes</span>
+                    <span>11 posts</span>
+                  </div>
+
+                  <button type="button" class="community-card-btn fake-action-btn">
+                    Entrar
+                  </button>
+                </div>
+              </article>
+
+            </div>
+          </section>
+
+        </div>
+
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Modal: nova comunidade -->
+  <div
+    class="modal fade"
+    id="newCommunityModal"
+    tabindex="-1"
+    aria-labelledby="newCommunityModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content post-modal-content">
+
+        <div class="modal-header post-modal-header">
+          <h2 class="modal-title fs-5" id="newCommunityModalLabel">
+            Criar comunidade
+          </h2>
+
+          <button
+            type="button"
+            class="btn-close post-modal-close"
+            data-bs-dismiss="modal"
+            aria-label="Fechar"
+          ></button>
+        </div>
+
+        <div class="modal-body post-modal-body">
+
+          <div class="community-form-area">
+            <label for="communityName">Nome da comunidade</label>
+            <input
+              type="text"
+              id="communityName"
+              maxlength="50"
+              placeholder="Ex: Clube de Estudos"
+            />
+
+            <label for="communityBio">Descrição</label>
+            <textarea
+              id="communityBio"
+              rows="4"
+              maxlength="150"
+              placeholder="Descreva o objetivo da comunidade"
+            ></textarea>
+          </div>
+
+          <p class="post-modal-warning">
+            Esta é uma versão visual. Nenhuma comunidade será criada de verdade.
+          </p>
+
+        </div>
+
+        <div class="modal-footer post-modal-footer">
+          <button type="button" class="modal-cancel-btn" data-bs-dismiss="modal">
+            Cancelar
+          </button>
+
+          <button type="button" class="modal-publish-btn" data-bs-dismiss="modal">
+            Criar
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: novo post -->
+  <div
+    class="modal fade"
+    id="newPostModal"
+    tabindex="-1"
+    aria-labelledby="newPostModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content post-modal-content">
+
+        <div class="modal-header post-modal-header">
+          <h2 class="modal-title fs-5" id="newPostModalLabel">
+            Criar novo post
+          </h2>
+
+          <button
+            type="button"
+            class="btn-close post-modal-close"
+            data-bs-dismiss="modal"
+            aria-label="Fechar"
+          ></button>
+        </div>
+
+        <div class="modal-body post-modal-body">
+
+          <div class="create-post-modal-area">
+            <div class="user-avatar">
+              KR
+            </div>
+
+            <textarea
+              rows="5"
+              maxlength="200"
+              placeholder="O que você está pensando?"
+            ></textarea>
+          </div>
+
+          <p class="post-modal-warning">
+            Esta é uma versão visual. Nenhum post será publicado de verdade.
+          </p>
+
+        </div>
+
+        <div class="modal-footer post-modal-footer">
+          <button type="button" class="modal-cancel-btn" data-bs-dismiss="modal">
+            Cancelar
+          </button>
+
+          <button type="button" class="modal-publish-btn" data-bs-dismiss="modal">
+            Publicar
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+  </script>
+
+  <script src="../assets/js/main.js"></script>
+</body>
+</html>

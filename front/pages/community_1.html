@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <!-- Base -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Conecta Fatec | Eu Amo Cinema</title>
+
+  <!-- Bootstrap -->
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  />
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="../assets/css/style.css" />
+</head>
+
+<body class="theme-light">
+
+  <!-- Tema -->
+  <button id="themeToggle" class="theme-toggle-btn page-theme-toggle" type="button" aria-label="Alternar tema">
+    ☽
+  </button>
+
+  <main class="feed-page">
+    <div class="feed-layout">
+
+      <!-- Sidebar desktop -->
+      <aside class="sidebar desktop-sidebar">
+
+        <a href="feed.html" class="sidebar-logo">
+          <img
+            src="../assets/img/logo-light.png"
+            alt="Logo Conecta Fatec"
+            class="sidebar-logo-img logo-light"
+          />
+
+          <img
+            src="../assets/img/logo-dark.png"
+            alt="Logo Conecta Fatec"
+            class="sidebar-logo-img logo-dark"
+          />
+        </a>
+
+        <nav class="sidebar-nav">
+          <a href="feed.html" class="sidebar-link">Feed</a>
+          <a href="profile.html" class="sidebar-link">Perfil</a>
+          <a href="communities.html" class="sidebar-link active">Comunidades</a>
+          <a href="friends.html" class="sidebar-link">Amizades</a>
+          <a href="#" class="sidebar-link">Notificações</a>
+          <a href="#" class="sidebar-link">Configurações</a>
+        </nav>
+
+        <button
+          class="new-post-btn"
+          type="button"
+          data-bs-toggle="modal"
+          data-bs-target="#newCommunityPostModal"
+        >
+          Novo post
+        </button>
+
+        <a href="profile.html" class="logged-user">
+          <div class="user-avatar">
+            KR
+          </div>
+
+          <div>
+            <strong>Kevin Ramos</strong>
+            <span>@kevin.dev</span>
+          </div>
+        </a>
+
+      </aside>
+
+      <!-- Topbar mobile -->
+      <header class="mobile-topbar">
+        <a href="feed.html" class="mobile-topbar-logo">
+          <img
+            src="../assets/img/logo-light.png"
+            alt="Logo Conecta Fatec"
+            class="sidebar-logo-img logo-light"
+          />
+
+          <img
+            src="../assets/img/logo-dark.png"
+            alt="Logo Conecta Fatec"
+            class="sidebar-logo-img logo-dark"
+          />
+        </a>
+
+        <button
+          class="mobile-menu-btn"
+          type="button"
+          data-bs-toggle="offcanvas"
+          data-bs-target="#mobileMenu"
+          aria-controls="mobileMenu"
+          aria-label="Abrir menu"
+        >
+          ☰
+        </button>
+      </header>
+
+      <!-- Menu mobile -->
+      <div
+        class="offcanvas offcanvas-end mobile-offcanvas"
+        tabindex="-1"
+        id="mobileMenu"
+        aria-labelledby="mobileMenuLabel"
+      >
+        <div class="offcanvas-header">
+          <h2 class="offcanvas-title" id="mobileMenuLabel">Menu</h2>
+
+          <button
+            type="button"
+            class="btn-close mobile-offcanvas-close"
+            data-bs-dismiss="offcanvas"
+            aria-label="Fechar"
+          ></button>
+        </div>
+
+        <div class="offcanvas-body">
+          <nav class="mobile-nav">
+            <a href="feed.html" class="sidebar-link">Feed</a>
+            <a href="profile.html" class="sidebar-link">Perfil</a>
+            <a href="communities.html" class="sidebar-link active">Comunidades</a>
+            <a href="friends.html" class="sidebar-link">Amizades</a>
+            <a href="#" class="sidebar-link">Notificações</a>
+            <a href="#" class="sidebar-link">Configurações</a>
+          </nav>
+
+          <button id="mobileThemeToggle" class="mobile-theme-btn" type="button">
+            Alterar tema <span>☽</span>
+          </button>
+
+          <button
+            class="new-post-btn mobile-new-post-btn"
+            type="button"
+            data-bs-toggle="modal"
+            data-bs-target="#newCommunityPostModal"
+          >
+            Novo post
+          </button>
+
+          <a href="profile.html" class="logged-user mobile-logged-user">
+            <div class="user-avatar">
+              KR
+            </div>
+
+            <div>
+              <strong>Kevin Ramos</strong>
+              <span>@kevin.dev</span>
+            </div>
+          </a>
+        </div>
+      </div>
+
+      <!-- Comunidade -->
+      <section class="feed-content community-page-content">
+
+        <header class="feed-header community-page-hero">
+          <a href="communities.html" class="back-link">
+            Voltar para comunidades
+          </a>
+
+          <div class="community-page-header">
+            <div class="community-page-avatar">
+              EC
+            </div>
+
+            <div class="community-page-info">
+              <span class="feed-kicker">Comunidade</span>
+              <h1>Eu Amo Cinema</h1>
+
+              <p>
+                Espaço para conversar sobre filmes, listas, críticas e recomendações
+                entre alunos da Fatec.
+              </p>
+
+              <div class="community-page-meta">
+                <span>Criada por Kevin Ramos.</span>
+                <span>12 participantes</span>
+                <span>4 posts</span>
+              </div>
+            </div>
+
+            <button type="button" class="edit-profile-btn">
+              Editar comunidade
+            </button>
+          </div>
+        </header>
+
+        <div class="community-page-layout">
+
+          <!-- Conteúdo principal -->
+          <main class="community-main">
+
+            <section class="community-create-card">
+              <div class="user-avatar">
+                KR
+              </div>
+
+              <div>
+                <h2>Publicar na comunidade</h2>
+                <p>
+                  Compartilhe uma recomendação, crítica curta ou lista com os participantes.
+                </p>
+
+                <button
+                  type="button"
+                  class="community-card-btn"
+                  data-bs-toggle="modal"
+                  data-bs-target="#newCommunityPostModal"
+                >
+                  Criar post
+                </button>
+              </div>
+            </section>
+
+            <!-- Posts da comunidade -->
+            <section class="profile-section community-posts-section">
+
+              <div class="profile-section-header">
+                <h2>Posts da comunidade</h2>
+              </div>
+
+              <article class="post-card profile-post-card">
+                <a href="profile.html" class="post-avatar user-avatar">
+                  KR
+                </a>
+
+                <div class="post-body">
+
+                  <div class="post-header">
+                    <div>
+                      <a href="profile.html" class="post-author">Kevin Ramos</a>
+                      <span>@kevin.dev · agora</span>
+                    </div>
+                  </div>
+
+                  <p class="post-text">
+                    Quais são os top 5 filmes favoritos de vocês?
+                  </p>
+
+                  <div class="post-actions">
+                    <button type="button" class="post-action-btn">
+                      <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M12 20.25c4.97 0 9-3.36 9-7.5s-4.03-7.5-9-7.5-9 3.36-9 7.5c0 1.64.64 3.15 1.72 4.38L3.75 21l4.2-1.35c1.22.38 2.59.6 4.05.6Z" />
+                      </svg>
+                      Comentar
+                    </button>
+
+                    <button type="button" class="post-action-btn">
+                      <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M20.8 4.6a5.4 5.4 0 0 0-7.6 0L12 5.8l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6L12 21l8.8-8.8a5.4 5.4 0 0 0 0-7.6Z" />
+                      </svg>
+                      Curtir
+                    </button>
+
+                    <button type="button" class="post-action-btn owner-action">
+                      Editar
+                    </button>
+
+                    <button type="button" class="post-action-btn owner-action delete-action">
+                      Excluir
+                    </button>
+                  </div>
+
+                  <div class="post-comment">
+                    <div class="comment-avatar static-avatar static-avatar-orange">
+                      AN
+                    </div>
+
+                    <div>
+                      <p>
+                        <strong>Augusto Neres</strong>
+                        Interestelar, Cidade de Deus, Parasita, Whiplash e O Poderoso Chefão.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div class="post-comment">
+                    <div class="comment-avatar static-avatar static-avatar-purple">
+                      GV
+                    </div>
+
+                    <div>
+                      <p>
+                        <strong>Giorgia Verrone</strong>
+                        Meu top 5 muda sempre, mas hoje seria: A vida é bela, Clube da Luta,
+                        Pulp Fiction, Jogos Vorzes em chamas e Como treinar seu dragão.
+                      </p>
+                    </div>
+                  </div>
+
+                </div>
+              </article>
+
+              <article class="post-card profile-post-card">
+                <div class="post-avatar user-avatar static-avatar static-avatar-yellow">
+                  MM
+                </div>
+
+                <div class="post-body">
+
+                  <div class="post-header">
+                    <div>
+                      <span class="post-author">Marty McFly</span>
+                      <span>@marty.mcfly · 2 h</span>
+                    </div>
+                  </div>
+
+                  <p class="post-text">
+                    De Volta para o Futuro ainda é uma das aventuras mais divertidas já feitas.
+                    Roteiro simples, ritmo perfeito e personagens memoráveis.
+                  </p>
+
+                  <div class="post-actions">
+                    <button type="button" class="post-action-btn">
+                      <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M12 20.25c4.97 0 9-3.36 9-7.5s-4.03-7.5-9-7.5-9 3.36-9 7.5c0 1.64.64 3.15 1.72 4.38L3.75 21l4.2-1.35c1.22.38 2.59.6 4.05.6Z" />
+                      </svg>
+                      Comentar
+                    </button>
+
+                    <button type="button" class="post-action-btn">
+                      <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M20.8 4.6a5.4 5.4 0 0 0-7.6 0L12 5.8l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6L12 21l8.8-8.8a5.4 5.4 0 0 0 0-7.6Z" />
+                      </svg>
+                      Curtir
+                    </button>
+                  </div>
+
+                </div>
+              </article>
+              <article class="post-card profile-post-card">
+                <div class="post-avatar user-avatar static-avatar static-avatar-red">
+                    DF
+                </div>
+
+                <div class="post-body">
+
+                    <div class="post-header">
+                    <div>
+                        <span class="post-author">Davi Farias</span>
+                        <span>@davi.farias · 3 h</span>
+                    </div>
+                    </div>
+
+                    <p class="post-text">
+                    Interestelar é o melhor filme já feito. A trilha sonora, a fotografia,
+                    a história e o final são simplesmente perfeitos.
+                    </p>
+
+                    <div class="post-actions">
+                    <button type="button" class="post-action-btn">
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M12 20.25c4.97 0 9-3.36 9-7.5s-4.03-7.5-9-7.5-9 3.36-9 7.5c0 1.64.64 3.15 1.72 4.38L3.75 21l4.2-1.35c1.22.38 2.59.6 4.05.6Z" />
+                        </svg>
+                        Comentar
+                    </button>
+
+                    <button type="button" class="post-action-btn">
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M20.8 4.6a5.4 5.4 0 0 0-7.6 0L12 5.8l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6L12 21l8.8-8.8a5.4 5.4 0 0 0 0-7.6Z" />
+                        </svg>
+                        Curtir
+                    </button>
+                    </div>
+
+                </div>
+                </article>
+
+                <article class="post-card profile-post-card">
+                <div class="post-avatar user-avatar static-avatar static-avatar-purple">
+                    GV
+                </div>
+
+                <div class="post-body">
+
+                    <div class="post-header">
+                    <div>
+                        <span class="post-author">Giorgia Verrone</span>
+                        <span>@giorgia.verrone · 4 h</span>
+                    </div>
+                    </div>
+
+                    <p class="post-text">
+                    Estou muito ansiosa para Jogos Vorazes: Amanhecer na Colheita.
+                    Quero ver como vão adaptar a história do Haymitch para o cinema.
+                    </p>
+
+                    <div class="post-actions">
+                    <button type="button" class="post-action-btn">
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M12 20.25c4.97 0 9-3.36 9-7.5s-4.03-7.5-9-7.5-9 3.36-9 7.5c0 1.64.64 3.15 1.72 4.38L3.75 21l4.2-1.35c1.22.38 2.59.6 4.05.6Z" />
+                        </svg>
+                        Comentar
+                    </button>
+
+                    <button type="button" class="post-action-btn">
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M20.8 4.6a5.4 5.4 0 0 0-7.6 0L12 5.8l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6L12 21l8.8-8.8a5.4 5.4 0 0 0 0-7.6Z" />
+                        </svg>
+                        Curtir
+                    </button>
+                    </div>
+
+                </div>
+                </article>
+              <footer class="feed-footer">
+                Fim dos posts da comunidade
+              </footer>
+
+            </section>
+
+          </main>
+
+          <!-- Lateral -->
+          <aside class="community-side">
+
+            <section class="side-card">
+              <div class="side-card-header">
+                <h2>Sobre</h2>
+              </div>
+
+              <p class="community-side-text">
+                Comunidade criada para reunir alunos que gostam de cinema, listas,
+                análises e recomendações de filmes.
+              </p>
+            </section>
+
+            <section class="side-card">
+              <div class="side-card-header">
+                <h2>Participantes</h2>
+                <span>12</span>
+              </div>
+
+              <a href="profile.html" class="side-friend-item">
+                <div class="user-avatar">
+                  KR
+                </div>
+
+                <div>
+                  <strong>Kevin Ramos</strong>
+                  <span>Criador</span>
+                </div>
+              </a>
+
+              <div class="side-friend-item static-user">
+                <div class="user-avatar static-avatar static-avatar-orange">
+                  AN
+                </div>
+
+                <div>
+                  <strong>Augusto Neres</strong>
+                  <span>Participante</span>
+                </div>
+              </div>
+
+              <div class="side-friend-item static-user">
+                <div class="user-avatar static-avatar static-avatar-red">
+                  DF
+                </div>
+
+                <div>
+                  <strong>Davi Farias</strong>
+                  <span>Participante</span>
+                </div>
+              </div>
+
+              <div class="side-friend-item static-user">
+                <div class="user-avatar static-avatar static-avatar-blue">
+                  AV
+                </div>
+
+                <div>
+                  <strong>Andrey Victor</strong>
+                  <span>Participante</span>
+                </div>
+              </div>
+
+              <div class="side-friend-item static-user">
+                <div class="user-avatar static-avatar static-avatar-green">
+                  ET
+                </div>
+
+                <div>
+                  <strong>Elton Teles</strong>
+                  <span>Participante</span>
+                </div>
+              </div>
+
+              <div class="side-friend-item static-user">
+                <div class="user-avatar static-avatar static-avatar-purple">
+                  GV
+                </div>
+
+                <div>
+                  <strong>Giorgia Verrone</strong>
+                  <span>Participante</span>
+                </div>
+              </div>
+
+              <div class="side-friend-item static-user">
+                <div class="user-avatar static-avatar static-avatar-yellow">
+                  MM
+                </div>
+
+                <div>
+                  <strong>Marty McFly</strong>
+                  <span>Participante</span>
+                </div>
+              </div>
+
+              <div class="side-friend-item static-user">
+                <div class="user-avatar static-avatar static-avatar-pink">
+                  RB
+                </div>
+
+                <div>
+                  <strong>Rocky Balboa</strong>
+                  <span>Participante</span>
+                </div>
+              </div>
+
+              <div class="side-friend-item static-user">
+                <div class="user-avatar static-avatar static-avatar-gray">
+                  HS
+                </div>
+
+                <div>
+                  <strong>Han Solo</strong>
+                  <span>Participante</span>
+                </div>
+              </div>
+
+              <div class="side-friend-item static-user">
+                <div class="user-avatar static-avatar static-avatar-indigo">
+                  MW
+                </div>
+
+                <div>
+                  <strong>Mia Wallace</strong>
+                  <span>Participante</span>
+                </div>
+              </div>
+
+              <div class="side-friend-item static-user">
+                <div class="user-avatar static-avatar static-avatar-brown">
+                  IJ
+                </div>
+
+                <div>
+                  <strong>Indiana Jones</strong>
+                  <span>Participante</span>
+                </div>
+              </div>
+
+              <div class="side-friend-item static-user">
+                <div class="user-avatar static-avatar static-avatar-teal">
+                  FG
+                </div>
+
+                <div>
+                  <strong>Forrest Gump</strong>
+                  <span>Participante</span>
+                </div>
+              </div>
+
+            </section>
+
+          </aside>
+
+        </div>
+
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Modal: novo post na comunidade -->
+  <div
+    class="modal fade"
+    id="newCommunityPostModal"
+    tabindex="-1"
+    aria-labelledby="newCommunityPostModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content post-modal-content">
+
+        <div class="modal-header post-modal-header">
+          <h2 class="modal-title fs-5" id="newCommunityPostModalLabel">
+            Publicar em Eu Amo Cinema
+          </h2>
+
+          <button
+            type="button"
+            class="btn-close post-modal-close"
+            data-bs-dismiss="modal"
+            aria-label="Fechar"
+          ></button>
+        </div>
+
+        <div class="modal-body post-modal-body">
+
+          <div class="create-post-modal-area">
+            <div class="user-avatar">
+              KR
+            </div>
+
+            <textarea
+              rows="5"
+              maxlength="200"
+              placeholder="Compartilhe algo com a comunidade"
+            ></textarea>
+          </div>
+
+          <p class="post-modal-warning">
+            Esta é uma versão visual. Nenhum post será publicado de verdade.
+          </p>
+
+        </div>
+
+        <div class="modal-footer post-modal-footer">
+          <button type="button" class="modal-cancel-btn" data-bs-dismiss="modal">
+            Cancelar
+          </button>
+
+          <button type="button" class="modal-publish-btn" data-bs-dismiss="modal">
+            Publicar
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+  </script>
+
+  <script src="../assets/js/main.js"></script>
+</body>
+</html>
