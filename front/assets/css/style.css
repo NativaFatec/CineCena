@@ -55,13 +55,22 @@ body.theme-dark .logo-dark {
   display: block;
 }
 
-/* Login */
-.text-primary-custom {
-  color: #2563eb;
+/* Logo CineCena */
+.cine {
+  color: #ffd500;
 }
 
-body.theme-dark .text-primary-custom {
-  color: #60a5fa;
+.cena {
+  color: #15803d;
+}
+
+/* Ajuste para o tema escuro */
+body.theme-dark .cine {
+  color: #ffd500;
+}
+
+body.theme-dark .cena {
+  color: #22c55e;
 }
 
 .description-text {
