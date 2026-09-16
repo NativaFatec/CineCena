@@ -5,7 +5,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>Conecta Fatec | Mural</title>
+  <title>CineCena | Mural</title>
 
   <!-- Bootstrap -->
   <link
@@ -23,7 +23,12 @@
 <body class="theme-light">
 
   <!-- Tema -->
-  <button id="themeToggle" class="theme-toggle-btn page-theme-toggle" type="button" aria-label="Alternar tema">
+  <button
+    id="themeToggle"
+    class="theme-toggle-btn page-theme-toggle"
+    type="button"
+    aria-label="Alternar tema"
+  >
     ☽
   </button>
 
@@ -34,17 +39,7 @@
       <aside class="sidebar desktop-sidebar">
 
         <a href="feed.html" class="sidebar-logo">
-          <img
-            src="../assets/img/logo-light.png"
-            alt="Logo Conecta Fatec"
-            class="sidebar-logo-img logo-light"
-          />
-
-          <img
-            src="../assets/img/logo-dark.png"
-            alt="Logo Conecta Fatec"
-            class="sidebar-logo-img logo-dark"
-          />
+          <span class="cine">Cine</span><span class="cena">Cena</span>
         </a>
 
         <nav class="sidebar-nav">
@@ -80,18 +75,9 @@
 
       <!-- Topbar mobile -->
       <header class="mobile-topbar">
-        <a href="feed.html" class="mobile-topbar-logo">
-          <img
-            src="../assets/img/logo-light.png"
-            alt="Logo Conecta Fatec"
-            class="sidebar-logo-img logo-light"
-          />
 
-          <img
-            src="../assets/img/logo-dark.png"
-            alt="Logo Conecta Fatec"
-            class="sidebar-logo-img logo-dark"
-          />
+        <a href="feed.html" class="mobile-topbar-logo">
+          <span class="cine">Cine</span><span class="cena">Cena</span>
         </a>
 
         <button
@@ -104,6 +90,7 @@
         >
           ☰
         </button>
+
       </header>
 
       <!-- Menu mobile -->
@@ -113,8 +100,12 @@
         id="mobileMenu"
         aria-labelledby="mobileMenuLabel"
       >
+
         <div class="offcanvas-header">
-          <h2 class="offcanvas-title" id="mobileMenuLabel">Menu</h2>
+
+          <h2 class="offcanvas-title" id="mobileMenuLabel">
+            Menu
+          </h2>
 
           <button
             type="button"
@@ -122,20 +113,48 @@
             data-bs-dismiss="offcanvas"
             aria-label="Fechar"
           ></button>
+
         </div>
 
         <div class="offcanvas-body">
+
           <nav class="mobile-nav">
-            <a href="feed.html" class="sidebar-link active">Feed</a>
-            <a href="profile.html" class="sidebar-link">    Perfil</a>
-            <a href="communities.html" class="sidebar-link">Comunidades</a>
-            <a href="friends.html" class="sidebar-link">Amizades</a>
-            <a href="#" class="sidebar-link">Notificações</a>
-            <a href="#" class="sidebar-link">Configurações</a>
+
+            <a href="feed.html" class="sidebar-link active">
+              Feed
+            </a>
+
+            <a href="profile.html" class="sidebar-link">
+              Perfil
+            </a>
+
+            <a href="communities.html" class="sidebar-link">
+              Comunidades
+            </a>
+
+            <a href="friends.html" class="sidebar-link">
+              Amizades
+            </a>
+
+            <a href="#" class="sidebar-link">
+              Notificações
+            </a>
+
+            <a href="#" class="sidebar-link">
+              Configurações
+            </a>
+
           </nav>
-          <button id="mobileThemeToggle" class="mobile-theme-btn" type="button">
-            Alterar tema <span>☽</span>
-            </button>
+
+          <button
+            id="mobileThemeToggle"
+            class="mobile-theme-btn"
+            type="button"
+          >
+            Alterar tema
+            <span>☽</span>
+          </button>
+
           <button
             class="new-post-btn mobile-new-post-btn"
             type="button"
@@ -146,6 +165,7 @@
           </button>
 
           <a href="profile.html" class="logged-user mobile-logged-user">
+
             <div class="user-avatar">
               KR
             </div>
@@ -154,7 +174,9 @@
               <strong>Kevin Ramos</strong>
               <span>@kevin.dev</span>
             </div>
+
           </a>
+
         </div>
       </div>
 
@@ -162,20 +184,39 @@
       <section class="feed-content">
 
         <header class="feed-header feed-hero">
+
           <div>
-            <span class="feed-kicker">Conecta Fatec</span>
-            <h1>Feed acadêmico</h1>
+
+            <span class="feed-kicker">
+              CineCena
+            </span>
+
+            <h1>
+              Mural
+            </h1>
+
             <p>
-              Acompanhe publicações, dúvidas e atualizações dos alunos conectados à nossa rede.
+              Compartilhe opiniões, descubra novos filmes e acompanhe
+              o que a comunidade está comentando sobre o cinema brasileiro.
             </p>
+
           </div>
+
         </header>
 
         <!-- Filtros -->
         <section class="feed-control-card">
 
           <div class="feed-control-text">
-            <h2>Publicações</h2>
+
+            <h2>
+              Publicações
+            </h2>
+
+            <p>
+              Veja as últimas publicações da comunidade.
+            </p>
+
           </div>
 
           <div class="feed-tabs" role="tablist">
@@ -219,7 +260,9 @@
 
             <div class="posts-list">
 
+              <!-- Post 1 -->
               <article class="post-card">
+
                 <a href="profile.html" class="post-avatar user-avatar">
                   KR
                 </a>
@@ -227,19 +270,29 @@
                 <div class="post-body">
 
                   <div class="post-header">
+
                     <div>
-                      <a href="profile.html" class="post-author">Kevin Ramos</a>
-                      <span>@kevin.dev · agora</span>
+
+                      <a href="profile.html" class="post-author">
+                        Kevin Ramos
+                      </a>
+
+                      <span>
+                        @kevin.dev · agora
+                      </span>
+
                     </div>
+
                   </div>
 
                   <p class="post-text">
-                    Finalizando a vitrine visual do Conecta Fatec. A ideia é apresentar
-                    o projeto com páginas estáticas, dados falsos e uma experiência parecida
-                    com uma rede social real.
+                    Hoje descobri alguns filmes brasileiros que ainda não
+                    conhecia. O CineCena está sendo uma ótima forma de
+                    encontrar novas produções e compartilhar opiniões.
                   </p>
 
                   <div class="post-actions">
+
                     <button type="button" class="post-action-btn">
                       <svg viewBox="0 0 24 24" aria-hidden="true">
                         <path d="M12 20.25c4.97 0 9-3.36 9-7.5s-4.03-7.5-9-7.5-9 3.36-9 7.5c0 1.64.64 3.15 1.72 4.38L3.75 21l4.2-1.35c1.22.38 2.59.6 4.05.6Z" />
@@ -254,38 +307,61 @@
                       Curtir
                     </button>
 
-                    <button type="button" class="post-action-btn owner-action">
+                    <button
+                      type="button"
+                      class="post-action-btn owner-action"
+                    >
                       Editar
                     </button>
 
-                    <button type="button" class="post-action-btn owner-action delete-action">
+                    <button
+                      type="button"
+                      class="post-action-btn owner-action delete-action"
+                    >
                       Excluir
                     </button>
+
                   </div>
 
                 </div>
               </article>
 
+              <!-- Post 2 -->
               <article class="post-card">
-                <a href="profileuser.html" class="post-avatar user-avatar user-avatar-alt">
+
+                <a
+                  href="profileuser.html"
+                  class="post-avatar user-avatar user-avatar-alt"
+                >
                   MB
                 </a>
 
                 <div class="post-body">
 
                   <div class="post-header">
+
                     <div>
-                      <a href="profileuser.html" class="post-author">Matheus Bertelii</a>
-                      <span>@m.bertelli · 18 min</span>
+
+                      <a href="profileuser.html" class="post-author">
+                        Matheus Bertelii
+                      </a>
+
+                      <span>
+                        @m.bertelli · 18 min
+                      </span>
+
                     </div>
+
                   </div>
 
                   <p class="post-text">
-                    Entrei na comunidade de Desenvolvimento Web. Muito legal ver alunos
-                    compartilhando projetos, dúvidas e ideias para portfólio.
+                    Acabei de assistir a um filme brasileiro que estava
+                    na minha lista há bastante tempo. A fotografia e a
+                    trilha sonora foram os pontos que mais gostei.
                   </p>
 
                   <div class="post-actions">
+
                     <button type="button" class="post-action-btn">
                       <svg viewBox="0 0 24 24" aria-hidden="true">
                         <path d="M12 20.25c4.97 0 9-3.36 9-7.5s-4.03-7.5-9-7.5-9 3.36-9 7.5c0 1.64.64 3.15 1.72 4.38L3.75 21l4.2-1.35c1.22.38 2.59.6 4.05.6Z" />
@@ -299,24 +375,33 @@
                       </svg>
                       Curtir
                     </button>
+
                   </div>
 
                   <div class="post-comment">
-                    <a href="profile.html" class="comment-avatar">KR</a>
+
+                    <a href="profile.html" class="comment-avatar">
+                      KR
+                    </a>
 
                     <div>
+
                       <p>
                         <strong>Kevin Ramos</strong>
-                        Também entrei nela. Acho que vai ser uma boa comunidade para trocar
-                        materiais e ideias de projetos.
+                        Também coloquei esse na minha lista.
+                        Parece ser muito bom.
                       </p>
+
                     </div>
+
                   </div>
 
                 </div>
               </article>
 
+              <!-- Post 3 -->
               <article class="post-card">
+
                 <a href="profile.html" class="post-avatar user-avatar">
                   KR
                 </a>
@@ -324,18 +409,28 @@
                 <div class="post-body">
 
                   <div class="post-header">
+
                     <div>
-                      <a href="profile.html" class="post-author">Kevin Ramos</a>
-                      <span>@kevin.dev · 1 h</span>
+
+                      <a href="profile.html" class="post-author">
+                        Kevin Ramos
+                      </a>
+
+                      <span>
+                        @kevin.dev · 1 h
+                      </span>
+
                     </div>
+
                   </div>
 
                   <p class="post-text">
-                    Hoje revisei autenticação, rotas e organização de templates no Django.
-                    Aos poucos o backend está ficando mais limpo e fácil de manter.
+                    Estou montando uma lista de filmes brasileiros para
+                    assistir durante o mês. Aceito recomendações da comunidade!
                   </p>
 
                   <div class="post-actions">
+
                     <button type="button" class="post-action-btn">
                       <svg viewBox="0 0 24 24" aria-hidden="true">
                         <path d="M12 20.25c4.97 0 9-3.36 9-7.5s-4.03-7.5-9-7.5-9 3.36-9 7.5c0 1.64.64 3.15 1.72 4.38L3.75 21l4.2-1.35c1.22.38 2.59.6 4.05.6Z" />
@@ -350,38 +445,61 @@
                       Curtir
                     </button>
 
-                    <button type="button" class="post-action-btn owner-action">
+                    <button
+                      type="button"
+                      class="post-action-btn owner-action"
+                    >
                       Editar
                     </button>
 
-                    <button type="button" class="post-action-btn owner-action delete-action">
+                    <button
+                      type="button"
+                      class="post-action-btn owner-action delete-action"
+                    >
                       Excluir
                     </button>
+
                   </div>
 
                 </div>
               </article>
 
+              <!-- Post 4 -->
               <article class="post-card">
-                <a href="profileuser.html" class="post-avatar user-avatar user-avatar-alt">
+
+                <a
+                  href="profileuser.html"
+                  class="post-avatar user-avatar user-avatar-alt"
+                >
                   MB
                 </a>
 
                 <div class="post-body">
 
                   <div class="post-header">
+
                     <div>
-                      <a href="profileuser.html" class="post-author">Matheus Bertelii</a>
-                      <span>@m.bertelli · 2 h</span>
+
+                      <a href="profileuser.html" class="post-author">
+                        Matheus Bertelii
+                      </a>
+
+                      <span>
+                        @m.bertelli · 2 h
+                      </span>
+
                     </div>
+
                   </div>
 
                   <p class="post-text">
-                    Alguém tem indicação de material simples para revisar responsividade
-                    com Bootstrap? Quero melhorar algumas páginas do meu projeto.
+                    Alguém tem indicação de filme brasileiro para assistir
+                    neste fim de semana? Estou procurando algo diferente
+                    para adicionar à minha lista.
                   </p>
 
                   <div class="post-actions">
+
                     <button type="button" class="post-action-btn">
                       <svg viewBox="0 0 24 24" aria-hidden="true">
                         <path d="M12 20.25c4.97 0 9-3.36 9-7.5s-4.03-7.5-9-7.5-9 3.36-9 7.5c0 1.64.64 3.15 1.72 4.38L3.75 21l4.2-1.35c1.22.38 2.59.6 4.05.6Z" />
@@ -395,13 +513,14 @@
                       </svg>
                       Curtir
                     </button>
+
                   </div>
 
                 </div>
               </article>
 
               <footer class="feed-footer">
-                Fim dos posts
+                Fim das publicações
               </footer>
 
             </div>
@@ -419,25 +538,40 @@
             <div class="posts-list">
 
               <article class="post-card">
-                <a href="profileuser.html" class="post-avatar user-avatar user-avatar-alt">
+
+                <a
+                  href="profileuser.html"
+                  class="post-avatar user-avatar user-avatar-alt"
+                >
                   MB
                 </a>
 
                 <div class="post-body">
 
                   <div class="post-header">
+
                     <div>
-                      <a href="profileuser.html" class="post-author">Matheus Bertelii</a>
-                      <span>@m.bertelli · 18 min</span>
+
+                      <a href="profileuser.html" class="post-author">
+                        Matheus Bertelii
+                      </a>
+
+                      <span>
+                        @m.bertelli · 18 min
+                      </span>
+
                     </div>
+
                   </div>
 
                   <p class="post-text">
-                    Entrei na comunidade de Desenvolvimento Web. Muito legal ver alunos
-                    compartilhando projetos, dúvidas e ideias para portfólio.
+                    Acabei de assistir a um filme brasileiro que estava
+                    na minha lista há bastante tempo. A fotografia e a
+                    trilha sonora foram os pontos que mais gostei.
                   </p>
 
                   <div class="post-actions">
+
                     <button type="button" class="post-action-btn">
                       <svg viewBox="0 0 24 24" aria-hidden="true">
                         <path d="M12 20.25c4.97 0 9-3.36 9-7.5s-4.03-7.5-9-7.5-9 3.36-9 7.5c0 1.64.64 3.15 1.72 4.38L3.75 21l4.2-1.35c1.22.38 2.59.6 4.05.6Z" />
@@ -451,43 +585,64 @@
                       </svg>
                       Curtir
                     </button>
+
                   </div>
 
                   <div class="post-comment">
-                    <a href="profile.html" class="comment-avatar">KR</a>
+
+                    <a href="profile.html" class="comment-avatar">
+                      KR
+                    </a>
 
                     <div>
+
                       <p>
                         <strong>Kevin Ramos</strong>
-                        Também entrei nela. Acho que vai ser uma boa comunidade para trocar
-                        materiais e ideias de projetos.
+                        Também coloquei esse na minha lista.
+                        Parece ser muito bom.
                       </p>
+
                     </div>
+
                   </div>
 
                 </div>
               </article>
 
               <article class="post-card">
-                <a href="profileuser.html" class="post-avatar user-avatar user-avatar-alt">
+
+                <a
+                  href="profileuser.html"
+                  class="post-avatar user-avatar user-avatar-alt"
+                >
                   MB
                 </a>
 
                 <div class="post-body">
 
                   <div class="post-header">
+
                     <div>
-                      <a href="profileuser.html" class="post-author">Matheus Bertelii</a>
-                      <span>@m.bertelli · 2 h</span>
+
+                      <a href="profileuser.html" class="post-author">
+                        Matheus Bertelii
+                      </a>
+
+                      <span>
+                        @m.bertelli · 2 h
+                      </span>
+
                     </div>
+
                   </div>
 
                   <p class="post-text">
-                    Alguém tem indicação de material simples para revisar responsividade
-                    com Bootstrap? Quero melhorar algumas páginas do meu projeto.
+                    Alguém tem indicação de filme brasileiro para assistir
+                    neste fim de semana?
                   </p>
 
                   <div class="post-actions">
+
                     <button type="button" class="post-action-btn">
                       <svg viewBox="0 0 24 24" aria-hidden="true">
                         <path d="M12 20.25c4.97 0 9-3.36 9-7.5s-4.03-7.5-9-7.5-9 3.36-9 7.5c0 1.64.64 3.15 1.72 4.38L3.75 21l4.2-1.35c1.22.38 2.59.6 4.05.6Z" />
@@ -501,13 +656,14 @@
                       </svg>
                       Curtir
                     </button>
+
                   </div>
 
                 </div>
               </article>
 
               <footer class="feed-footer">
-                Fim dos posts
+                Fim das publicações
               </footer>
 
             </div>
@@ -529,10 +685,13 @@
     aria-labelledby="newPostModalLabel"
     aria-hidden="true"
   >
+
     <div class="modal-dialog modal-dialog-centered">
+
       <div class="modal-content post-modal-content">
 
         <div class="modal-header post-modal-header">
+
           <h2 class="modal-title fs-5" id="newPostModalLabel">
             Criar novo post
           </h2>
@@ -543,11 +702,13 @@
             data-bs-dismiss="modal"
             aria-label="Fechar"
           ></button>
+
         </div>
 
         <div class="modal-body post-modal-body">
 
           <div class="create-post-modal-area">
+
             <div class="user-avatar">
               KR
             </div>
@@ -557,6 +718,7 @@
               maxlength="200"
               placeholder="O que você está pensando?"
             ></textarea>
+
           </div>
 
           <p class="post-modal-warning">
@@ -566,17 +728,29 @@
         </div>
 
         <div class="modal-footer post-modal-footer">
-          <button type="button" class="modal-cancel-btn" data-bs-dismiss="modal">
+
+          <button
+            type="button"
+            class="modal-cancel-btn"
+            data-bs-dismiss="modal"
+          >
             Cancelar
           </button>
 
-          <button type="button" class="modal-publish-btn" data-bs-dismiss="modal">
+          <button
+            type="button"
+            class="modal-publish-btn"
+            data-bs-dismiss="modal"
+          >
             Publicar
           </button>
+
         </div>
 
       </div>
+
     </div>
+
   </div>
 
   <!-- Scripts -->
@@ -585,5 +759,6 @@
   </script>
 
   <script src="../assets/js/main.js"></script>
+
 </body>
 </html>
