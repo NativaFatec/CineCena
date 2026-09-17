@@ -1,8 +1,3 @@
-/* =========================================================
-   CINECENA
-   Identidade visual
-   ========================================================= */
-
 :root {
   --cine-amarelo: #ffd500;
   --cine-verde: #168821;
@@ -20,11 +15,6 @@
   --verde-claro: #e8f5eb;
   --amarelo-claro: #fff8cc;
 }
-
-
-/* =========================================================
-   BASE
-   ========================================================= */
 
 * {
   box-sizing: border-box;
@@ -50,11 +40,6 @@ button {
   font-family: inherit;
 }
 
-
-/* =========================================================
-   TEMAS
-   ========================================================= */
-
 body.theme-light {
   background-color: var(--fundo);
   color: var(--texto);
@@ -65,11 +50,6 @@ body.theme-dark {
   color: #f8fafc;
 }
 
-
-/* =========================================================
-   LOGO
-   ========================================================= */
-
 .sidebar-logo,
 .mobile-topbar-logo {
   display: flex;
@@ -78,6 +58,26 @@ body.theme-dark {
   font-size: 1.65rem;
   font-weight: 900;
   letter-spacing: -0.06em;
+}
+
+.cine-logo {
+  display: inline-flex;
+  align-items: center;
+
+  text-decoration: none;
+
+  font-weight: 800;
+  letter-spacing: -1px;
+
+  white-space: nowrap;
+}
+
+.sidebar-cine-logo {
+  font-size: 28px;
+}
+
+.mobile-cine-logo {
+  font-size: 24px;
 }
 
 .sidebar-logo {
@@ -95,11 +95,6 @@ body.theme-dark {
 .cena {
   color: var(--cine-verde);
 }
-
-
-/* =========================================================
-   LAYOUT
-   ========================================================= */
 
 .feed-page {
   min-height: 100vh;
@@ -119,11 +114,6 @@ body.theme-dark .feed-page {
   display: grid;
   grid-template-columns: 280px minmax(0, 1fr);
 }
-
-
-/* =========================================================
-   SIDEBAR
-   ========================================================= */
 
 .sidebar {
   min-height: 100vh;
@@ -148,11 +138,6 @@ body.theme-dark .sidebar {
   background-color: #111a14;
   border-right-color: #29382e;
 }
-
-
-/* =========================================================
-   NAVEGAÇÃO
-   ========================================================= */
 
 .sidebar-nav {
   display: flex;
@@ -207,11 +192,6 @@ body.theme-dark .sidebar-link.active {
   border-left-color: #39b85a;
 }
 
-
-/* =========================================================
-   BOTÃO NOVO POST
-   ========================================================= */
-
 .new-post-btn {
   width: 100%;
 
@@ -234,11 +214,6 @@ body.theme-dark .sidebar-link.active {
   background-color: var(--cine-verde-escuro);
   transform: translateY(-1px);
 }
-
-
-/* =========================================================
-   USUÁRIO LOGADO
-   ========================================================= */
 
 .logged-user {
   margin-top: auto;
@@ -283,11 +258,6 @@ body.theme-dark .logged-user span {
   color: #94a39a;
 }
 
-
-/* =========================================================
-   AVATARES
-   ========================================================= */
-
 .user-avatar {
   width: 44px;
   height: 44px;
@@ -310,11 +280,6 @@ body.theme-dark .logged-user span {
   background-color: #8a6d00;
 }
 
-
-/* =========================================================
-   CONTEÚDO
-   ========================================================= */
-
 .feed-content {
   min-height: 100vh;
 
@@ -327,11 +292,6 @@ body.theme-dark .feed-content {
   background-color: #101712;
   border-right-color: #29382e;
 }
-
-
-/* =========================================================
-   CABEÇALHO
-   ========================================================= */
 
 .feed-header {
   padding: 26px 28px 18px;
@@ -363,11 +323,6 @@ body.theme-dark .feed-header p {
   color: #aab7ae;
 }
 
-
-/* =========================================================
-   HERO
-   ========================================================= */
-
 .feed-hero {
   display: flex;
   align-items: center;
@@ -395,11 +350,6 @@ body.theme-dark .feed-header p {
 body.theme-dark .feed-kicker {
   color: #55d477;
 }
-
-
-/* =========================================================
-   CONTROLE DO FEED
-   ========================================================= */
 
 .feed-control-card {
   margin: 24px 28px 0;
@@ -441,11 +391,6 @@ body.theme-dark .feed-control-card {
 body.theme-dark .feed-control-text p {
   color: #9dacA2;
 }
-
-
-/* =========================================================
-   ABAS
-   ========================================================= */
 
 .feed-tabs {
   display: flex;
@@ -503,11 +448,6 @@ body.theme-dark .feed-tab.active {
   color: #ffffff;
   border-color: #168821;
 }
-
-
-/* =========================================================
-   POSTS
-   ========================================================= */
 
 .feed-tab-content {
   padding: 24px 28px 0;
@@ -580,11 +520,6 @@ body.theme-dark .feed-tab.active {
   margin-bottom: 14px;
 }
 
-
-/* =========================================================
-   AÇÕES
-   ========================================================= */
-
 .post-actions {
   display: flex;
 
@@ -625,11 +560,6 @@ body.theme-dark .feed-tab.active {
 .delete-action:hover {
   color: #c62828;
 }
-
-
-/* =========================================================
-   COMENTÁRIOS
-   ========================================================= */
 
 .post-comment {
   margin-top: 16px;
@@ -682,11 +612,6 @@ body.theme-dark .feed-tab.active {
   margin-right: 4px;
 }
 
-
-/* =========================================================
-   RODAPÉ
-   ========================================================= */
-
 .feed-footer {
   padding: 24px 0 32px;
 
@@ -698,11 +623,6 @@ body.theme-dark .feed-tab.active {
 
   font-weight: 600;
 }
-
-
-/* =========================================================
-   MODAL
-   ========================================================= */
 
 .post-modal-content {
   border-radius: 8px;
@@ -800,11 +720,6 @@ body.theme-dark .feed-tab.active {
   background-color: var(--cine-verde-escuro);
 }
 
-
-/* =========================================================
-   TEMA ESCURO
-   ========================================================= */
-
 body.theme-dark .post-modal-content {
   background-color: #111a14;
   color: #f8fafc;
@@ -833,11 +748,6 @@ body.theme-dark .modal-cancel-btn {
 body.theme-dark .modal-cancel-btn:hover {
   background-color: #29382e;
 }
-
-
-/* =========================================================
-   BOTÃO DE TEMA
-   ========================================================= */
 
 .theme-toggle-btn {
   width: 42px;
@@ -873,11 +783,6 @@ body.theme-dark .theme-toggle-btn {
 
   border-color: #344238;
 }
-
-
-/* =========================================================
-   MENU MOBILE
-   ========================================================= */
 
 .mobile-topbar {
   display: none;
@@ -978,10 +883,6 @@ body.theme-dark .theme-toggle-btn {
 }
 
 
-/* =========================================================
-   DARK MOBILE
-   ========================================================= */
-
 body.theme-dark .mobile-topbar {
   background-color: #101712;
 
@@ -1021,11 +922,6 @@ body.theme-dark .mobile-theme-btn {
 body.theme-dark .mobile-theme-btn:hover {
   background-color: #1b2720;
 }
-
-
-/* =========================================================
-   RESPONSIVO
-   ========================================================= */
 
 @media (max-width: 992px) {
 
