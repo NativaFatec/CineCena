@@ -2,376 +2,22 @@
 <html lang="pt-BR">
 
 <head>
-  <!-- Base -->
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <title>CineCena | Perfil</title>
 
-  <!-- Bootstrap -->
-  <link
-    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-    rel="stylesheet"
-  />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
 
-  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
 
-  <!-- CSS principal -->
   <link rel="stylesheet" href="../assets/css/style.css" />
-
-  <!-- Ajustes específicos do perfil -->
-  <style>
-    /* =========================
-       LOGO CINECENA
-    ========================= */
-
-    .cine-logo {
-      display: inline-flex;
-      align-items: center;
-      font-weight: 800;
-      letter-spacing: -1px;
-      text-decoration: none;
-    }
-
-    .cine-logo .cine {
-      color: #ffd500;
-    }
-
-    .cine-logo .cena {
-      color: #15803d;
-    }
-
-    .sidebar-cine-logo {
-      font-size: 28px;
-      white-space: nowrap;
-    }
-
-    .mobile-cine-logo {
-      font-size: 24px;
-    }
-
-    body.theme-dark .cine-logo .cine {
-      color: #ffd500;
-    }
-
-    body.theme-dark .cine-logo .cena {
-      color: #22c55e;
-    }
-
-
-    /* =========================
-       PERFIL
-    ========================= */
-
-    .profile-layout {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) 320px;
-      gap: 24px;
-      padding: 24px;
-    }
-
-    .profile-main {
-      min-width: 0;
-    }
-
-    .profile-side {
-      display: flex;
-      flex-direction: column;
-      gap: 18px;
-    }
-
-    .profile-card,
-    .side-card {
-      background: var(--card-bg, #ffffff);
-      border: 1px solid var(--border-color, #dce2e8);
-      border-radius: 14px;
-    }
-
-    .profile-summary-card {
-      padding: 24px;
-      margin-bottom: 24px;
-    }
-
-    .profile-summary-header {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-    }
-
-    .profile-avatar {
-      width: 72px;
-      height: 72px;
-      border-radius: 50%;
-      background: #15803d;
-      color: #ffffff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 22px;
-      font-weight: 700;
-      flex-shrink: 0;
-    }
-
-    .profile-title-area {
-      flex: 1;
-      min-width: 0;
-    }
-
-    .profile-title-area h2 {
-      margin: 0;
-      font-size: 24px;
-      font-weight: 700;
-    }
-
-    .profile-nickname {
-      margin: 4px 0 0;
-      color: #64748b;
-    }
-
-    .edit-profile-btn {
-      border: 1px solid #15803d;
-      background: transparent;
-      color: #15803d;
-      border-radius: 8px;
-      padding: 9px 16px;
-      font-weight: 600;
-      cursor: pointer;
-    }
-
-    .edit-profile-btn:hover {
-      background: #15803d;
-      color: #ffffff;
-    }
-
-    .profile-info {
-      margin-top: 20px;
-    }
-
-    .profile-course {
-      margin: 0 0 8px;
-      font-weight: 600;
-    }
-
-    .profile-bio {
-      margin: 0;
-      line-height: 1.6;
-      color: #475569;
-    }
-
-    .profile-stats {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 24px;
-      margin-top: 20px;
-      padding-top: 18px;
-      border-top: 1px solid #e2e8f0;
-    }
-
-    .profile-stats span {
-      color: #64748b;
-    }
-
-    .profile-stats strong {
-      color: #172033;
-    }
-
-    .profile-section {
-      margin-bottom: 24px;
-    }
-
-    .profile-section-header {
-      margin-bottom: 12px;
-    }
-
-    .profile-section-header h2 {
-      margin: 0;
-      font-size: 20px;
-      font-weight: 700;
-    }
-
-    .profile-post-card {
-      margin-bottom: 12px;
-    }
-
-
-    /* =========================
-       CARDS LATERAIS
-    ========================= */
-
-    .side-card {
-      padding: 18px;
-    }
-
-    .side-card-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 12px;
-    }
-
-    .side-card-header h2 {
-      margin: 0;
-      font-size: 18px;
-      font-weight: 700;
-    }
-
-    .side-card-header span {
-      color: #64748b;
-      font-size: 14px;
-      font-weight: 600;
-    }
-
-    .side-community-item,
-    .side-friend-item {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 12px 8px;
-      border-radius: 10px;
-      text-decoration: none;
-      color: inherit;
-      transition: background 0.2s ease;
-    }
-
-    .side-community-item:hover,
-    .side-friend-item:hover {
-      background: #f1f5f9;
-    }
-
-    .side-community-avatar {
-      width: 42px;
-      height: 42px;
-      border-radius: 10px;
-      background: #15803d;
-      color: #ffffff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 13px;
-      font-weight: 700;
-      flex-shrink: 0;
-    }
-
-    .side-community-avatar-alt {
-      background: #ffd500;
-      color: #172033;
-    }
-
-    .side-community-item strong,
-    .side-friend-item strong {
-      display: block;
-      font-size: 14px;
-      line-height: 1.3;
-    }
-
-    .side-community-item span,
-    .side-friend-item span {
-      display: block;
-      margin-top: 3px;
-      color: #64748b;
-      font-size: 13px;
-    }
-
-    .user-avatar-alt {
-      background: #b58a00;
-    }
-
-
-    /* =========================
-       DARK MODE
-    ========================= */
-
-    body.theme-dark .profile-card,
-    body.theme-dark .side-card {
-      background: #172033;
-      border-color: #334155;
-    }
-
-    body.theme-dark .profile-nickname,
-    body.theme-dark .profile-bio,
-    body.theme-dark .profile-stats span,
-    body.theme-dark .side-card-header span,
-    body.theme-dark .side-community-item span,
-    body.theme-dark .side-friend-item span {
-      color: #94a3b8;
-    }
-
-    body.theme-dark .profile-stats strong {
-      color: #f8fafc;
-    }
-
-    body.theme-dark .profile-stats {
-      border-color: #334155;
-    }
-
-    body.theme-dark .side-community-item:hover,
-    body.theme-dark .side-friend-item:hover {
-      background: #1e293b;
-    }
-
-    body.theme-dark .edit-profile-btn {
-      color: #22c55e;
-      border-color: #22c55e;
-    }
-
-    body.theme-dark .edit-profile-btn:hover {
-      background: #22c55e;
-      color: #0f172a;
-    }
-
-
-    /* =========================
-       RESPONSIVIDADE
-    ========================= */
-
-    @media (max-width: 1000px) {
-      .profile-layout {
-        grid-template-columns: 1fr;
-      }
-
-      .profile-side {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-    }
-
-    @media (max-width: 700px) {
-      .profile-layout {
-        padding: 16px;
-      }
-
-      .profile-summary-header {
-        align-items: flex-start;
-        flex-wrap: wrap;
-      }
-
-      .edit-profile-btn {
-        width: 100%;
-      }
-
-      .profile-stats {
-        gap: 12px;
-        flex-direction: column;
-      }
-
-      .profile-side {
-        display: flex;
-      }
-    }
-  </style>
 </head>
 
 
 <body class="theme-light">
 
-  <!-- Botão de tema -->
-  <button
-    id="themeToggle"
-    class="theme-toggle-btn page-theme-toggle"
-    type="button"
-    aria-label="Alternar tema"
-  >
+  <button id="themeToggle" class="theme-toggle-btn page-theme-toggle" type="button" aria-label="Alternar tema">
     ☽
   </button>
 
@@ -380,10 +26,6 @@
 
     <div class="feed-layout">
 
-
-      <!-- =========================
-           SIDEBAR DESKTOP
-      ========================== -->
 
       <aside class="sidebar desktop-sidebar">
 
@@ -395,42 +37,25 @@
         <nav class="sidebar-nav">
 
           <a href="feed.html" class="sidebar-link">
-            Início
+            Feed
           </a>
 
           <a href="profile.html" class="sidebar-link active">
             Perfil
           </a>
 
-          <a href="movies.html" class="sidebar-link">
-            Filmes
+          <a href="friends.html" class="sidebar-link">
+            Amizades
           </a>
 
-          <a href="reviews.html" class="sidebar-link">
-            Avaliações
-          </a>
-
-          <a href="#" class="sidebar-link">
-            Comunidades
-          </a>
-
-          <a href="#" class="sidebar-link">
-            Notificações
-          </a>
-
-          <a href="#" class="sidebar-link">
-            Configurações
+          <a href="lists.html" class="sidebar-link">
+            Listas
           </a>
 
         </nav>
 
 
-        <button
-          class="new-post-btn"
-          type="button"
-          data-bs-toggle="modal"
-          data-bs-target="#newPostModal"
-        >
+        <button class="new-post-btn" type="button" data-bs-toggle="modal" data-bs-target="#newPostModal">
           Nova avaliação
         </button>
 
@@ -451,60 +76,32 @@
       </aside>
 
 
-      <!-- =========================
-           TOPBAR MOBILE
-      ========================== -->
-
       <header class="mobile-topbar">
 
-        <a
-          href="feed.html"
-          class="mobile-topbar-logo cine-logo mobile-cine-logo"
-        >
+        <a href="feed.html" class="mobile-topbar-logo cine-logo mobile-cine-logo">
           <span class="cine">Cine</span><span class="cena">Cena</span>
         </a>
 
 
-        <button
-          class="mobile-menu-btn"
-          type="button"
-          data-bs-toggle="offcanvas"
-          data-bs-target="#mobileMenu"
-          aria-controls="mobileMenu"
-          aria-label="Abrir menu"
-        >
+        <button class="mobile-menu-btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileMenu"
+          aria-controls="mobileMenu" aria-label="Abrir menu">
           ☰
         </button>
 
       </header>
 
 
-      <!-- =========================
-           MENU MOBILE
-      ========================== -->
-
-      <div
-        class="offcanvas offcanvas-end mobile-offcanvas"
-        tabindex="-1"
-        id="mobileMenu"
-        aria-labelledby="mobileMenuLabel"
-      >
+      <div class="offcanvas offcanvas-end mobile-offcanvas" tabindex="-1" id="mobileMenu"
+        aria-labelledby="mobileMenuLabel">
 
         <div class="offcanvas-header">
 
-          <h2
-            class="offcanvas-title"
-            id="mobileMenuLabel"
-          >
+          <h2 class="offcanvas-title" id="mobileMenuLabel">
             Menu
           </h2>
 
-          <button
-            type="button"
-            class="btn-close mobile-offcanvas-close"
-            data-bs-dismiss="offcanvas"
-            aria-label="Fechar"
-          ></button>
+          <button type="button" class="btn-close mobile-offcanvas-close" data-bs-dismiss="offcanvas"
+            aria-label="Fechar"></button>
 
         </div>
 
@@ -514,59 +111,36 @@
           <nav class="mobile-nav">
 
             <a href="feed.html" class="sidebar-link">
-              Início
+              Feed
             </a>
 
             <a href="profile.html" class="sidebar-link active">
               Perfil
             </a>
 
-            <a href="movies.html" class="sidebar-link">
-              Filmes
+            <a href="friends.html" class="sidebar-link">
+              Amizades
             </a>
 
-            <a href="reviews.html" class="sidebar-link">
-              Avaliações
-            </a>
-
-            <a href="#" class="sidebar-link">
-              Comunidades
-            </a>
-
-            <a href="#" class="sidebar-link">
-              Notificações
-            </a>
-
-            <a href="#" class="sidebar-link">
-              Configurações
+            <a href="lists.html" class="sidebar-link">
+              Listas
             </a>
 
           </nav>
 
 
-          <button
-            id="mobileThemeToggle"
-            class="mobile-theme-btn"
-            type="button"
-          >
+          <button id="mobileThemeToggle" class="mobile-theme-btn" type="button">
             Alterar tema <span>☽</span>
           </button>
 
 
-          <button
-            class="new-post-btn mobile-new-post-btn"
-            type="button"
-            data-bs-toggle="modal"
-            data-bs-target="#newPostModal"
-          >
+          <button class="new-post-btn mobile-new-post-btn" type="button" data-bs-toggle="modal"
+            data-bs-target="#newPostModal">
             Nova avaliação
           </button>
 
 
-          <a
-            href="profile.html"
-            class="logged-user mobile-logged-user"
-          >
+          <a href="profile.html" class="logged-user mobile-logged-user">
 
             <div class="user-avatar">
               KR
@@ -584,14 +158,8 @@
       </div>
 
 
-      <!-- =========================
-           CONTEÚDO DO PERFIL
-      ========================== -->
-
       <section class="feed-content profile-content">
 
-
-        <!-- Cabeçalho -->
 
         <header class="feed-header">
 
@@ -613,14 +181,8 @@
         <div class="profile-layout">
 
 
-          <!-- =========================
-               CONTEÚDO PRINCIPAL
-          ========================== -->
-
           <div class="profile-main">
 
-
-            <!-- Resumo do perfil -->
 
             <section class="profile-card profile-summary-card">
 
@@ -644,10 +206,7 @@
                 </div>
 
 
-                <button
-                  type="button"
-                  class="edit-profile-btn"
-                >
+                <button type="button" class="edit-profile-btn">
                   Editar perfil
                 </button>
 
@@ -691,11 +250,6 @@
 
             </section>
 
-
-            <!-- =========================
-                 AVALIAÇÕES RECENTES
-            ========================== -->
-
             <section class="profile-section">
 
               <div class="profile-section-header">
@@ -706,15 +260,9 @@
 
               </div>
 
-
-              <!-- Avaliação 1 -->
-
               <article class="post-card profile-post-card">
 
-                <a
-                  href="profile.html"
-                  class="post-avatar user-avatar"
-                >
+                <a href="profile.html" class="post-avatar user-avatar">
                   KR
                 </a>
 
@@ -725,10 +273,7 @@
 
                     <div>
 
-                      <a
-                        href="profile.html"
-                        class="post-author"
-                      >
+                      <a href="profile.html" class="post-author">
                         Kevin Ramos
                       </a>
 
@@ -750,16 +295,11 @@
 
                   <div class="post-actions">
 
-                    <button
-                      type="button"
-                      class="post-action-btn"
-                    >
+                    <button type="button" class="post-action-btn">
 
-                      <svg
-                        viewBox="0 0 24 24"
-                        aria-hidden="true"
-                      >
-                        <path d="M12 20.25c4.97 0 9-3.36 9-7.5s-4.03-7.5-9-7.5-9 3.36-9 7.5c0 1.64.64 3.15 1.72 4.38L3.75 21l4.2-1.35c1.22.38 2.59.6 4.05.6Z" />
+                      <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path
+                          d="M12 20.25c4.97 0 9-3.36 9-7.5s-4.03-7.5-9-7.5-9 3.36-9 7.5c0 1.64.64 3.15 1.72 4.38L3.75 21l4.2-1.35c1.22.38 2.59.6 4.05.6Z" />
                       </svg>
 
                       Comentar
@@ -767,16 +307,11 @@
                     </button>
 
 
-                    <button
-                      type="button"
-                      class="post-action-btn"
-                    >
+                    <button type="button" class="post-action-btn">
 
-                      <svg
-                        viewBox="0 0 24 24"
-                        aria-hidden="true"
-                      >
-                        <path d="M20.8 4.6a5.4 5.4 0 0 0-7.6 0L12 5.8l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6L12 21l8.8-8.8a5.4 5.4 0 0 0 0-7.6Z" />
+                      <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path
+                          d="M20.8 4.6a5.4 5.4 0 0 0-7.6 0L12 5.8l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6L12 21l8.8-8.8a5.4 5.4 0 0 0 0-7.6Z" />
                       </svg>
 
                       Curtir
@@ -784,18 +319,12 @@
                     </button>
 
 
-                    <button
-                      type="button"
-                      class="post-action-btn owner-action"
-                    >
+                    <button type="button" class="post-action-btn owner-action">
                       Editar
                     </button>
 
 
-                    <button
-                      type="button"
-                      class="post-action-btn owner-action delete-action"
-                    >
+                    <button type="button" class="post-action-btn owner-action delete-action">
                       Excluir
                     </button>
 
@@ -805,15 +334,9 @@
 
               </article>
 
-
-              <!-- Avaliação 2 -->
-
               <article class="post-card profile-post-card">
 
-                <a
-                  href="profile.html"
-                  class="post-avatar user-avatar"
-                >
+                <a href="profile.html" class="post-avatar user-avatar">
                   KR
                 </a>
 
@@ -824,10 +347,7 @@
 
                     <div>
 
-                      <a
-                        href="profile.html"
-                        class="post-author"
-                      >
+                      <a href="profile.html" class="post-author">
                         Kevin Ramos
                       </a>
 
@@ -850,16 +370,11 @@
 
                   <div class="post-actions">
 
-                    <button
-                      type="button"
-                      class="post-action-btn"
-                    >
+                    <button type="button" class="post-action-btn">
 
-                      <svg
-                        viewBox="0 0 24 24"
-                        aria-hidden="true"
-                      >
-                        <path d="M12 20.25c4.97 0 9-3.36 9-7.5s-4.03-7.5-9-7.5-9 3.36-9 7.5c0 1.64.64 3.15 1.72 4.38L3.75 21l4.2-1.35c1.22.38 2.59.6 4.05.6Z" />
+                      <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path
+                          d="M12 20.25c4.97 0 9-3.36 9-7.5s-4.03-7.5-9-7.5-9 3.36-9 7.5c0 1.64.64 3.15 1.72 4.38L3.75 21l4.2-1.35c1.22.38 2.59.6 4.05.6Z" />
                       </svg>
 
                       Comentar
@@ -867,16 +382,11 @@
                     </button>
 
 
-                    <button
-                      type="button"
-                      class="post-action-btn"
-                    >
+                    <button type="button" class="post-action-btn">
 
-                      <svg
-                        viewBox="0 0 24 24"
-                        aria-hidden="true"
-                      >
-                        <path d="M20.8 4.6a5.4 5.4 0 0 0-7.6 0L12 5.8l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6L12 21l8.8-8.8a5.4 5.4 0 0 0 0-7.6Z" />
+                      <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path
+                          d="M20.8 4.6a5.4 5.4 0 0 0-7.6 0L12 5.8l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6L12 21l8.8-8.8a5.4 5.4 0 0 0 0-7.6Z" />
                       </svg>
 
                       Curtir
@@ -884,18 +394,12 @@
                     </button>
 
 
-                    <button
-                      type="button"
-                      class="post-action-btn owner-action"
-                    >
+                    <button type="button" class="post-action-btn owner-action">
                       Editar
                     </button>
 
 
-                    <button
-                      type="button"
-                      class="post-action-btn owner-action delete-action"
-                    >
+                    <button type="button" class="post-action-btn owner-action delete-action">
                       Excluir
                     </button>
 
@@ -910,14 +414,8 @@
           </div>
 
 
-          <!-- =========================
-               LATERAL
-          ========================== -->
-
           <aside class="profile-side">
 
-
-            <!-- Filmes favoritos -->
 
             <section class="side-card">
 
@@ -934,10 +432,7 @@
               </div>
 
 
-              <a
-                href="movie_1.html"
-                class="side-community-item"
-              >
+              <a href="movie_1.html" class="side-community-item">
 
                 <div class="side-community-avatar">
                   CD
@@ -958,10 +453,7 @@
               </a>
 
 
-              <a
-                href="movie_2.html"
-                class="side-community-item"
-              >
+              <a href="movie_2.html" class="side-community-item">
 
                 <div class="side-community-avatar side-community-avatar-alt">
                   OA
@@ -982,10 +474,7 @@
               </a>
 
 
-              <a
-                href="movie_3.html"
-                class="side-community-item"
-              >
+              <a href="movie_3.html" class="side-community-item">
 
                 <div class="side-community-avatar">
                   CB
@@ -1007,9 +496,6 @@
 
             </section>
 
-
-            <!-- Comunidades -->
-
             <section class="side-card">
 
               <div class="side-card-header">
@@ -1025,10 +511,7 @@
               </div>
 
 
-              <a
-                href="community_1.html"
-                class="side-community-item"
-              >
+              <a href="community_1.html" class="side-community-item">
 
                 <div class="side-community-avatar">
                   CB
@@ -1049,10 +532,7 @@
               </a>
 
 
-              <a
-                href="community_2.html"
-                class="side-community-item"
-              >
+              <a href="community_2.html" class="side-community-item">
 
                 <div class="side-community-avatar side-community-avatar-alt">
                   DC
@@ -1074,9 +554,6 @@
 
             </section>
 
-
-            <!-- Amigos -->
-
             <section class="side-card">
 
               <div class="side-card-header">
@@ -1092,10 +569,7 @@
               </div>
 
 
-              <a
-                href="profileuser.html"
-                class="side-friend-item"
-              >
+              <a href="profileuser.html" class="side-friend-item">
 
                 <div class="user-avatar user-avatar-alt">
                   MB
@@ -1128,18 +602,7 @@
 
   </main>
 
-
-  <!-- =========================
-       MODAL: NOVA AVALIAÇÃO
-  ========================== -->
-
-  <div
-    class="modal fade"
-    id="newPostModal"
-    tabindex="-1"
-    aria-labelledby="newPostModalLabel"
-    aria-hidden="true"
-  >
+  <div class="modal fade" id="newPostModal" tabindex="-1" aria-labelledby="newPostModalLabel" aria-hidden="true">
 
     <div class="modal-dialog modal-dialog-centered">
 
@@ -1148,20 +611,12 @@
 
         <div class="modal-header post-modal-header">
 
-          <h2
-            class="modal-title fs-5"
-            id="newPostModalLabel"
-          >
+          <h2 class="modal-title fs-5" id="newPostModalLabel">
             Nova avaliação
           </h2>
 
 
-          <button
-            type="button"
-            class="btn-close post-modal-close"
-            data-bs-dismiss="modal"
-            aria-label="Fechar"
-          ></button>
+          <button type="button" class="btn-close post-modal-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
 
         </div>
 
@@ -1175,11 +630,7 @@
             </div>
 
 
-            <textarea
-              rows="5"
-              maxlength="500"
-              placeholder="Compartilhe sua opinião sobre um filme..."
-            ></textarea>
+            <textarea rows="5" maxlength="500" placeholder="Compartilhe sua opinião sobre um filme..."></textarea>
 
           </div>
 
@@ -1193,20 +644,12 @@
 
         <div class="modal-footer post-modal-footer">
 
-          <button
-            type="button"
-            class="modal-cancel-btn"
-            data-bs-dismiss="modal"
-          >
+          <button type="button" class="modal-cancel-btn" data-bs-dismiss="modal">
             Cancelar
           </button>
 
 
-          <button
-            type="button"
-            class="modal-publish-btn"
-            data-bs-dismiss="modal"
-          >
+          <button type="button" class="modal-publish-btn" data-bs-dismiss="modal">
             Publicar avaliação
           </button>
 
@@ -1218,13 +661,7 @@
 
   </div>
 
-
-  <!-- =========================
-       SCRIPTS
-  ========================== -->
-
-  <script
-    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
   </script>
 
   <script src="../assets/js/main.js"></script>
