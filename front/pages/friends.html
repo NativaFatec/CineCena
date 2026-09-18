@@ -2,28 +2,23 @@
 <html lang="pt-BR">
 
 <head>
-  <!-- Base -->
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <title>CineCena | Amizades</title>
 
-  <!-- Bootstrap -->
   <link
     href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
     rel="stylesheet"
   />
 
-  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
 
-  <!-- CSS -->
   <link rel="stylesheet" href="../assets/css/style.css" />
 </head>
 
 <body class="theme-light">
 
-  <!-- Tema -->
   <button
     id="themeToggle"
     class="theme-toggle-btn page-theme-toggle"
@@ -37,10 +32,12 @@
 
     <div class="feed-layout">
 
-      <!-- Sidebar desktop -->
       <aside class="sidebar desktop-sidebar">
 
-        <a href="feed.html" class="sidebar-logo">
+        <a
+          href="feed.html"
+          class="sidebar-logo cine-logo sidebar-cine-logo"
+        >
           <span class="cine">Cine</span><span class="cena">Cena</span>
         </a>
 
@@ -54,28 +51,12 @@
             Perfil
           </a>
 
-          <a href="movies.html" class="sidebar-link">
-            Filmes
-          </a>
-
-          <a href="reviews.html" class="sidebar-link">
-            Avaliações
-          </a>
-
-          <a href="communities.html" class="sidebar-link">
-            Comunidades
-          </a>
-
           <a href="friends.html" class="sidebar-link active">
             Amizades
           </a>
 
-          <a href="#" class="sidebar-link">
-            Notificações
-          </a>
-
-          <a href="#" class="sidebar-link">
-            Configurações
+          <a href="lists.html" class="sidebar-link">
+            Listas
           </a>
 
         </nav>
@@ -104,10 +85,12 @@
 
       </aside>
 
-      <!-- Topbar mobile -->
       <header class="mobile-topbar">
 
-        <a href="feed.html" class="mobile-topbar-logo">
+        <a
+          href="feed.html"
+          class="mobile-topbar-logo cine-logo mobile-cine-logo"
+        >
           <span class="cine">Cine</span><span class="cena">Cena</span>
         </a>
 
@@ -124,7 +107,6 @@
 
       </header>
 
-      <!-- Menu mobile -->
       <div
         class="offcanvas offcanvas-end mobile-offcanvas"
         tabindex="-1"
@@ -159,28 +141,12 @@
               Perfil
             </a>
 
-            <a href="movies.html" class="sidebar-link">
-              Filmes
-            </a>
-
-            <a href="reviews.html" class="sidebar-link">
-              Avaliações
-            </a>
-
-            <a href="communities.html" class="sidebar-link">
-              Comunidades
-            </a>
-
             <a href="friends.html" class="sidebar-link active">
               Amizades
             </a>
 
-            <a href="#" class="sidebar-link">
-              Notificações
-            </a>
-
-            <a href="#" class="sidebar-link">
-              Configurações
+            <a href="lists.html" class="sidebar-link">
+              Listas
             </a>
 
           </nav>
@@ -203,7 +169,10 @@
             Nova avaliação
           </button>
 
-          <a href="profile.html" class="logged-user mobile-logged-user">
+          <a
+            href="profile.html"
+            class="logged-user mobile-logged-user"
+          >
 
             <div class="user-avatar">
               KR
@@ -217,9 +186,9 @@
           </a>
 
         </div>
+
       </div>
 
-      <!-- Amizades -->
       <section class="feed-content friends-content">
 
         <header class="feed-header communities-hero">
@@ -245,7 +214,6 @@
 
         <div class="communities-layout">
 
-          <!-- Status -->
           <section class="communities-summary-card">
 
             <div>
@@ -279,7 +247,6 @@
 
           </section>
 
-          <!-- Meus amigos -->
           <section class="communities-section">
 
             <div class="communities-section-header">
@@ -300,7 +267,6 @@
 
             <div class="friends-grid">
 
-              <!-- Amigo 1 -->
               <article class="friend-card">
 
                 <a
@@ -343,7 +309,6 @@
 
           </section>
 
-          <!-- Solicitações -->
           <section class="communities-section">
 
             <div class="communities-section-header">
@@ -364,10 +329,11 @@
 
             <div class="friends-grid">
 
-              <!-- Solicitação 1 -->
               <article class="friend-card">
 
-                <div class="friend-card-avatar user-avatar static-avatar static-avatar-red">
+                <div
+                  class="friend-card-avatar user-avatar static-avatar static-avatar-red"
+                >
                   DF
                 </div>
 
@@ -401,7 +367,6 @@
 
           </section>
 
-          <!-- Explorar -->
           <section class="communities-section">
 
             <div class="communities-section-header">
@@ -422,10 +387,11 @@
 
             <div class="friends-grid">
 
-              <!-- Usuário 1 -->
               <article class="friend-card">
 
-                <div class="friend-card-avatar user-avatar static-avatar static-avatar-orange">
+                <div
+                  class="friend-card-avatar user-avatar static-avatar static-avatar-orange"
+                >
                   AN
                 </div>
 
@@ -455,10 +421,11 @@
 
               </article>
 
-              <!-- Usuário 2 -->
               <article class="friend-card">
 
-                <div class="friend-card-avatar user-avatar static-avatar static-avatar-indigo">
+                <div
+                  class="friend-card-avatar user-avatar static-avatar static-avatar-indigo"
+                >
                   LA
                 </div>
 
@@ -488,10 +455,11 @@
 
               </article>
 
-              <!-- Usuário 3 -->
               <article class="friend-card">
 
-                <div class="friend-card-avatar user-avatar static-avatar static-avatar-brown">
+                <div
+                  class="friend-card-avatar user-avatar static-avatar static-avatar-brown"
+                >
                   PB
                 </div>
 
@@ -521,10 +489,11 @@
 
               </article>
 
-              <!-- Usuário 4 -->
               <article class="friend-card">
 
-                <div class="friend-card-avatar user-avatar static-avatar static-avatar-teal">
+                <div
+                  class="friend-card-avatar user-avatar static-avatar static-avatar-teal"
+                >
                   JV
                 </div>
 
@@ -554,10 +523,11 @@
 
               </article>
 
-              <!-- Usuário 5 -->
               <article class="friend-card">
 
-                <div class="friend-card-avatar user-avatar static-avatar static-avatar-green">
+                <div
+                  class="friend-card-avatar user-avatar static-avatar static-avatar-green"
+                >
                   GA
                 </div>
 
@@ -599,7 +569,6 @@
 
   </main>
 
-  <!-- Modal: nova avaliação -->
   <div
     class="modal fade"
     id="newPostModal"
@@ -678,12 +647,11 @@
 
   </div>
 
-  <!-- Scripts -->
-  <script
-    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
   </script>
 
   <script src="../assets/js/main.js"></script>
 
 </body>
+
 </html>
