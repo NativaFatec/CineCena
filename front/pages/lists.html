@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>CineCena | Listas</title>
+
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  />
+
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <link rel="stylesheet" href="../assets/css/style.css" />
+</head>
+
+<body class="theme-light">
+
+  <div class="feed-page">
+
+    <div class="mobile-topbar">
+
+      <a href="feed.html" class="mobile-topbar-logo cine-logo mobile-cine-logo">
+        <span class="cine">Cine</span><span class="cena">Cena</span>
+      </a>
+
+      <button
+        class="mobile-menu-btn"
+        type="button"
+        data-bs-toggle="offcanvas"
+        data-bs-target="#mobileMenu"
+        aria-controls="mobileMenu"
+        aria-label="Abrir menu"
+      >
+        ☰
+      </button>
+
+    </div>
+
+    <div
+      class="offcanvas offcanvas-start mobile-offcanvas"
+      tabindex="-1"
+      id="mobileMenu"
+      aria-labelledby="mobileMenuLabel"
+    >
+
+      <div class="offcanvas-header">
+
+        <h2 class="offcanvas-title" id="mobileMenuLabel">
+          Menu
+        </h2>
+
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="offcanvas"
+          aria-label="Fechar"
+        ></button>
+
+      </div>
+
+      <div class="offcanvas-body">
+
+        <nav class="mobile-nav">
+
+          <a href="feed.html" class="sidebar-link">
+            Feed
+          </a>
+
+          <a href="profile.html" class="sidebar-link">
+            Perfil
+          </a>
+
+          <a href="friends.html" class="sidebar-link">
+            Amizades
+          </a>
+
+          <a href="lists.html" class="sidebar-link active">
+            Listas
+          </a>
+
+        </nav>
+
+        <button
+          class="mobile-new-post-btn"
+          type="button"
+          data-bs-toggle="modal"
+          data-bs-target="#newPostModal"
+        >
+          Nova avaliação
+        </button>
+
+        <div class="mobile-logged-user">
+
+          <div class="user-avatar">
+            KR
+          </div>
+
+          <div>
+            <strong>Kevin Ramos</strong>
+            <span>@kevin.dev</span>
+          </div>
+
+        </div>
+
+        <button
+          id="mobileThemeToggle"
+          class="mobile-theme-btn"
+          type="button"
+        >
+          <span>Tema</span>
+          <span>☽</span>
+        </button>
+
+      </div>
+
+    </div>
+
+    <div class="feed-layout">
+
+      <aside class="sidebar desktop-sidebar">
+
+        <a href="feed.html" class="sidebar-logo cine-logo sidebar-cine-logo">
+          <span class="cine">Cine</span><span class="cena">Cena</span>
+        </a>
+
+        <nav class="sidebar-nav">
+
+          <a href="feed.html" class="sidebar-link">
+            Feed
+          </a>
+
+          <a href="profile.html" class="sidebar-link">
+            Perfil
+          </a>
+
+          <a href="friends.html" class="sidebar-link">
+            Amizades
+          </a>
+
+          <a href="lists.html" class="sidebar-link active">
+            Listas
+          </a>
+
+        </nav>
+
+        <button
+          class="new-post-btn"
+          type="button"
+          data-bs-toggle="modal"
+          data-bs-target="#newPostModal"
+        >
+          Nova avaliação
+        </button>
+
+        <div class="logged-user">
+
+          <div class="user-avatar">
+            KR
+          </div>
+
+          <div>
+            <strong>Kevin Ramos</strong>
+            <span>@kevin.dev</span>
+          </div>
+
+        </div>
+
+      </aside>
+
+      <main class="feed-content">
+
+        <header class="lists-hero">
+
+          <div class="lists-hero-content">
+
+            <span class="feed-kicker">
+              CineCena
+            </span>
+
+            <h1>
+              Listas
+            </h1>
+
+            <p>
+              Organize os filmes que você quer assistir, descubra produções
+              por gênero e acompanhe o que seus amigos estão assistindo.
+            </p>
+
+          </div>
+
+        </header>
+
+        <div class="lists-layout">
+
+          <section class="lists-section watchlist-section">
+
+            <div class="lists-section-header">
+
+              <div>
+                <span class="lists-section-kicker">
+                  Minha lista
+                </span>
+
+                <h2>
+                  Assistir mais tarde
+                </h2>
+
+                <p>
+                  Filmes que você salvou para assistir quando tiver tempo.
+                </p>
+              </div>
+
+              <span class="lists-count">
+                4 filmes
+              </span>
+
+            </div>
+
+            <div class="movies-list-grid">
+
+              <article class="list-movie-card">
+
+                <div class="list-movie-poster poster-red">
+                  <span>O Auto da Compadecida</span>
+                </div>
+
+                <div class="list-movie-info">
+
+                  <h3>
+                    O Auto da Compadecida
+                  </h3>
+
+                  <span>
+                    2000 · Comédia
+                  </span>
+
+                  <button class="list-movie-action" type="button">
+                    Assistir depois
+                  </button>
+
+                </div>
+
+              </article>
+
+              <article class="list-movie-card">
+
+                <div class="list-movie-poster poster-blue">
+                  <span>
+                    Bacurau
+                  </span>
+                </div>
+
+                <div class="list-movie-info">
+
+                  <h3>
+                    Bacurau
+                  </h3>
+
+                  <span>
+                    2019 · Drama
+                  </span>
+
+                  <button class="list-movie-action" type="button">
+                    Assistir depois
+                  </button>
+
+                </div>
+
+              </article>
+
+              <article class="list-movie-card">
+
+                <div class="list-movie-poster poster-dark">
+                  <span>
+                    Tropa de Elite
+                  </span>
+                </div>
+
+                <div class="list-movie-info">
+
+                  <h3>
+                    Tropa de Elite
+                  </h3>
+
+                  <span>
+                    2007 · Ação
+                  </span>
+
+                  <button class="list-movie-action" type="button">
+                    Assistir depois
+                  </button>
+
+                </div>
+
+              </article>
+
+              <article class="list-movie-card">
+
+                <div class="list-movie-poster poster-yellow">
+                  <span>
+                    Cidade de Deus
+                  </span>
+                </div>
+
+                <div class="list-movie-info">
+
+                  <h3>
+                    Cidade de Deus
+                  </h3>
+
+                  <span>
+                    2002 · Drama
+                  </span>
+
+                  <button class="list-movie-action" type="button">
+                    Assistir depois
+                  </button>
+
+                </div>
+
+              </article>
+
+            </div>
+
+          </section>
+
+          <section class="lists-section">
+
+            <div class="lists-section-header">
+
+              <div>
+
+                <span class="lists-section-kicker">
+                  Descobrir
+                </span>
+
+                <h2>
+                  Por gênero
+                </h2>
+
+                <p>
+                  Encontre filmes separados por diferentes gêneros.
+                </p>
+
+              </div>
+
+            </div>
+
+            <div class="genre-lists-grid">
+
+              <a href="#" class="genre-list-card genre-terror">
+
+                <div>
+                  <span>
+                    Gênero
+                  </span>
+
+                  <h3>
+                    Terror
+                  </h3>
+
+                  <p>
+                    12 filmes
+                  </p>
+                </div>
+
+                <span class="genre-arrow">
+                  →
+                </span>
+
+              </a>
+
+              <a href="#" class="genre-list-card genre-comedy">
+
+                <div>
+                  <span>
+                    Gênero
+                  </span>
+
+                  <h3>
+                    Comédia
+                  </h3>
+
+                  <p>
+                    18 filmes
+                  </p>
+                </div>
+
+                <span class="genre-arrow">
+                  →
+                </span>
+
+              </a>
+
+              <a href="#" class="genre-list-card genre-drama">
+
+                <div>
+                  <span>
+                    Gênero
+                  </span>
+
+                  <h3>
+                    Drama
+                  </h3>
+
+                  <p>
+                    24 filmes
+                  </p>
+                </div>
+
+                <span class="genre-arrow">
+                  →
+                </span>
+
+              </a>
+
+              <a href="#" class="genre-list-card genre-action">
+
+                <div>
+                  <span>
+                    Gênero
+                  </span>
+
+                  <h3>
+                    Ação
+                  </h3>
+
+                  <p>
+                    15 filmes
+                  </p>
+                </div>
+
+                <span class="genre-arrow">
+                  →
+                </span>
+
+              </a>
+
+            </div>
+
+          </section>
+
+          <section class="lists-section">
+
+            <div class="lists-section-header">
+
+              <div>
+
+                <span class="lists-section-kicker">
+                  Comunidade
+                </span>
+
+                <h2>
+                  Assistidos por amigos
+                </h2>
+
+                <p>
+                  Filmes que seus amigos assistiram recentemente.
+                </p>
+
+              </div>
+
+            </div>
+
+            <div class="friend-watched-list">
+
+              <article class="friend-watched-card">
+
+                <div class="friend-watched-movie-poster poster-green">
+                  <span>
+                    Central do Brasil
+                  </span>
+                </div>
+
+                <div class="friend-watched-content">
+
+                  <div class="friend-watched-user">
+
+                    <div class="user-avatar">
+                      MB
+                    </div>
+
+                    <div>
+                      <strong>
+                        Matheus Bertelli
+                      </strong>
+
+                      <span>
+                        assistiu recentemente
+                      </span>
+                    </div>
+
+                  </div>
+
+                  <h3>
+                    Central do Brasil
+                  </h3>
+
+                  <p>
+                    1998 · Drama
+                  </p>
+
+                  <button class="list-movie-action" type="button">
+                    Ver filme
+                  </button>
+
+                </div>
+
+              </article>
+
+              <article class="friend-watched-card">
+
+                <div class="friend-watched-movie-poster poster-purple">
+                  <span>
+                    O Homem do Futuro
+                  </span>
+                </div>
+
+                <div class="friend-watched-content">
+
+                  <div class="friend-watched-user">
+
+                    <div class="user-avatar">
+                      DF
+                    </div>
+
+                    <div>
+                      <strong>
+                        Davi Farias
+                      </strong>
+
+                      <span>
+                        assistiu recentemente
+                      </span>
+                    </div>
+
+                  </div>
+
+                  <h3>
+                    O Homem do Futuro
+                  </h3>
+
+                  <p>
+                    2011 · Comédia
+                  </p>
+
+                  <button class="list-movie-action" type="button">
+                    Ver filme
+                  </button>
+
+                </div>
+
+              </article>
+
+              <article class="friend-watched-card">
+
+                <div class="friend-watched-movie-poster poster-orange">
+                  <span>
+                    Que Horas Ela Volta?
+                  </span>
+                </div>
+
+                <div class="friend-watched-content">
+
+                  <div class="friend-watched-user">
+
+                    <div class="user-avatar">
+                      GA
+                    </div>
+
+                    <div>
+                      <strong>
+                        Gustavo Avelino
+                      </strong>
+
+                      <span>
+                        assistiu recentemente
+                      </span>
+                    </div>
+
+                  </div>
+
+                  <h3>
+                    Que Horas Ela Volta?
+                  </h3>
+
+                  <p>
+                    2015 · Drama
+                  </p>
+
+                  <button class="list-movie-action" type="button">
+                    Ver filme
+                  </button>
+
+                </div>
+
+              </article>
+
+            </div>
+
+          </section>
+
+        </div>
+
+      </main>
+
+    </div>
+
+  </div>
+
+  <button
+    id="themeToggle"
+    class="theme-toggle-btn page-theme-toggle"
+    type="button"
+    aria-label="Alternar tema"
+  >
+    ☽
+  </button>
+
+  <div
+    class="modal fade"
+    id="newPostModal"
+    tabindex="-1"
+    aria-labelledby="newPostModalLabel"
+    aria-hidden="true"
+  >
+
+    <div class="modal-dialog modal-dialog-centered">
+
+      <div class="modal-content post-modal-content">
+
+        <div class="modal-header post-modal-header">
+
+          <h2
+            class="modal-title fs-5"
+            id="newPostModalLabel"
+          >
+            Nova avaliação
+          </h2>
+
+          <button
+            type="button"
+            class="btn-close post-modal-close"
+            data-bs-dismiss="modal"
+            aria-label="Fechar"
+          ></button>
+
+        </div>
+
+        <div class="modal-body post-modal-body">
+
+          <div class="create-post-modal-area">
+
+            <div class="user-avatar">
+              KR
+            </div>
+
+            <textarea
+              rows="5"
+              maxlength="500"
+              placeholder="Compartilhe sua opinião sobre um filme..."
+            ></textarea>
+
+          </div>
+
+          <p class="post-modal-warning">
+            Esta é uma versão visual. Nenhuma avaliação será publicada de verdade.
+          </p>
+
+        </div>
+
+        <div class="modal-footer post-modal-footer">
+
+          <button
+            type="button"
+            class="modal-cancel-btn"
+            data-bs-dismiss="modal"
+          >
+            Cancelar
+          </button>
+
+          <button
+            type="button"
+            class="modal-publish-btn"
+            data-bs-dismiss="modal"
+          >
+            Publicar avaliação
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script src="../assets/js/main.js"></script>
+
+</body>
+
+</html>
