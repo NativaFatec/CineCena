@@ -2,7 +2,6 @@ __pycache__/
 *.py[cod]
 *.sqlite3
 .env
-backend/.env.example
 .venv/
 venv/
 staticfiles/
