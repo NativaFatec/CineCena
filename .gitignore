@@ -1,0 +1,20 @@
+# Editor e SO
+.vscode/
+.DS_Store
+*.swp
+
+# Backend (Python / Django)
+backend/venv/
+backend/.env
+backend/db.sqlite3
+backend/*/__pycache__/
+backend/*.pyc
+backend/*.pyo
+backend/*.pyd
+backend/.pytest_cache/
+backend/staticfiles/
+backend/media/
+
+# Frontend
+front/node_modules/
+front/.vscode/
