@@ -2759,3 +2759,100 @@ body.theme-dark .movie-rating-card textarea {
     min-height: 250px;
   }
 }
+
+body.theme-dark .post-card {
+  border-color: #29382e;
+  background-color: #111a14;
+  color: #f8fafc;
+}
+
+body.theme-dark .post-author {
+  color: #f8fafc;
+}
+
+body.theme-dark .post-header span {
+  color: #aab7ae;
+}
+
+body.theme-dark .post-text {
+  color: #d7e0da;
+}
+
+body.theme-dark .post-action-btn {
+  color: #aab7ae;
+}
+
+body.theme-dark .post-action-btn:hover {
+  color: #39b54a;
+}
+
+body.theme-dark .post-action-btn svg {
+  stroke: currentColor;
+}
+
+body.theme-dark .post-comment {
+  border-color: #344238;
+  background-color: #18231c;
+}
+
+body.theme-dark .post-comment p {
+  color: #d7e0da;
+}
+
+body.theme-dark .post-comment strong {
+  color: #f8fafc;
+}
+
+body.theme-dark .feed-footer {
+  color: #aab7ae;
+}
+
+body.theme-dark .profile-card,
+body.theme-dark .side-card {
+  border-color: #29382e;
+  background-color: #111a14;
+}
+
+body.theme-dark .profile-summary-card {
+  color: #f8fafc;
+}
+
+body.theme-dark .profile-title-area h2,
+body.theme-dark .profile-course,
+body.theme-dark .profile-section-header h2,
+body.theme-dark .side-card-header h2,
+body.theme-dark .side-community-item strong,
+body.theme-dark .side-friend-item strong {
+  color: #f8fafc;
+}
+
+body.theme-dark .profile-nickname,
+body.theme-dark .profile-bio,
+body.theme-dark .profile-stats,
+body.theme-dark .side-community-item span,
+body.theme-dark .side-friend-item span,
+body.theme-dark .side-card-header > span {
+  color: #aab7ae;
+}
+
+body.theme-dark .profile-stats {
+  border-color: #344238;
+}
+
+body.theme-dark .edit-profile-btn {
+  border-color: #39b54a;
+  color: #39b54a;
+}
+
+body.theme-dark .edit-profile-btn:hover {
+  background-color: #123d20;
+}
+
+body.theme-dark .side-community-item:hover,
+body.theme-dark .side-friend-item:hover {
+  background-color: #18231c;
+}
+
+body.theme-dark .profile-section {
+  color: #f8fafc;
+}
