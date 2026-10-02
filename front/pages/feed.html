@@ -19,24 +19,27 @@
 
 <body class="theme-light">
 
-  <button
-    id="themeToggle"
-    class="theme-toggle-btn page-theme-toggle"
-    type="button"
-    aria-label="Alternar tema"
-  >
-    ☽
-  </button>
-
+  
   <main class="feed-page">
 
     <div class="feed-layout">
 
       <aside class="sidebar desktop-sidebar">
 
-        <a href="feed.html" class="sidebar-logo cine-logo sidebar-cine-logo">
-          <span class="cine">Cine</span><span class="cena">Cena</span>
-        </a>
+        <div class="sidebar-header">
+          <a href="feed.html" class="sidebar-logo cine-logo sidebar-cine-logo">
+            <span class="cine">Cine</span><span class="cena">Cena</span>
+          </a>
+
+          <button
+            id="themeToggle"
+            class="theme-toggle-btn"
+            type="button"
+            aria-label="Alternar tema"
+          >
+            <span class="theme-toggle-icon">☽</span>
+          </button>
+        </div>
 
         <nav class="sidebar-nav">
 
@@ -57,6 +60,16 @@
           </a>
 
         </nav>
+
+        <button
+          id="themeToggle"
+          class="theme-toggle-btn"
+          type="button"
+          aria-label="Alternar tema"
+        >
+          <span class="theme-toggle-icon">☽</span>
+          <span>Alterar tema</span>
+        </button>
 
         <button
           class="new-post-btn"
@@ -88,16 +101,29 @@
           <span class="cine">Cine</span><span class="cena">Cena</span>
         </a>
 
-        <button
-          class="mobile-menu-btn"
-          type="button"
-          data-bs-toggle="offcanvas"
-          data-bs-target="#mobileMenu"
-          aria-controls="mobileMenu"
-          aria-label="Abrir menu"
-        >
-          ☰
-        </button>
+        <div class="mobile-topbar-actions">
+
+          <button
+            id="mobileThemeToggle"
+            class="mobile-theme-btn"
+            type="button"
+            aria-label="Alternar tema"
+          >
+            <span class="theme-toggle-icon">☽</span>
+          </button>
+
+          <button
+            class="mobile-menu-btn"
+            type="button"
+            data-bs-toggle="offcanvas"
+            data-bs-target="#mobileMenu"
+            aria-controls="mobileMenu"
+            aria-label="Abrir menu"
+          >
+            ☰
+          </button>
+
+        </div>
 
       </header>
 

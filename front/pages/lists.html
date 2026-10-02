@@ -21,24 +21,37 @@
 
   <div class="feed-page">
 
-    <div class="mobile-topbar">
+      <header class="mobile-topbar">
 
-      <a href="feed.html" class="mobile-topbar-logo cine-logo mobile-cine-logo">
-        <span class="cine">Cine</span><span class="cena">Cena</span>
-      </a>
+        <a href="feed.html" class="mobile-topbar-logo cine-logo mobile-cine-logo">
+          <span class="cine">Cine</span><span class="cena">Cena</span>
+        </a>
 
-      <button
-        class="mobile-menu-btn"
-        type="button"
-        data-bs-toggle="offcanvas"
-        data-bs-target="#mobileMenu"
-        aria-controls="mobileMenu"
-        aria-label="Abrir menu"
-      >
-        ☰
-      </button>
+        <div class="mobile-topbar-actions">
 
-    </div>
+          <button
+            id="mobileThemeToggle"
+            class="mobile-theme-btn"
+            type="button"
+            aria-label="Alternar tema"
+          >
+            <span class="theme-toggle-icon">☽</span>
+          </button>
+
+          <button
+            class="mobile-menu-btn"
+            type="button"
+            data-bs-toggle="offcanvas"
+            data-bs-target="#mobileMenu"
+            aria-controls="mobileMenu"
+            aria-label="Abrir menu"
+          >
+            ☰
+          </button>
+
+        </div>
+
+      </header>
 
     <div
       class="offcanvas offcanvas-start mobile-offcanvas"
@@ -123,9 +136,20 @@
 
       <aside class="sidebar desktop-sidebar">
 
-        <a href="feed.html" class="sidebar-logo cine-logo sidebar-cine-logo">
-          <span class="cine">Cine</span><span class="cena">Cena</span>
-        </a>
+        <div class="sidebar-header">
+          <a href="feed.html" class="sidebar-logo cine-logo sidebar-cine-logo">
+            <span class="cine">Cine</span><span class="cena">Cena</span>
+          </a>
+
+          <button
+            id="themeToggle"
+            class="theme-toggle-btn"
+            type="button"
+            aria-label="Alternar tema"
+          >
+            <span class="theme-toggle-icon">☽</span>
+          </button>
+        </div>
 
         <nav class="sidebar-nav">
 
