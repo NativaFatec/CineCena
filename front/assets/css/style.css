@@ -1987,3 +1987,93 @@ body.theme-dark .lists-section-kicker {
     height: 180px;
   }
 }
+
+.login-badge {
+  display: inline-block;
+  padding: 8px 14px;
+  background-color: var(--verde-claro);
+  color: var(--cine-verde-escuro);
+  border: 1px solid #cde7d3;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.login-features {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  max-width: 520px;
+}
+
+.login-feature {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.login-feature-icon {
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  background-color: var(--verde-claro);
+  color: var(--cine-verde);
+  font-size: 1rem;
+}
+
+.login-feature div {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.login-feature strong {
+  color: var(--texto);
+  font-size: 0.95rem;
+}
+
+.login-feature span:not(.login-feature-icon) {
+  color: var(--texto-secundario);
+  font-size: 0.85rem;
+}
+
+.login-card-label {
+  color: var(--cine-verde-escuro);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.login-link {
+  color: var(--cine-verde-escuro);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.login-link:hover {
+  text-decoration: underline;
+}
+
+.login-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 24px 0;
+  color: var(--texto-secundario);
+  font-size: 0.8rem;
+}
+
+.login-divider::before,
+.login-divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background-color: var(--borda);
+}
+
+.login-divider span {
+  flex-shrink: 0;
+}
