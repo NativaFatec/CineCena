@@ -6,11 +6,15 @@ function updateThemeButtons() {
   const isDark = body.classList.contains("theme-dark");
 
   if (themeToggle) {
-    themeToggle.textContent = isDark ? "☼" : "☽";
+    const icon = themeToggle.querySelector(".theme-toggle-icon");
+
+    if (icon) {
+      icon.textContent = isDark ? "☼" : "☽";
+    }
   }
 
   if (mobileThemeToggle) {
-    const icon = mobileThemeToggle.querySelector("span");
+    const icon = mobileThemeToggle.querySelector(".theme-toggle-icon");
 
     if (icon) {
       icon.textContent = isDark ? "☼" : "☽";
