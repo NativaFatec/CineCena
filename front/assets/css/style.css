@@ -1,3 +1,29 @@
+/*
+@import url("./base/variables.css");
+
+@import url("./layout/app.css");
+
+@import url("./components/ui.css");
+@import url("./components/posts.css");
+@import url("./components/modal.css");
+
+@import url("./pages/feed.css");
+@import url("./pages/profile.css");
+@import url("./pages/friends.css");
+@import url("./pages/lists.css");
+@import url("./pages/login.css");
+@import url("./pages/movies.css");
+@import url("./pages/movie.css");
+@import url("./pages/profile-user.css");
+
+@import url("./themes/dark.css");
+
+@import url("./responsive.css");
+*/
+
+
+
+
 :root {
   --cine-amarelo: #ffd500;
   --cine-verde: #168821;

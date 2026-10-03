@@ -1,0 +1,49 @@
+:root {
+  --cine-amarelo: #ffd500;
+  --cine-verde: #168821;
+  --cine-verde-escuro: #0b6b2a;
+
+  --fundo: #f8f8f8;
+  --branco: #ffffff;
+
+  --texto: #1f2937;
+  --texto-secundario: #5f6b78;
+
+  --borda: #d9dee5;
+  --borda-hover: #bfc7d1;
+
+  --verde-claro: #e8f5eb;
+  --amarelo-claro: #fff8cc;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
+  background-color: var(--fundo);
+  color: var(--texto);
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+}
+
+a {
+  text-decoration: none;
+}
+
+button {
+  font-family: inherit;
+}
+
+body.theme-light {
+  background-color: var(--fundo);
+  color: var(--texto);
+}
+
+body.theme-dark {
+  background-color: #101712;
+  color: #f8fafc;
+}
