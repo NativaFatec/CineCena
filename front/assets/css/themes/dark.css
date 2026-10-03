@@ -1,0 +1,666 @@
+body.theme-dark {
+  background-color: #101712;
+  color: #f8fafc;
+}
+
+body.theme-dark .cine {
+  color: var(--cine-amarelo);
+}
+
+body.theme-dark .cena {
+  color: #22c55e;
+}
+
+body.theme-dark .feed-page {
+  background-color: #101712;
+}
+
+body.theme-dark .sidebar {
+  background-color: #111a14;
+  border-right-color: #29382e;
+}
+
+body.theme-dark .sidebar-link {
+  color: #cbd5ce;
+}
+
+body.theme-dark .sidebar-link:hover {
+  background-color: #18231c;
+  color: #5bd477;
+}
+
+body.theme-dark .sidebar-link.active {
+  background-color: #193323;
+  color: #6ee486;
+  border-left-color: #39b85a;
+}
+
+body.theme-dark .logged-user {
+  color: #f8fafc;
+}
+
+body.theme-dark .logged-user:hover {
+  background-color: #18231c;
+}
+
+body.theme-dark .logged-user span {
+  color: #94a39a;
+}
+
+body.theme-dark .feed-content {
+  background-color: #101712;
+  border-right-color: #29382e;
+}
+
+body.theme-dark .feed-header {
+  border-bottom-color: #29382e;
+}
+
+body.theme-dark .feed-header p {
+  color: #aab7ae;
+}
+
+body.theme-dark .feed-kicker {
+  color: #55d477;
+}
+
+body.theme-dark .feed-control-card {
+  background-color: #111a14;
+  border-color: #29382e;
+}
+
+body.theme-dark .feed-control-text p {
+  color: #9daca2;
+}
+
+body.theme-dark .feed-tab {
+  background-color: #101712;
+  border-color: #344238;
+  color: #aab7ae;
+}
+
+body.theme-dark .feed-tab:hover {
+  background-color: #18231c;
+  color: #65dc80;
+}
+
+body.theme-dark .feed-tab.active {
+  background-color: #168821;
+  color: #ffffff;
+  border-color: #168821;
+}
+
+body.theme-dark .post-modal-content {
+  background-color: #111a14;
+  color: #f8fafc;
+  border-color: #29382e;
+}
+
+body.theme-dark .post-modal-header,
+
+body.theme-dark .post-modal-footer {
+  border-color: #29382e;
+}
+
+body.theme-dark .create-post-modal-area textarea {
+  color: #f8fafc;
+}
+
+body.theme-dark .post-modal-warning {
+  color: #9daca2;
+}
+
+body.theme-dark .modal-cancel-btn {
+  background-color: #1b2720;
+  color: #f8fafc;
+}
+
+body.theme-dark .modal-cancel-btn:hover {
+  background-color: #29382e;
+}
+
+body.theme-dark .theme-toggle-btn {
+  background-color: #111a14;
+  color: #f8fafc;
+  border-color: #344238;
+}
+
+body.theme-dark .theme-toggle-btn:hover {
+  background-color: #18231c;
+  border-color: #405246;
+}
+
+body.theme-dark .mobile-theme-btn {
+  background-color: #111a14;
+  color: #f8fafc;
+  border-color: #344238;
+}
+
+body.theme-dark .mobile-theme-btn:hover {
+  background-color: #1b2720;
+}
+
+body.theme-dark .mobile-topbar {
+  background-color: #101712;
+  border-bottom-color: #29382e;
+}
+
+body.theme-dark .mobile-menu-btn {
+  background-color: #111a14;
+  color: #f8fafc;
+  border-color: #344238;
+}
+
+body.theme-dark .mobile-menu-btn:hover {
+  background-color: #1b2720;
+}
+
+body.theme-dark .mobile-offcanvas {
+  background-color: #111a14;
+  color: #f8fafc;
+}
+
+body.theme-dark .mobile-offcanvas .offcanvas-header {
+  border-bottom-color: #29382e;
+}
+
+body.theme-dark .mobile-theme-btn {
+  background-color: #111a14;
+  color: #f8fafc;
+  border-color: #344238;
+}
+
+body.theme-dark .mobile-theme-btn:hover {
+  background-color: #1b2720;
+}
+
+body.theme-dark .profile-card,
+
+body.theme-dark .side-card {
+  background: #172033;
+  border-color: #334155;
+}
+
+body.theme-dark .profile-nickname,
+
+body.theme-dark .profile-bio,
+
+body.theme-dark .profile-stats span,
+
+body.theme-dark .side-card-header span,
+
+body.theme-dark .side-community-item span,
+
+body.theme-dark .side-friend-item span {
+  color: #94a3b8;
+}
+
+body.theme-dark .profile-stats strong {
+  color: #f8fafc;
+}
+
+body.theme-dark .profile-stats {
+  border-color: #334155;
+}
+
+body.theme-dark .side-community-item:hover,
+
+body.theme-dark .side-friend-item:hover {
+  background-color: #1e293b;
+}
+
+body.theme-dark .edit-profile-btn {
+  color: #22c55e;
+  border-color: #22c55e;
+}
+
+body.theme-dark .edit-profile-btn:hover {
+  background: #22c55e;
+  color: #0f172a;
+}
+
+body.theme-dark .communities-hero {
+  border-bottom-color: #29382e;
+}
+
+body.theme-dark .communities-hero-content h1 {
+  color: #f8fafc;
+}
+
+body.theme-dark .communities-hero-content p {
+  color: #aab7ae;
+}
+
+body.theme-dark .communities-summary-card,
+
+body.theme-dark .friend-card {
+  background-color: #111a14;
+  border-color: #29382e;
+}
+
+body.theme-dark .friend-card:hover {
+  background-color: #18231c;
+  border-color: #344238;
+}
+
+body.theme-dark .communities-summary-text h2,
+
+body.theme-dark .friend-card-name {
+  color: #f8fafc;
+}
+
+body.theme-dark .communities-summary-text p,
+
+body.theme-dark .communities-section-header p,
+
+body.theme-dark .friend-card-username,
+
+body.theme-dark .friend-card-description {
+  color: #9daca2;
+}
+
+body.theme-dark .communities-summary-text strong {
+  color: #f8fafc;
+}
+
+body.theme-dark .mobile-logged-user {
+  color: #f8fafc;
+}
+
+body.theme-dark .lists-hero {
+  border-bottom-color: #29382e;
+}
+
+body.theme-dark .lists-hero-content h1,
+
+body.theme-dark .lists-section-header h2,
+
+body.theme-dark .list-movie-info h3,
+
+body.theme-dark .friend-watched-user strong,
+
+body.theme-dark .friend-watched-content h3 {
+  color: #f8fafc;
+}
+
+body.theme-dark .lists-hero-content p,
+
+body.theme-dark .lists-section-header p,
+
+body.theme-dark .lists-count,
+
+body.theme-dark .list-movie-info > span,
+
+body.theme-dark .friend-watched-user span,
+
+body.theme-dark .friend-watched-content > p {
+  color: #9daca2;
+}
+
+body.theme-dark .list-movie-card,
+
+body.theme-dark .friend-watched-card {
+  background-color: #111a14;
+  border-color: #29382e;
+}
+
+body.theme-dark .list-movie-card:hover,
+
+body.theme-dark .friend-watched-card:hover {
+  background-color: #18231c;
+  border-color: #344238;
+}
+
+body.theme-dark .lists-section-kicker {
+  color: #55d477;
+}
+
+body.theme-dark .movies-content {
+  background-color: #0d120f;
+}
+
+body.theme-dark .movies-hero,
+
+body.theme-dark .movies-controls,
+
+body.theme-dark .movie-card {
+  background-color: #111a14;
+  border-color: #29382e;
+}
+
+body.theme-dark .movies-hero h1,
+
+body.theme-dark .movies-section-header h2,
+
+body.theme-dark .movies-search label,
+
+body.theme-dark .movies-filter-label,
+
+body.theme-dark .movie-card-body h3 {
+  color: #f8fafc;
+}
+
+body.theme-dark .movies-hero p,
+
+body.theme-dark .movies-section-header p,
+
+body.theme-dark .movies-count,
+
+body.theme-dark .movie-card-body p {
+  color: #aab7ae;
+}
+
+body.theme-dark .movies-search-input,
+
+body.theme-dark .movie-filter-btn {
+  background-color: #101712;
+  border-color: #344238;
+  color: #d8e1db;
+}
+
+body.theme-dark .movie-filter-btn:hover {
+  background-color: #18231c;
+  border-color: #405246;
+  color: #65dc80;
+}
+
+body.theme-dark .movie-filter-btn.active {
+  background-color: #168821;
+  border-color: #168821;
+  color: #ffffff;
+}
+
+body.theme-dark .movie-card:hover {
+  background-color: #18231c;
+  border-color: #344238;
+}
+
+body.theme-dark .movie-content {
+  background-color: #0d120f;
+}
+
+body.theme-dark .movie-main-card,
+
+body.theme-dark .movie-rating-card,
+
+body.theme-dark .movie-reviews,
+
+body.theme-dark .movie-review-card {
+  border-color: #29382e;
+  background-color: #111a14;
+}
+
+body.theme-dark .movie-detail-info h1,
+
+body.theme-dark .movie-description h2,
+
+body.theme-dark .movie-section-header h2,
+
+body.theme-dark .movie-rating-card label,
+
+body.theme-dark .movie-review-author {
+  color: #f8fafc;
+}
+
+body.theme-dark .movie-detail-meta span {
+  border-color: #344238;
+  background-color: #18231c;
+  color: #aab7ae;
+}
+
+body.theme-dark .movie-director,
+
+body.theme-dark .movie-description p,
+
+body.theme-dark .movie-section-header p,
+
+body.theme-dark .movie-form-warning,
+
+body.theme-dark .movie-review-user span,
+
+body.theme-dark .movie-review-card p {
+  color: #aab7ae;
+}
+
+body.theme-dark .movie-rating-card textarea {
+  border-color: #344238;
+  background-color: #101712;
+  color: #f8fafc;
+}
+
+body.theme-dark .post-card {
+  border-color: #29382e;
+  background-color: #111a14;
+  color: #f8fafc;
+}
+
+body.theme-dark .post-author {
+  color: #f8fafc;
+}
+
+body.theme-dark .post-header span {
+  color: #aab7ae;
+}
+
+body.theme-dark .post-text {
+  color: #d7e0da;
+}
+
+body.theme-dark .post-action-btn {
+  color: #aab7ae;
+}
+
+body.theme-dark .post-action-btn:hover {
+  color: #39b54a;
+}
+
+body.theme-dark .post-action-btn svg {
+  stroke: currentColor;
+}
+
+body.theme-dark .post-comment {
+  border-color: #344238;
+  background-color: #18231c;
+}
+
+body.theme-dark .post-comment p {
+  color: #d7e0da;
+}
+
+body.theme-dark .post-comment strong {
+  color: #f8fafc;
+}
+
+body.theme-dark .feed-footer {
+  color: #aab7ae;
+}
+
+body.theme-dark .profile-card,
+
+body.theme-dark .side-card {
+  border-color: #29382e;
+  background-color: #111a14;
+}
+
+body.theme-dark .profile-summary-card {
+  color: #f8fafc;
+}
+
+body.theme-dark .profile-title-area h2,
+
+body.theme-dark .profile-course,
+
+body.theme-dark .profile-section-header h2,
+
+body.theme-dark .side-card-header h2,
+
+body.theme-dark .side-community-item strong,
+
+body.theme-dark .side-friend-item strong {
+  color: #f8fafc;
+}
+
+body.theme-dark .profile-nickname,
+
+body.theme-dark .profile-bio,
+
+body.theme-dark .profile-stats,
+
+body.theme-dark .side-community-item span,
+
+body.theme-dark .side-friend-item span,
+
+body.theme-dark .side-card-header > span {
+  color: #aab7ae;
+}
+
+body.theme-dark .profile-stats {
+  border-color: #344238;
+}
+
+body.theme-dark .edit-profile-btn {
+  border-color: #39b54a;
+  color: #39b54a;
+}
+
+body.theme-dark .edit-profile-btn:hover {
+  background-color: #123d20;
+}
+
+body.theme-dark .side-community-item:hover,
+
+body.theme-dark .side-friend-item:hover {
+  background-color: #18231c;
+}
+
+body.theme-dark .profile-section {
+  color: #f8fafc;
+}
+
+body.theme-dark .movies-content {
+  background-color: #0d120f;
+}
+
+body.theme-dark .movies-controls,
+
+body.theme-dark .movies-catalog {
+  border-color: #29382e;
+  background-color: #111a14;
+}
+
+body.theme-dark .movies-hero h1,
+
+body.theme-dark .movies-section-header h2,
+
+body.theme-dark .movies-filter-label,
+
+body.theme-dark .movies-search label {
+  color: #f8fafc;
+}
+
+body.theme-dark .movies-hero p,
+
+body.theme-dark .movies-section-header p {
+  color: #aab7ae;
+}
+
+body.theme-dark .movies-search-input {
+  border-color: #344238;
+  background-color: #101712;
+  color: #f8fafc;
+}
+
+body.theme-dark .movies-search-input::placeholder {
+  color: #718078;
+}
+
+body.theme-dark .movie-filter-btn {
+  border-color: #344238;
+  background-color: #111a14;
+  color: #aab7ae;
+}
+
+body.theme-dark .movie-filter-btn:hover,
+
+body.theme-dark .movie-filter-btn.active {
+  border-color: var(--cine-verde);
+  background-color: var(--cine-verde);
+  color: #ffffff;
+}
+
+body.theme-dark .movies-count {
+  color: #aab7ae;
+}
+
+body.theme-dark .movie-card {
+  border-color: #29382e;
+  background-color: #111a14;
+}
+
+body.theme-dark .movie-card:hover {
+  border-color: #3a5142;
+  background-color: #18231c;
+}
+
+body.theme-dark .movie-card-body h3 {
+  color: #f8fafc;
+}
+
+body.theme-dark .movie-card-meta,
+
+body.theme-dark .movie-card-body p {
+  color: #aab7ae;
+}
+
+body.theme-dark .profile-user-content {
+  background-color: #0d120f;
+}
+
+body.theme-dark .profile-user-card,
+
+body.theme-dark .profile-user-stat,
+
+body.theme-dark .profile-user-section,
+
+body.theme-dark .profile-user-activity-card,
+
+body.theme-dark .profile-user-list-card {
+  border-color: #29382e;
+  background-color: #111a14;
+}
+
+body.theme-dark .profile-user-info h1,
+
+body.theme-dark .profile-user-stat strong,
+
+body.theme-dark .profile-user-section-header h2,
+
+body.theme-dark .profile-user-movie-link,
+
+body.theme-dark .profile-user-list-card h3 {
+  color: #f8fafc;
+}
+
+body.theme-dark .profile-user-handle,
+
+body.theme-dark .profile-user-bio,
+
+body.theme-dark .profile-user-section-header p,
+
+body.theme-dark .profile-user-activity-time,
+
+body.theme-dark .profile-user-activity-card p,
+
+body.theme-dark .profile-user-list-card span {
+  color: #aab7ae;
+}
+
+body.theme-dark .profile-user-list-card:hover {
+  border-color: #405246;
+  background-color: #18231c;
+}
+
+body.theme-dark .profile-user-list-icon {
+  background-color: #1c3523;
+  color: #79c985;
+}
