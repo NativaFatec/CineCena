@@ -1,0 +1,236 @@
+.movie-content {
+  flex: 1;
+  min-width: 0;
+  padding: 28px;
+  background-color: var(--fundo);
+}
+
+.movie-page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.movie-back-link {
+  color: var(--cine-verde-escuro);
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.movie-back-link:hover {
+  text-decoration: underline;
+}
+
+.movie-kicker {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--cine-verde);
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.movie-main-card {
+  display: grid;
+  grid-template-columns: 280px minmax(0, 1fr);
+  gap: 28px;
+  padding: 24px;
+  border: 1px solid var(--borda);
+  border-radius: 10px;
+  background-color: #ffffff;
+}
+
+.movie-detail-poster {
+  min-height: 390px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  background-color: #374151;
+  color: #ffffff;
+  font-size: 2rem;
+  font-weight: 800;
+  text-align: center;
+}
+
+.movie-detail-info h1 {
+  margin: 0;
+  color: var(--texto);
+  font-size: 2rem;
+  font-weight: 800;
+}
+
+.movie-detail-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+  color: var(--texto-secundario);
+  font-size: 0.88rem;
+}
+
+.movie-detail-meta span {
+  display: inline-flex;
+  align-items: center;
+}
+
+.movie-detail-meta span:not(:last-child)::after {
+  content: "•";
+  margin-left: 8px;
+  color: var(--borda-hover);
+}
+
+.movie-director {
+  margin-top: 18px;
+  color: var(--texto);
+  font-size: 0.9rem;
+}
+
+.movie-director strong {
+  font-weight: 800;
+}
+
+.movie-description {
+  max-width: 760px;
+  margin-top: 18px;
+  color: var(--texto-secundario);
+  line-height: 1.65;
+}
+
+.movie-rating-card {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid var(--borda);
+}
+
+.movie-rating-card h2 {
+  margin: 0;
+  color: var(--texto);
+  font-size: 1.05rem;
+  font-weight: 800;
+}
+
+.rating-stars {
+  display: flex;
+  gap: 5px;
+  margin: 12px 0;
+}
+
+.rating-stars button {
+  border: none;
+  background-color: transparent;
+  color: #c5c9ce;
+  padding: 2px;
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.rating-stars button:hover,
+.rating-stars button.active {
+  color: var(--cine-amarelo);
+}
+
+.movie-rating-card textarea {
+  width: 100%;
+  min-height: 90px;
+  resize: vertical;
+  border: 1px solid var(--borda);
+  border-radius: 6px;
+  background-color: #ffffff;
+  color: var(--texto);
+  padding: 10px 12px;
+  outline: none;
+  font-family: inherit;
+}
+
+.movie-rating-card textarea:focus {
+  border-color: var(--cine-verde);
+  box-shadow: 0 0 0 3px rgba(22, 136, 33, 0.1);
+}
+
+.movie-review-btn {
+  margin-top: 10px;
+  border: 1px solid var(--cine-verde);
+  border-radius: 6px;
+  background-color: var(--cine-verde);
+  color: #ffffff;
+  padding: 9px 14px;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.movie-review-btn:hover {
+  background-color: var(--cine-verde-escuro);
+  border-color: var(--cine-verde-escuro);
+}
+
+.movie-reviews {
+  margin-top: 28px;
+}
+
+.movie-section-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 14px;
+}
+
+.movie-section-header h2 {
+  margin: 0;
+  color: var(--texto);
+  font-size: 1.2rem;
+  font-weight: 800;
+}
+
+.movie-review-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.movie-review-card {
+  padding: 16px;
+  border: 1px solid var(--borda);
+  border-radius: 8px;
+  background-color: #ffffff;
+}
+
+.movie-review-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.movie-review-author {
+  color: var(--texto);
+  font-size: 0.88rem;
+  font-weight: 800;
+}
+
+.movie-review-author a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.movie-review-author a:hover {
+  color: var(--cine-verde);
+}
+
+.movie-review-rating {
+  margin-left: auto;
+  color: var(--cine-amarelo);
+  font-size: 0.95rem;
+  letter-spacing: 0.03em;
+}
+
+.movie-review-card p {
+  margin: 12px 0 0;
+  color: var(--texto-secundario);
+  font-size: 0.9rem;
+  line-height: 1.55;
+}
