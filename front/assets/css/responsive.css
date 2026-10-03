@@ -1,0 +1,441 @@
+@media (max-width: 1000px) {
+  .profile-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .profile-side {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 992px) {
+  .feed-layout {
+    grid-template-columns: 220px minmax(0, 1fr);
+  }
+
+  .desktop-sidebar {
+    padding: 24px 14px;
+  }
+}
+
+@media (max-width: 768px) {
+  .feed-layout {
+    display: block;
+  }
+
+  .desktop-sidebar {
+    display: none;
+  }
+
+  .mobile-topbar {
+    display: flex;
+  }
+
+  .feed-content {
+    min-height: auto;
+    border-right: none;
+  }
+
+  .feed-header,
+  .feed-hero {
+    padding: 22px 18px 16px;
+  }
+
+  .feed-hero {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .feed-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .feed-control-card {
+    margin: 18px 18px 0;
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .feed-tabs {
+    width: 100%;
+  }
+
+  .feed-tab {
+    flex: 1;
+  }
+
+  .feed-tab-content {
+    padding: 18px 18px 0;
+  }
+
+  .post-card {
+    padding: 18px;
+  }
+
+  .post-actions {
+    justify-content: flex-start;
+    gap: 16px;
+  }
+}
+
+@media (max-width: 700px) {
+  .profile-layout {
+    padding: 16px;
+  }
+
+  .profile-summary-header {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .edit-profile-btn {
+    width: 100%;
+  }
+
+  .profile-stats {
+    gap: 12px;
+    flex-direction: column;
+  }
+
+  .profile-side {
+    display: flex;
+  }
+}
+
+@media (max-width: 480px) {
+  .mobile-topbar {
+    padding: 10px 14px;
+  }
+
+  .mobile-menu-btn {
+    width: 40px;
+    height: 40px;
+  }
+
+  .user-avatar {
+    width: 42px;
+    height: 42px;
+    min-width: 42px;
+  }
+
+  .post-card {
+    gap: 12px;
+  }
+
+  .post-text {
+    font-size: 0.95rem;
+  }
+
+  .post-action-btn {
+    font-size: 0.82rem;
+  }
+}
+
+@media (max-width: 900px) {
+  .friends-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .communities-hero {
+    padding: 22px 18px 18px;
+  }
+
+  .communities-hero-content h1 {
+    font-size: 1.5rem;
+  }
+
+  .communities-layout {
+    padding: 18px 18px 28px;
+  }
+
+  .communities-summary-card {
+    align-items: flex-start;
+    flex-direction: column;
+    padding: 18px;
+  }
+
+  .friend-card {
+    align-items: flex-start;
+  }
+
+  .friend-card-btn {
+    margin-left: auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .communities-layout {
+    padding: 16px 14px 24px;
+  }
+
+  .communities-summary-card {
+    margin-bottom: 22px;
+  }
+
+  .friend-card {
+    gap: 11px;
+    padding: 14px;
+  }
+
+  .friend-card-avatar {
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+  }
+
+  .friend-card-btn {
+    padding: 6px 9px;
+    font-size: 0.75rem;
+  }
+}
+
+@media (max-width: 1050px) {
+  .movies-list-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .genre-lists-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .friend-watched-list {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .lists-hero {
+    padding: 22px 18px 18px;
+  }
+
+  .lists-hero-content h1 {
+    font-size: 1.5rem;
+  }
+
+  .lists-layout {
+    padding: 18px;
+  }
+
+  .lists-section {
+    margin-bottom: 28px;
+  }
+
+  .lists-section-header {
+    align-items: flex-start;
+  }
+
+  .movies-list-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .genre-lists-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .list-movie-poster {
+    height: 170px;
+  }
+}
+
+@media (max-width: 480px) {
+  .lists-layout {
+    padding: 16px 14px 24px;
+  }
+
+  .movies-list-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .list-movie-poster {
+    height: 210px;
+  }
+
+  .friend-watched-movie-poster {
+    height: 180px;
+  }
+}
+
+@media (max-width: 1050px) {
+  .movies-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .movies-controls {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .movies-search {
+    max-width: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .movies-hero {
+    padding: 22px 18px 18px;
+  }
+
+  .movies-hero h1 {
+    font-size: 1.5rem;
+  }
+
+  .movies-controls {
+    margin: 18px;
+    padding: 16px;
+  }
+
+  .movies-catalog {
+    padding: 18px 18px 30px;
+  }
+
+  .movies-grid {
+    gap: 12px;
+  }
+
+  .movie-poster {
+    height: 230px;
+  }
+}
+
+@media (max-width: 480px) {
+  .movies-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .movies-section-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .movie-poster {
+    height: 280px;
+  }
+}
+
+@media (max-width: 800px) {
+  .movie-main-card {
+    grid-template-columns: 1fr;
+  }
+
+  .movie-detail-poster {
+    min-height: 300px;
+  }
+}
+
+@media (max-width: 768px) {
+  .movie-page-header {
+    padding: 22px 18px 16px;
+  }
+
+  .movie-main-card,
+  .movie-rating-card,
+  .movie-reviews {
+    margin-left: 18px;
+    margin-right: 18px;
+  }
+
+  .movie-main-card {
+    padding: 18px;
+    gap: 20px;
+  }
+
+  .movie-detail-info h1 {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .movie-main-card,
+  .movie-rating-card,
+  .movie-reviews {
+    padding: 16px;
+  }
+
+  .movie-detail-poster {
+    min-height: 250px;
+  }
+}
+
+@media (max-width: 768px) {
+  .profile-user-header {
+    padding: 22px 18px 16px;
+  }
+
+  .profile-user-card,
+  .profile-user-section {
+    margin-left: 18px;
+    margin-right: 18px;
+  }
+
+  .profile-user-card {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 18px;
+  }
+
+  .profile-user-actions {
+    width: 100%;
+  }
+
+  .profile-user-friend-btn {
+    width: 100%;
+  }
+
+  .profile-user-stats {
+    margin-left: 18px;
+    margin-right: 18px;
+  }
+
+  .profile-user-section {
+    padding: 18px;
+  }
+}
+
+@media (max-width: 600px) {
+  .profile-user-main {
+    align-items: flex-start;
+  }
+
+  .profile-user-avatar {
+    width: 72px;
+    height: 72px;
+    min-width: 72px;
+    font-size: 1.3rem;
+  }
+
+  .profile-user-info h1 {
+    font-size: 1.35rem;
+  }
+
+  .profile-user-bio {
+    font-size: 0.86rem;
+  }
+
+  .profile-user-lists {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .profile-user-stats {
+    gap: 8px;
+  }
+
+  .profile-user-stat {
+    min-height: 80px;
+    padding: 12px 8px;
+  }
+
+  .profile-user-stat strong {
+    font-size: 1.1rem;
+  }
+
+  .profile-user-stat span {
+    font-size: 0.72rem;
+    text-align: center;
+  }
+}
