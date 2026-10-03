@@ -1,0 +1,76 @@
+.post-modal-content {
+  border-radius: 8px;
+  border: 1px solid var(--borda);
+  background-color: #ffffff;
+  color: var(--texto);
+}
+
+.post-modal-header {
+  border-bottom: 1px solid var(--borda);
+  padding: 18px 22px;
+}
+
+.post-modal-header h2 {
+  font-weight: 800;
+}
+
+.post-modal-body {
+  padding: 22px;
+}
+
+.create-post-modal-area {
+  display: flex;
+  gap: 14px;
+}
+
+.create-post-modal-area textarea {
+  width: 100%;
+  resize: none;
+  border: none;
+  outline: none;
+  background-color: transparent;
+  color: var(--texto);
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.create-post-modal-area textarea::placeholder {
+  color: #8a949e;
+}
+
+.post-modal-warning {
+  color: #68737e;
+  font-size: 0.82rem;
+  margin: 18px 0 0;
+}
+
+.post-modal-footer {
+  border-top: 1px solid var(--borda);
+  padding: 16px 22px;
+}
+
+.modal-cancel-btn,
+.modal-publish-btn {
+  border: none;
+  border-radius: 6px;
+  font-weight: 700;
+  padding: 9px 18px;
+}
+
+.modal-cancel-btn {
+  background-color: #eef0f2;
+  color: #303942;
+}
+
+.modal-cancel-btn:hover {
+  background-color: #e1e4e7;
+}
+
+.modal-publish-btn {
+  background-color: var(--cine-verde);
+  color: #ffffff;
+}
+
+.modal-publish-btn:hover {
+  background-color: var(--cine-verde-escuro);
+}
