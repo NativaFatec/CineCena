@@ -18,3 +18,5 @@ backend/media/
 # Frontend
 front/node_modules/
 front/.vscode/
+# CineCena frontend local configuration
+front/assets/js/config.js

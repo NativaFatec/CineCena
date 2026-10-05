@@ -1,182 +1,28 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
-
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-  <title>CineCena | Login</title>
-
-  <link
-    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-    rel="stylesheet"
-  />
-
-  <script src="https://cdn.tailwindcss.com"></script>
-
-  <link rel="stylesheet" href="assets/css/style.css" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#ffffff">
+  <title>CineCena — Cinema brasileiro em movimento</title>
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
 </head>
-
-<body class="theme-light">
-
-  <button
-    id="themeToggle"
-    class="theme-toggle-btn page-theme-toggle"
-    type="button"
-    aria-label="Alternar tema"
-  >
-    <span class="theme-toggle-icon">☽</span>
-  </button>
-
-  <main class="login-page min-h-screen d-flex align-items-center justify-content-center px-3">
-
-    <section class="container">
-
-      <div class="row align-items-center justify-content-center g-5">
-
-        <div class="col-lg-6 text-center text-lg-start">
-
-          <div class="mb-4">
-            <span class="badge login-badge">
-              Plataforma de cinema brasileiro
-            </span>
-          </div>
-
-          <h1 class="display-4 fw-bold mb-3">
-            Bem-vindo ao
-            <span class="cine-logo">
-              <span class="cine">Cine</span><span class="cena">Cena</span>
-            </span>
-          </h1>
-
-          <p class="lead description-text mb-4">
-            Descubra filmes, compartilhe suas opiniões e conecte-se com
-            pessoas que também gostam de cinema.
-          </p>
-
-          <div class="login-features">
-
-            <div class="login-feature">
-              <span class="login-feature-icon">◉</span>
-              <div>
-                <strong>Descubra</strong>
-                <span>Encontre novas produções para assistir.</span>
-              </div>
-            </div>
-
-            <div class="login-feature">
-              <span class="login-feature-icon">★</span>
-              <div>
-                <strong>Avalie</strong>
-                <span>Registre suas opiniões sobre os filmes.</span>
-              </div>
-            </div>
-
-            <div class="login-feature">
-              <span class="login-feature-icon">♧</span>
-              <div>
-                <strong>Conecte-se</strong>
-                <span>Compartilhe sua paixão pelo cinema.</span>
-              </div>
-            </div>
-
-          </div>
-
-        </div>
-
-        <div class="col-lg-5 col-md-8">
-
-          <div class="login-card shadow-lg rounded-4 p-4 p-md-5">
-
-            <div class="mb-4">
-              <span class="small login-card-label">
-                ACESSO À PLATAFORMA
-              </span>
-
-              <h2 class="h3 fw-bold mb-2 mt-2">
-                Entrar no CineCena
-              </h2>
-
-              <p class="small muted-text mb-0">
-                Acesse sua conta para continuar.
-              </p>
-            </div>
-
-            <form>
-
-              <div class="mb-3">
-                <label for="username" class="form-label">
-                  Usuário
-                </label>
-
-                <input
-                  type="text"
-                  class="form-control custom-input"
-                  id="username"
-                  placeholder="@seu.usuario"
-                  value="User 1"
-                />
-              </div>
-
-              <div class="mb-4">
-                <div class="d-flex justify-content-between align-items-center">
-                  <label for="password" class="form-label mb-2">
-                    Senha
-                  </label>
-
-                  <a href="#" class="login-link small">
-                    Esqueci minha senha
-                  </a>
-                </div>
-
-                <input
-                  type="password"
-                  class="form-control custom-input"
-                  id="password"
-                  placeholder="Digite sua senha"
-                  value="123"
-                />
-              </div>
-
-              <a
-                href="pages/feed.html"
-                class="btn login-btn w-100 py-2"
-              >
-                Entrar
-              </a>
-
-            </form>
-
-            <div class="login-divider">
-              <span>ou</span>
-            </div>
-
-            <p class="text-center small muted-text mb-0">
-              Ainda não possui uma conta?
-              <a href="#" class="login-link">
-                Criar conta
-              </a>
-            </p>
-
-            <p class="fake-warning text-center small mt-4 mb-0">
-              Versão de protótipo. A autenticação ainda não está disponível.
-            </p>
-
-          </div>
-
-        </div>
-
-      </div>
-
+<body class="login-body">
+  <main class="login-page">
+    <section class="login-visual">
+      <a class="brand login-brand" href="index.html"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span><span class="brand-name">Cine<span>Cena</span></span></a>
+      <div class="login-story"><h1>Assista.<br>Registre.<br><span>Converse.</span></h1><p>Um espaço para descobrir filmes nacionais, escrever reviews sem notas, montar listas e acompanhar o que sua rede está assistindo.</p><div class="login-points"></span></div></div>
     </section>
-
+    <section class="login-panel">
+      <div class="login-card"><h2>Entrar no CineCena</h2><br><form data-login-form><label>E-mail ou usuário<input type="text" required placeholder="@usuario ou email@exemplo.com" value="@usuario"></label><label>Senha<span class="label-row"></span><input type="password" required placeholder="Sua senha" value="123456"></label><button class="btn btn-primary login-submit" type="submit">Entrar no CineCena</button><button type="button" class="link-button" data-forgot>Esqueci a senha</button></form><div class="login-divider"><span>ou</span></div><button class="btn btn-secondary w-full" type="button" data-signup>Criar uma conta</button><div class="login-legal"><a href="pages/about.html">Sobre</a><a href="pages/terms.html">Termos e condições</a></div></div>
+      <p class="prototype-note">Todos os direitos reservados © 2026 CineCena</p>
+    </section>
   </main>
-
-  <script
-    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
-  </script>
-
-  <script src="assets/js/main.js"></script>
-
+  <div id="portal"></div>
+  <script src="assets/js/auth.js"></script>
 </body>
 </html>
