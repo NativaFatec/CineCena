@@ -2,7 +2,15 @@
   const App = window.CineCena;
   if (!App) return;
 
-  const { Data, TMDB, state, escapeHTML, movieYear, posterURL, initials, movieKey, genresText, icon, movieStateFor, updateMovieState, mountModal, closeModal, toast, savePost, saveReview, saveProfile } = App;
+  const {
+    Data, TMDB, state, escapeHTML, movieYear, posterURL, initials, movieKey,
+    genresText, icon, movieStateFor, updateMovieState, addFavorite, removeFavoriteAt, mountModal,
+    closeModal, toast, savePost, saveReview, saveProfile
+  } = App;
+
+  function moviePageURL(movie) {
+    return `movie.html?movie=${encodeURIComponent(movie.title)}`;
+  }
 
   function movieCard(movie, options = {}) {
     const poster = posterURL(movie);
@@ -21,7 +29,7 @@
     </button>`;
   }
 
-  function movieRail(id, movies, limit = 12) {
+  function movieRail(id, movies, limit = 15) {
     return `<div class="rail-wrap">
       <button class="rail-arrow left" type="button" data-rail-prev="${id}" aria-label="Voltar">${icon("chevronLeft")}</button>
       <div class="movie-rail" id="${id}">${movies.slice(0, limit).map(movie => movieCard(movie)).join("")}</div>
@@ -36,18 +44,29 @@
     return `<span class="person-avatar ${size}">${initials(person.name)}</span>`;
   }
 
+  function reviewMovieCard(review, options = {}) {
+    const movie = state.movies.find(item => item.title === review.movie);
+    const poster = movie ? posterURL(movie) : "";
+    const year = review.year || (movie ? movieYear(movie) : "");
+    const featured = options.featured ? " featured" : "";
+    return `<button class="review-movie-card${featured}" type="button" ${movie ? `data-movie-key="${escapeHTML(movieKey(movie))}"` : "disabled"}>
+      <span class="review-movie-poster">${poster ? `<img src="${poster}" alt="Pôster de ${escapeHTML(review.movie)}" loading="lazy">` : `<span>${escapeHTML((review.movie || "C").slice(0, 1))}</span>`}</span>
+      <span class="review-movie-copy"><strong>${escapeHTML(review.movie)}</strong><small>${escapeHTML(year)}</small></span>
+    </button>`;
+  }
+
   function reviewActivity(review) {
     return `<article class="activity-card">
       <div class="activity-person">${profileAvatar("sm")}<div><a href="profileusers.html"><strong>${Data.glauber.name}</strong></a><small>${escapeHTML(review.date)}</small></div></div>
-      <div class="activity-type">publicou uma review de <strong>${escapeHTML(review.movie)}</strong></div>
-      <p>${escapeHTML(review.text)}</p>
-      <div class="activity-meta"><span>${icon("movie")} ${escapeHTML(review.movie)} · ${review.year}</span>${review.loved ? `<span class="loved">${icon("heart")} Amei</span>` : ""}</div>
+      <div class="activity-type">publicou uma review</div>
+      <div class="review-content-layout">${reviewMovieCard(review)}<p>${escapeHTML(review.text)}</p></div>
+      ${review.loved ? `<div class="activity-meta"><span class="loved">${icon("heart")} Curtiu este filme</span></div>` : ""}
     </article>`;
   }
 
   function listCard(list) {
     const listMovies = list.movies.map(title => state.movies.find(movie => movie.title === title)).filter(Boolean).slice(0, 4);
-    return `<a class="list-card accent-${list.accent}" href="lists.html#${list.slug}">
+    return `<a class="list-card accent-${list.accent}" href="list.html?list=${encodeURIComponent(list.slug)}">
       <div class="poster-stack">${listMovies.map(movie => {
         const url = posterURL(movie);
         return url ? `<img src="${url}" alt="" loading="lazy">` : `<span>${escapeHTML(movie.title.slice(0, 1))}</span>`;
@@ -62,11 +81,13 @@
     const avatar = own ? `<span class="person-avatar sm own">${initials(state.profile.name)}</span>` : profileAvatar("sm");
     const name = own ? state.profile.name : Data.glauber.name;
     const href = own ? "profile.html" : "profileusers.html";
-    return `<article class="feed-card" data-feed-kind="review ${own ? "own" : "friend"}">
-      <header class="feed-card-head"><a href="${href}" class="feed-author">${avatar}<span><strong>${escapeHTML(name)}</strong><small>${escapeHTML(review.date || "Agora")}</small></span></a><span class="content-badge">Review</span></header>
-      <div class="review-movie-line">${icon("movie")} <strong>${escapeHTML(review.movie)}</strong>${review.year ? ` <span>· ${review.year}</span>` : ""}</div>
-      <p class="feed-text">${escapeHTML(review.text)}</p>
-      <footer class="feed-actions"><button type="button">${icon("heart")} Amei</button><button type="button">${icon("comment")} Comentar</button></footer>
+    return `<article class="feed-card feed-review-card" data-feed-kind="review ${own ? "own" : "friend"}">
+      <div class="feed-review-main">
+        <header class="feed-card-head"><a href="${href}" class="feed-author">${avatar}<span><strong>${escapeHTML(name)}</strong><small>${escapeHTML(review.date || "Agora")}</small></span></a><span class="content-badge">Review</span></header>
+        <p class="feed-text">${escapeHTML(review.text)}</p>
+        <footer class="feed-actions"><button type="button">${icon("heart")} Amei</button><button type="button">${icon("comment")} Comentar</button></footer>
+      </div>
+      <aside class="feed-review-movie">${reviewMovieCard(review, { featured: true })}</aside>
     </article>`;
   }
 
@@ -110,34 +131,113 @@
     });
   }
 
+  function pickerRows(movies) {
+    return movies.map(movie => {
+      const poster = posterURL(movie);
+      return `<button class="movie-picker-row" type="button" data-picker-movie="${escapeHTML(movieKey(movie))}">
+        <span class="movie-picker-poster">${poster ? `<img src="${poster}" alt="" loading="lazy">` : `<span>${escapeHTML(movie.title.slice(0, 1))}</span>`}</span>
+        <span class="movie-picker-copy"><strong>${escapeHTML(movie.title)}</strong><small>${escapeHTML(movieYear(movie))} · ${escapeHTML(genresText(movie))}</small></span>
+        ${icon("arrow")}
+      </button>`;
+    }).join("");
+  }
+
+  function bindMoviePicker(modal, { preselectedMovie = "", onSelect }) {
+    const search = modal.querySelector("[data-picker-search]");
+    const results = modal.querySelector("[data-picker-results]");
+    const selected = modal.querySelector("[data-picker-selected]");
+    let selectedMovie = preselectedMovie ? state.movies.find(movie => movie.title === preselectedMovie) : null;
+
+    function renderSelected() {
+      if (!selected) return;
+      selected.innerHTML = selectedMovie ? reviewMovieCard({ movie: selectedMovie.title, year: movieYear(selectedMovie) }) : "";
+      selected.classList.toggle("hidden", !selectedMovie);
+      onSelect?.(selectedMovie);
+    }
+
+    function renderResults() {
+      if (!results) return;
+      const term = String(search?.value || "").trim().toLocaleLowerCase("pt-BR");
+      const movies = state.movies.filter(movie => !term || `${movie.title} ${movieYear(movie)} ${genresText(movie, 4)}`.toLocaleLowerCase("pt-BR").includes(term)).slice(0, 18);
+      results.innerHTML = movies.length ? pickerRows(movies) : `<div class="picker-empty">Nenhum filme encontrado.</div>`;
+    }
+
+    modal.addEventListener("click", event => {
+      const row = event.target.closest("[data-picker-movie]");
+      if (!row) return;
+      selectedMovie = state.movies.find(movie => movieKey(movie) === row.dataset.pickerMovie) || null;
+      renderSelected();
+    });
+    search?.addEventListener("input", renderResults);
+    renderSelected();
+    renderResults();
+    return () => selectedMovie;
+  }
+
   function openReviewModal(preselectedMovie = "") {
-    const options = state.movies.map(movie => `<option value="${escapeHTML(movie.title)}" ${movie.title === preselectedMovie ? "selected" : ""}>${escapeHTML(movie.title)} (${movieYear(movie)})</option>`).join("");
+    let selectedMovie = null;
     const modal = mountModal("review", `
-      <div class="modal-form-head"><h2>Escrever review</h2><p>Conte como foi sua experiência. O CineCena não usa estrelas nem notas.</p></div>
+      <div class="modal-form-head"><h2>Escrever review</h2><p>Escolha um filme e escreva o que ficou com você depois da sessão.</p></div>
       <form class="modal-form" data-review-form>
-        <label>Filme<select name="movie" required><option value="">Selecione um filme</option>${options}</select></label>
+        <div class="movie-picker-block">
+          <label for="review-movie-search">Filme</label>
+          <div class="search-field picker-search">${icon("search")}<input id="review-movie-search" type="search" data-picker-search placeholder="Pesquisar filme por nome, ano ou gênero" autocomplete="off"></div>
+          <div class="picker-selected hidden" data-picker-selected></div>
+          <div class="movie-picker-results" data-picker-results></div>
+        </div>
         <label>Sua review<textarea name="text" rows="6" maxlength="1200" required placeholder="O que ficou com você depois do filme?"></textarea></label>
         <label class="check-line"><input type="checkbox" name="spoiler"><span>Esta review contém spoilers</span></label>
-        <div class="form-footer"><small>Sem nota: o texto é o centro da experiência.</small><button class="btn btn-primary" type="submit">Publicar review ${icon("arrow")}</button></div>
+        <div class="form-footer"><small>Máximo de 1200 caracteres.</small><button class="btn btn-primary" type="submit">Publicar review ${icon("arrow")}</button></div>
       </form>
     `, "md");
 
+    const getSelected = bindMoviePicker(modal, { preselectedMovie, onSelect: movie => { selectedMovie = movie; } });
+
     modal.querySelector("[data-review-form]")?.addEventListener("submit", event => {
       event.preventDefault();
+      selectedMovie = getSelected() || selectedMovie;
       const form = new FormData(event.currentTarget);
-      const movieTitle = String(form.get("movie") || "");
-      const movie = state.movies.find(item => item.title === movieTitle);
       const text = String(form.get("text") || "").trim();
-      if (!movieTitle || !text) return;
-      saveReview({ movie: movieTitle, year: movie ? movieYear(movie) : "", text, date: "Agora", spoiler: form.get("spoiler") === "on" });
+      if (!selectedMovie) return toast("Selecione um filme para publicar a review.");
+      if (!text) return;
+      saveReview({
+        movie: selectedMovie.title,
+        movieKey: movieKey(selectedMovie),
+        year: movieYear(selectedMovie),
+        text,
+        date: "Agora",
+        spoiler: form.get("spoiler") === "on"
+      });
       closeModal(modal);
       toast("Review publicada no protótipo.");
     });
   }
 
+  function openFavoriteModal(slotIndex = null) {
+    let selectedMovie = null;
+    const modal = mountModal("favorite", `
+      <div class="modal-form-head"><h2>Adicionar filme aos favoritos</h2><p>Escolha um filme do catálogo. Os favoritos são independentes dos filmes curtidos.</p></div>
+      <div class="movie-picker-block">
+        <div class="search-field picker-search">${icon("search")}<input type="search" data-picker-search placeholder="Pesquisar entre os ${state.movies.length} filmes" autocomplete="off"></div>
+        <div class="picker-selected hidden" data-picker-selected></div>
+        <div class="movie-picker-results tall" data-picker-results></div>
+      </div>
+      <div class="form-footer"><small>Seu perfil exibe até cinco favoritos.</small><button class="btn btn-primary" type="button" data-confirm-favorite>Adicionar aos favoritos</button></div>
+    `, "md");
+
+    const getSelected = bindMoviePicker(modal, { onSelect: movie => { selectedMovie = movie; } });
+    modal.querySelector("[data-confirm-favorite]")?.addEventListener("click", () => {
+      selectedMovie = getSelected() || selectedMovie;
+      if (!selectedMovie) return toast("Selecione um filme primeiro.");
+      if (!addFavorite(selectedMovie, slotIndex)) return toast("Esse filme já está nos favoritos ou a vaga não está disponível.");
+      closeModal(modal);
+      toast("Filme adicionado aos favoritos.");
+    });
+  }
+
   function openEditProfileModal() {
     const modal = mountModal("profile-edit", `
-      <div class="modal-form-head"><h2>Editar perfil</h2><p>Nesta etapa, nome e descrição são os únicos campos preenchidos inicialmente.</p></div>
+      <div class="modal-form-head"><h2>Editar perfil</h2><p>Atualize as informações principais do seu perfil.</p></div>
       <form class="modal-form" data-profile-form>
         <label>Nome<input type="text" name="name" maxlength="60" required value="${escapeHTML(state.profile.name)}"></label>
         <label>Descrição<textarea name="description" rows="4" maxlength="240" required>${escapeHTML(state.profile.description)}</textarea></label>
@@ -157,48 +257,41 @@
     });
   }
 
-  function movieModalContent(movie, detailed = movie) {
+  function movieDirector(detailed, movie) {
+    return detailed?.credits?.crew?.find(person => person.job === "Director")?.name
+      || detailed?.director
+      || (movie.title === "Cidade de Deus" ? "Fernando Meirelles, Kátia Lund" : "Disponível via TMDB");
+  }
+
+  function compactMovieModalContent(movie, detailed = movie) {
     const interaction = movieStateFor(movie);
     const poster = posterURL(detailed) || posterURL(movie);
-    const backdrop = detailed.backdrop || TMDB.backdropUrl(detailed.backdrop_path || "");
-    const director = detailed.credits?.crew?.find(person => person.job === "Director")?.name || (movie.id === 598 ? "Fernando Meirelles, Kátia Lund" : "Informação disponível via TMDB");
-    const cast = detailed.credits?.cast?.slice(0, 8).map(person => person.name).join(", ") || "Elenco disponível quando o TMDB estiver conectado.";
+    const backdrop = detailed?.backdrop || TMDB.backdropUrl(detailed?.backdrop_path || "") || movie?.backdrop || TMDB.backdropUrl(movie?.backdrop_path || "");
+    const director = movieDirector(detailed, movie);
     const genres = genresText(detailed, 4) || genresText(movie, 4);
-    const runtime = detailed.runtime ? `${Math.floor(detailed.runtime / 60)}h ${String(detailed.runtime % 60).padStart(2, "0")}min` : "—";
-    const companies = detailed.production_companies?.slice(0, 4).map(company => company.name).join(", ") || "—";
-    const synopsis = detailed.overview || movie.overview || "Sinopse indisponível nesta demonstração.";
 
-    return `
-      ${backdrop ? `<div class="movie-modal-backdrop" style="background-image:linear-gradient(90deg, rgba(7,24,46,.96), rgba(7,24,46,.72)),url('${backdrop}')"></div>` : `<div class="movie-modal-backdrop fallback"></div>`}
-      <div class="movie-modal-content">
-        <div class="movie-modal-poster">${poster ? `<img src="${poster}" alt="Pôster de ${escapeHTML(detailed.title || movie.title)}">` : `<span class="poster-fallback"><small>CineCena</small><strong>${escapeHTML(detailed.title || movie.title)}</strong><i>${movieYear(detailed)}</i></span>`}</div>
-        <div class="movie-modal-main">
-          <h2>${escapeHTML(movie.title)}</h2>
-          <div class="movie-meta"><span>${movieYear(movie)}</span><span>${escapeHTML(runtime)}</span><span>${escapeHTML(genres)}</span></div>
-          <p class="movie-synopsis">${escapeHTML(synopsis)}</p>
-          <div class="movie-actions">
-            <button class="movie-action ${interaction.watched ? "active" : ""}" type="button" data-movie-action="watched">${icon("eye")}<span>${interaction.watched ? "Visto" : "Marcar como visto"}</span></button>
-            <button class="movie-action ${interaction.loved ? "active love" : ""}" type="button" data-movie-action="loved">${icon("heart")}<span>Amei</span></button>
-            <button class="movie-action ${interaction.listed ? "active" : ""}" type="button" data-movie-action="listed">${icon("bookmark")}<span>${interaction.listed ? "Na sua lista" : "Adicionar em lista"}</span></button>
-            <button class="movie-action primary" type="button" data-modal-review>${icon("pen")}<span>Criar review</span></button>
-          </div>
-          <div class="movie-info-grid">
-            <div><small>Direção</small><strong>${escapeHTML(director)}</strong></div>
-            <div><small>Gênero</small><strong>${escapeHTML(genres)}</strong></div>
-            <div><small>Elenco</small><strong>${escapeHTML(cast)}</strong></div>
-            <div><small>Produção</small><strong>${escapeHTML(companies)}</strong></div>
-          </div>
-          <section class="friend-activity-movie"><div><h3>Atividade dos amigos</h3><p>Quando uma amizade interagir com este filme, a atividade aparecerá nesta seção.</p></div>${icon("friends")}</section>
+    return `<div class="quick-movie-card">
+      <div class="quick-movie-poster">${poster ? `<img src="${poster}" alt="Pôster de ${escapeHTML(movie.title)}">` : `<span class="poster-fallback"><small>CineCena</small><strong>${escapeHTML(movie.title)}</strong><i>${movieYear(movie)}</i></span>`}</div>
+      <div class="quick-movie-main">
+        <div><h2>${escapeHTML(movie.title)}</h2><div class="quick-movie-meta"><span>${escapeHTML(movieYear(movie))}</span><span>${escapeHTML(genres)}</span></div></div>
+        <dl class="quick-movie-info"><div><dt>Direção</dt><dd>${escapeHTML(director)}</dd></div><div><dt>Gênero</dt><dd>${escapeHTML(genres)}</dd></div></dl>
+        <div class="quick-movie-actions">
+          <button class="movie-action ${interaction.watched ? "active" : ""}" type="button" data-movie-action="watched">${icon("eye")}<span>${interaction.watched ? "Assistido" : "Marcar como assistido"}</span></button>
+          <button class="movie-action ${interaction.loved ? "active love" : ""}" type="button" data-movie-action="loved">${icon("heart")}<span>${interaction.loved ? "Curtido" : "Amei"}</span></button>
+          <button class="movie-action ${interaction.listed ? "active" : ""}" type="button" data-movie-action="listed">${icon("bookmark")}<span>${interaction.listed ? "Na lista" : "Adicionar em lista"}</span></button>
+          <button class="movie-action primary" type="button" data-modal-review>${icon("pen")}<span>Criar review</span></button>
         </div>
+        <a class="btn btn-primary quick-more" href="${moviePageURL(movie)}">Ver mais ${icon("arrow")}</a>
       </div>
-    `;
+    </div>
+    <div class="quick-movie-backdrop${backdrop ? "" : " fallback"}" ${backdrop ? `style="background-image:linear-gradient(90deg, rgba(5,24,48,.3), rgba(5,24,48,.08)),url('${backdrop}')"` : ""}></div>`;
   }
 
   function bindMovieModalActions(modal, movie, details = movie) {
     modal.querySelectorAll("[data-movie-action]").forEach(button => {
       button.addEventListener("click", () => {
         updateMovieState(movie, button.dataset.movieAction);
-        modal.querySelector(".movie-modal-shell").innerHTML = movieModalContent(movie, details);
+        modal.querySelector(".movie-modal-shell").innerHTML = compactMovieModalContent(movie, details);
         bindMovieModalActions(modal, movie, details);
         toast("Interação salva localmente.");
       });
@@ -211,7 +304,7 @@
 
   async function openMovieModal(movie) {
     if (!movie) return;
-    const modal = mountModal("movie", `<div class="movie-modal-shell">${movieModalContent(movie)}</div>`, "movie-size");
+    const modal = mountModal("movie", `<div class="movie-modal-shell">${compactMovieModalContent(movie)}</div>`, "movie-quick-size");
     bindMovieModalActions(modal, movie);
 
     const detailsId = Number(movie.id);
@@ -219,18 +312,32 @@
       try {
         const details = await TMDB.getMovieDetails(detailsId);
         if (!document.body.contains(modal)) return;
-        modal.querySelector(".movie-modal-shell").innerHTML = movieModalContent(movie, { ...details, title: movie.title, year: movie.year });
+        modal.querySelector(".movie-modal-shell").innerHTML = compactMovieModalContent(movie, { ...details, title: movie.title, year: movie.year });
         bindMovieModalActions(modal, movie, details);
       } catch (error) {
-        console.warn("CineCena: não foi possível carregar detalhes do TMDB.", error);
+        console.warn("CineCena: não foi possível carregar detalhes rápidos do TMDB.", error);
       }
     }
   }
 
   function bindGlobalEvents() {
     document.addEventListener("click", event => {
+      const removeFavoriteButton = event.target.closest("[data-remove-favorite]");
+      if (removeFavoriteButton) {
+        removeFavoriteAt(Number(removeFavoriteButton.dataset.removeFavorite));
+        toast("Filme removido dos favoritos.");
+        return;
+      }
+
+      const addFavoriteButton = event.target.closest("[data-new-favorite]");
+      if (addFavoriteButton) {
+        const slot = Number(addFavoriteButton.dataset.favoriteSlot);
+        openFavoriteModal(Number.isInteger(slot) ? slot : null);
+        return;
+      }
+
       const card = event.target.closest("[data-movie-key]");
-      if (card) {
+      if (card && !card.closest("[data-picker-selected]")) {
         const movie = state.movies.find(item => movieKey(item) === card.dataset.movieKey);
         openMovieModal(movie);
         return;
@@ -257,7 +364,9 @@
   window.CineCenaComponents = {
     movieCard,
     movieRail,
+    moviePageURL,
     profileAvatar,
+    reviewMovieCard,
     reviewActivity,
     listCard,
     feedEntryFromReview,
@@ -265,6 +374,7 @@
     feedEntries,
     openPostModal,
     openReviewModal,
+    openFavoriteModal,
     openEditProfileModal,
     openMovieModal
   };

@@ -3,8 +3,9 @@
   const UI = window.CineCenaComponents;
   if (!App || !UI) return;
 
-  const { Data, state, findMovie, escapeHTML } = App;
+  const { Data, findMovie, escapeHTML } = App;
   const target = document.querySelector("[data-lists-page]");
+  const LIMIT = 15;
 
   function render() {
     if (!target) return;
@@ -15,7 +16,7 @@
           <div><h2>${escapeHTML(list.title)}</h2><p>${escapeHTML(list.description)}</p></div>
           <span class="list-number">${String(index + 1).padStart(2, "0")}</span>
         </header>
-        <div class="list-showcase-body">${UI.movieRail(`list-${list.slug}`, movies, movies.length)}</div>
+        <div class="list-showcase-body">${UI.movieRail(`list-${list.slug}`, movies, LIMIT)}${movies.length > LIMIT ? `<div class="section-more"><a class="btn btn-secondary" href="list.html?list=${encodeURIComponent(list.slug)}">Ver mais</a></div>` : ""}</div>
       </section>`;
     }).join("");
   }

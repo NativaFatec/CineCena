@@ -55,19 +55,54 @@ window.CineCenaData = (() => {
     ["turma-da-monica-lacos", "Turma da Mônica: Laços", 2019, ["Família", "Aventura"]],
     ["turma-da-monica-uma-aventura-no-tempo", "Turma da Mônica em Uma Aventura no Tempo", 2007, ["Animação", "Família"]],
     ["o-menino-e-o-mundo", "O Menino e o Mundo", 2013, ["Animação", "Aventura"]],
-    ["chico-bento-goiabeira", "Chico Bento e a Goiabeira Maraviosa", 2025, ["Família", "Aventura"]],
+    ["chico-bento-goiabeira", "Chico Bento e a Goiabeira Maraviósa", 2025, ["Família", "Aventura"]],
     ["2-filhos-de-francisco", "2 Filhos de Francisco", 2005, ["Drama", "Música"]],
     ["pixote", "Pixote: A Lei do Mais Fraco", 1980, ["Drama", "Crime"]],
-
-    // Acréscimos da curadoria: clássicos e autores próximos aos títulos indicados pelo projeto.
     ["o-pagador-de-promessas", "O Pagador de Promessas", 1962, ["Drama"]],
     ["o-dragao-da-maldade", "O Dragão da Maldade contra o Santo Guerreiro", 1969, ["Drama", "Faroeste"]],
     ["eles-nao-usam-black-tie", "Eles Não Usam Black-Tie", 1981, ["Drama"]],
     ["ilha-das-flores", "Ilha das Flores", 1989, ["Documentário", "Comédia"]],
     ["o-som-ao-redor", "O Som ao Redor", 2012, ["Drama", "Suspense"]],
-    ["santiago", "Santiago", 2007, ["Documentário"]]
+    ["santiago", "Santiago", 2007, ["Documentário"]],
+    ["o-cheiro-do-ralo", "O Cheiro do Ralo", 2006, ["Drama", "Comédia"]],
+    ["o-que-e-isso-companheiro", "O Que É Isso, Companheiro?", 1997, ["Drama", "História"]],
+    ["feito-pipa", "Feito Pipa", 2026, ["Drama"]],
+    ["o-pai-o", "Ó Paí, Ó", 2007, ["Comédia", "Música"]],
+    ["de-pernas-pro-ar", "De Pernas pro Ar", 2010, ["Comédia"]],
+    ["vai-que-cola", "Vai Que Cola: O Filme", 2015, ["Comédia"]],
+    ["ate-que-a-sorte-nos-separe", "Até que a Sorte nos Separe", 2012, ["Comédia"]],
+    ["se-eu-fosse-voce", "Se Eu Fosse Você", 2006, ["Comédia", "Romance"]],
+    ["o-candidato-honesto", "O Candidato Honesto", 2014, ["Comédia"]],
+    ["os-parcas", "Os Parças", 2017, ["Comédia"]],
+    ["dona-flor-e-seus-dois-maridos", "Dona Flor e Seus Dois Maridos", 1976, ["Comédia", "Romance"]],
+    ["xica-da-silva", "Xica da Silva", 1976, ["Drama", "História"]],
+    ["o-cangaceiro", "O Cangaceiro", 1953, ["Drama", "Faroeste"]],
+    ["ganga-bruta", "Ganga Bruta", 1933, ["Drama"]],
+    ["sao-bernardo", "São Bernardo", 1972, ["Drama"]],
+    ["memorias-do-carcere", "Memórias do Cárcere", 1984, ["Drama", "História"]],
+    ["o-homem-que-virou-suco", "O Homem que Virou Suco", 1981, ["Drama", "Comédia"]],
+    ["pra-frente-brasil", "Pra Frente, Brasil", 1982, ["Drama", "História"]],
+    ["eu-sei-que-vou-te-amar", "Eu Sei que Vou Te Amar", 1986, ["Drama", "Romance"]],
+    ["carlota-joaquina", "Carlota Joaquina, Princesa do Brazil", 1995, ["Comédia", "História"]],
+    ["lavoura-arcaica", "Lavoura Arcaica", 2001, ["Drama"]],
+    ["madame-sata", "Madame Satã", 2002, ["Drama"]],
+    ["cinema-aspirinas-e-urubus", "Cinema, Aspirinas e Urubus", 2005, ["Drama"]],
+    ["linha-de-passe", "Linha de Passe", 2008, ["Drama"]],
+    ["tropa-de-elite", "Tropa de Elite", 2007, ["Drama", "Crime"]],
+    ["tropa-de-elite-2", "Tropa de Elite 2: O Inimigo Agora é Outro", 2010, ["Drama", "Crime"]],
+    ["hoje-eu-quero-voltar-sozinho", "Hoje Eu Quero Voltar Sozinho", 2014, ["Drama", "Romance"]],
+    ["marte-um", "Marte Um", 2022, ["Drama"]],
+    ["retratos-fantasmas", "Retratos Fantasmas", 2023, ["Documentário"]],
+    ["motel-destino", "Motel Destino", 2024, ["Drama", "Suspense"]],
+    ["deserto-particular", "Deserto Particular", 2021, ["Drama", "Romance"]],
+    ["pequeno-segredo", "Pequeno Segredo", 2016, ["Drama"]],
+    ["o-grande-circo-mistico", "O Grande Circo Místico", 2018, ["Drama", "Fantasia"]],
+    ["ultima-parada-174", "Última Parada 174", 2008, ["Drama", "Crime"]],
+    ["salve-geral", "Salve Geral", 2009, ["Drama", "Crime"]],
+    ["lula-o-filho-do-brasil", "Lula, o Filho do Brasil", 2009, ["Drama", "Biografia"]]
   ].map(([id, title, year, genres], index) => ({
     id,
+    catalogKey: String(id),
     title,
     searchTitle: title,
     year,
@@ -79,6 +114,14 @@ window.CineCenaData = (() => {
       : "Informações completas disponíveis quando a integração com o TMDB está ativa.",
     mock: true
   }));
+
+  const featureMovies = [
+    "Oeste Outra Vez",
+    "Terra Estrangeira",
+    "Terra em Transe",
+    "Ainda Estou Aqui",
+    "Rio, Zona Norte"
+  ];
 
   const glauber = {
     id: "glauber-rocha",
@@ -121,30 +164,46 @@ window.CineCenaData = (() => {
       title: "Filmes mais vistos",
       description: "Uma seleção de filmes muito presentes nas conversas da comunidade nesta versão do CineCena.",
       accent: "blue",
-      movies: ["Cidade de Deus", "Ainda Estou Aqui", "O Auto da Compadecida", "Central do Brasil", "Bacurau", "Que Horas Ela Volta?", "Carandiru", "Minha Mãe é uma Peça"]
+      movies: ["Cidade de Deus", "Ainda Estou Aqui", "O Auto da Compadecida", "Central do Brasil", "Bacurau", "Que Horas Ela Volta?", "Carandiru", "Minha Mãe é uma Peça", "Tropa de Elite", "O Homem que Copiava", "Estômago", "O Agente Secreto", "O Palhaço", "Bingo: O Rei das Manhãs", "2 Filhos de Francisco", "Ó Paí, Ó", "Se Eu Fosse Você"]
     },
     {
       slug: "cannes",
       title: "Brasil em Cannes",
-      description: "Filmes e autores brasileiros que passaram por Cannes e ajudam a mostrar a força internacional do nosso cinema.",
+      description: "Filmes brasileiros que passaram pelo Festival de Cannes em diferentes décadas e mostras.",
       accent: "yellow",
-      movies: ["O Pagador de Promessas", "Terra em Transe", "O Dragão da Maldade contra o Santo Guerreiro", "Bacurau", "A Vida Invisível", "O Agente Secreto"]
+      movies: ["O Pagador de Promessas", "Terra em Transe", "O Dragão da Maldade contra o Santo Guerreiro", "Cidade de Deus", "Madame Satã", "Cinema, Aspirinas e Urubus", "Linha de Passe", "Aquarius", "Bacurau", "A Vida Invisível", "Motel Destino", "O Agente Secreto"]
     },
     {
       slug: "mais-curtidos",
-      title: "Mais amados do CineCena",
-      description: "Títulos que aparecem entre os favoritos da comunidade nesta demonstração, sem qualquer sistema de notas.",
+      title: "Mais curtidos do CineCena",
+      description: "Títulos que aparecem com frequência entre os filmes curtidos pela comunidade nesta demonstração.",
       accent: "green",
-      movies: ["Cidade de Deus", "Central do Brasil", "Aquarius", "Estômago", "O Céu de Suely", "O Homem que Copiava", "Bicho de Sete Cabeças", "Pixote: A Lei do Mais Fraco"]
+      movies: ["Cidade de Deus", "Central do Brasil", "Aquarius", "Estômago", "O Céu de Suely", "O Homem que Copiava", "Bicho de Sete Cabeças", "Pixote: A Lei do Mais Fraco", "Tropa de Elite", "Lavoura Arcaica", "O Cheiro do Ralo"]
     },
     {
       slug: "classicos",
       title: "Clássicos para começar",
       description: "Um caminho inicial por diferentes períodos do cinema brasileiro, com atenção especial às obras mais antigas.",
       accent: "blue",
-      movies: ["Limite", "Rio, 40 Graus", "Vidas Secas", "Deus e o Diabo na Terra do Sol", "São Paulo Sociedade Anônima", "Terra em Transe", "O Bandido da Luz Vermelha", "Macunaíma"]
+      movies: ["Limite", "Ganga Bruta", "O Cangaceiro", "Rio, 40 Graus", "Rio, Zona Norte", "Vidas Secas", "Deus e o Diabo na Terra do Sol", "São Paulo Sociedade Anônima", "Terra em Transe", "O Bandido da Luz Vermelha", "Macunaíma", "São Bernardo", "Dona Flor e Seus Dois Maridos", "Xica da Silva", "Pixote: A Lei do Mais Fraco"]
+    },
+    {
+      slug: "oscar-brasil",
+      title: "Brasil rumo ao Oscar",
+      description: "Filmes escolhidos em diferentes anos para representar o Brasil na disputa por uma vaga no Oscar de Filme Internacional.",
+      accent: "yellow",
+      movies: ["O Que É Isso, Companheiro?", "Central do Brasil", "Última Parada 174", "Salve Geral", "Lula, o Filho do Brasil", "O Palhaço", "O Som ao Redor", "Hoje Eu Quero Voltar Sozinho", "Que Horas Ela Volta?", "Pequeno Segredo", "Bingo: O Rei das Manhãs", "O Grande Circo Místico", "Deserto Particular", "Marte Um", "Retratos Fantasmas", "Ainda Estou Aqui", "O Agente Secreto", "Feito Pipa"]
     }
   ];
 
-  return { curatedMovies, fallbackMovies: curatedMovies, glauber, creators, glauberReviews, glauberPosts, curatedLists };
+  return {
+    curatedMovies,
+    fallbackMovies: curatedMovies,
+    featureMovies,
+    glauber,
+    creators,
+    glauberReviews,
+    glauberPosts,
+    curatedLists
+  };
 })();

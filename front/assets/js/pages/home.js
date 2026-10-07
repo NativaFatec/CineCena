@@ -1,21 +1,47 @@
 (() => {
   const App = window.CineCena;
   const UI = window.CineCenaComponents;
+  const TMDB = window.CineCenaTMDB;
   if (!App || !UI) return;
 
-  const { Data, state, findMovie, icon } = App;
+  const { Data, state, findMovie, icon, escapeHTML, movieYear, genresText, posterURL, movieKey } = App;
+  let featureIndex = 0;
+  let featureTimer = null;
+
+  function featureMovies() {
+    return Data.featureMovies.map(findMovie).filter(Boolean);
+  }
 
   function renderFeature() {
     const target = document.querySelector("[data-home-feature]");
     if (!target) return;
-    const city = findMovie("Cidade de Deus") || state.movies[0];
+    const movies = featureMovies();
+    if (!movies.length) return;
+    const movie = movies[featureIndex % movies.length];
+    const poster = posterURL(movie);
+    const backdrop = movie.backdrop || TMDB?.backdropUrl(movie.backdrop_path || "") || "";
     target.innerHTML = `
-      <div class="hero-feature-poster">${UI.movieCard(city, { compact: true })}</div>
-      <div class="hero-feature-copy">
-        <h2>Cidade de Deus</h2>
-        <p>Abra o filme para ver sinopse, direção, elenco, gêneros e as ações sociais do CineCena.</p>
-        <button class="text-action" type="button" data-movie-key="${App.escapeHTML(App.movieKey(city))}">Abrir filme ${icon("arrow")}</button>
+      <div class="feature-carousel-card${backdrop ? " has-backdrop" : ""}" ${backdrop ? `style="background-image:linear-gradient(90deg, rgba(5,24,48,.94), rgba(5,24,48,.58)),url('${backdrop}')"` : ""}>
+        <button class="feature-poster" type="button" data-movie-key="${escapeHTML(movieKey(movie))}">
+          ${poster ? `<img src="${poster}" alt="Pôster de ${escapeHTML(movie.title)}">` : `<span class="poster-fallback"><strong>${escapeHTML(movie.title)}</strong></span>`}
+        </button>
+        <div class="feature-carousel-copy">
+          <span>${escapeHTML(movieYear(movie))} · ${escapeHTML(genresText(movie))}</span>
+          <h2>${escapeHTML(movie.title)}</h2>
+          <button class="text-link button-link" type="button" data-movie-key="${escapeHTML(movieKey(movie))}">Abrir filme ${icon("arrow")}</button>
+          <div class="feature-dots">${movies.map((_, index) => `<button type="button" class="${index === featureIndex ? "active" : ""}" data-feature-index="${index}" aria-label="Destaque ${index + 1}"></button>`).join("")}</div>
+        </div>
       </div>`;
+  }
+
+  function startFeatureTimer() {
+    clearInterval(featureTimer);
+    const movies = featureMovies();
+    if (movies.length < 2) return;
+    featureTimer = setInterval(() => {
+      featureIndex = (featureIndex + 1) % movies.length;
+      renderFeature();
+    }, 5500);
   }
 
   function renderPopular() {
@@ -23,7 +49,7 @@
     if (!target) return;
     const titles = Data.curatedLists.find(list => list.slug === "mais-vistos")?.movies || [];
     const selected = titles.map(findMovie).filter(Boolean);
-    target.innerHTML = UI.movieRail("home-popular-rail", selected.length ? selected : state.movies, 12);
+    target.innerHTML = UI.movieRail("home-popular-rail", selected.length ? selected : state.movies, 15);
   }
 
   function renderActivity() {
@@ -49,7 +75,16 @@
     renderPopular();
     renderActivity();
     renderLists();
+    startFeatureTimer();
   }
+
+  document.addEventListener("click", event => {
+    const dot = event.target.closest("[data-feature-index]");
+    if (!dot) return;
+    featureIndex = Number(dot.dataset.featureIndex) || 0;
+    renderFeature();
+    startFeatureTimer();
+  });
 
   render();
   window.addEventListener("cinecena:movies-updated", render);

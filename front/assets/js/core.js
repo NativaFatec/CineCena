@@ -7,8 +7,10 @@
     profile: "cinecena.profile",
     reviews: "cinecena.reviews",
     posts: "cinecena.posts",
-    movieState: "cinecena.movie-state"
+    movieState: "cinecena.movie-state",
+    favorites: "cinecena.favorites"
   };
+  const FAVORITE_LIMIT = 5;
 
   function readJSON(key, fallback) {
     try {
@@ -23,6 +25,15 @@
     localStorage.setItem(key, JSON.stringify(value));
   }
 
+  function normalizeFavoriteSlots(items) {
+    const slots = Array(FAVORITE_LIMIT).fill(null);
+    if (!Array.isArray(items)) return slots;
+    items.slice(0, FAVORITE_LIMIT).forEach((item, index) => {
+      if (item?.key || item?.title) slots[index] = item;
+    });
+    return slots;
+  }
+
   const state = {
     movies: Data.curatedMovies,
     tmdbReady: TMDB.isConfigured(),
@@ -35,7 +46,8 @@
     }),
     reviews: readJSON(KEYS.reviews, []),
     posts: readJSON(KEYS.posts, []),
-    movieState: readJSON(KEYS.movieState, {})
+    movieState: readJSON(KEYS.movieState, {}),
+    favorites: normalizeFavoriteSlots(readJSON(KEYS.favorites, []))
   };
 
   function escapeHTML(value = "") {
@@ -48,11 +60,11 @@
   }
 
   function movieYear(movie) {
-    return movie.year || (movie.release_date ? movie.release_date.slice(0, 4) : "—");
+    return movie?.year || (movie?.release_date ? movie.release_date.slice(0, 4) : "—");
   }
 
   function posterURL(movie) {
-    return movie.poster || TMDB.posterUrl(movie.poster_path || "");
+    return movie?.poster || TMDB.posterUrl(movie?.poster_path || "");
   }
 
   function initials(name = "") {
@@ -66,11 +78,12 @@
   }
 
   function movieKey(movie) {
-    return String(movie.id ?? movie.title);
+    return String(movie?.catalogKey ?? movie?.id ?? movie?.title ?? "");
   }
 
   function findMovie(keyOrTitle) {
-    return state.movies.find(movie => movieKey(movie) === String(keyOrTitle) || movie.title === keyOrTitle);
+    const wanted = String(keyOrTitle ?? "");
+    return state.movies.find(movie => movieKey(movie) === wanted || movie.title === wanted);
   }
 
   function genresText(movie, max = 2) {
@@ -101,23 +114,81 @@
       chevronLeft: '<path d="m15 18-6-6 6-6"/>',
       chevronRight: '<path d="m9 18 6-6-6-6"/>',
       check: '<path d="m5 12 4 4L19 6"/>',
-      comment: '<path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z"/>',
+      comment: '<path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z"/>'
     };
     return `<svg class="icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${paths[name] || paths.info}</svg>`;
   }
 
   function movieStateFor(movie) {
     const key = movieKey(movie);
-    return state.movieState[key] || { watched: false, loved: false, listed: false };
+    const saved = state.movieState[key] || {};
+    return {
+      watched: Boolean(saved.watched),
+      watchedAt: saved.watchedAt || 0,
+      loved: Boolean(saved.loved),
+      lovedAt: saved.lovedAt || 0,
+      listed: Boolean(saved.listed),
+      listedAt: saved.listedAt || 0
+    };
   }
 
   function updateMovieState(movie, action) {
     const key = movieKey(movie);
     const current = movieStateFor(movie);
-    state.movieState[key] = { ...current, [action]: !current[action] };
+    const nextValue = !current[action];
+    const timestampField = `${action}At`;
+    state.movieState[key] = {
+      ...current,
+      [action]: nextValue,
+      [timestampField]: nextValue ? Date.now() : 0
+    };
     writeJSON(KEYS.movieState, state.movieState);
-    window.dispatchEvent(new CustomEvent("cinecena:movie-state-updated"));
+    window.dispatchEvent(new CustomEvent("cinecena:movie-state-updated", { detail: { movie, action } }));
     return state.movieState[key];
+  }
+
+  function favoriteSlots() {
+    return state.favorites.map(item => item ? findMovie(item.key) || findMovie(item.title) || null : null);
+  }
+
+  function collectionMovies(type) {
+    if (type === "favorites") return favoriteSlots().filter(Boolean);
+
+    const field = type === "loved" ? "loved" : type === "watched" ? "watched" : "listed";
+    const atField = `${field}At`;
+    return state.movies
+      .filter(movie => movieStateFor(movie)[field])
+      .sort((a, b) => movieStateFor(b)[atField] - movieStateFor(a)[atField]);
+  }
+
+  function addFavorite(movie, slotIndex = null) {
+    if (!movie) return false;
+    const key = movieKey(movie);
+    const duplicate = state.favorites.findIndex(item => item && (item.key === key || item.title === movie.title));
+    if (duplicate !== -1) return false;
+
+    const target = Number.isInteger(slotIndex) ? slotIndex : state.favorites.findIndex(item => !item);
+    if (target < 0 || target >= FAVORITE_LIMIT || state.favorites[target]) return false;
+
+    state.favorites[target] = { key, title: movie.title, addedAt: Date.now() };
+    writeJSON(KEYS.favorites, state.favorites);
+    window.dispatchEvent(new CustomEvent("cinecena:favorites-updated"));
+    return true;
+  }
+
+  function removeFavoriteAt(slotIndex) {
+    const target = Number(slotIndex);
+    if (!Number.isInteger(target) || target < 0 || target >= FAVORITE_LIMIT) return;
+    state.favorites[target] = null;
+    writeJSON(KEYS.favorites, state.favorites);
+    window.dispatchEvent(new CustomEvent("cinecena:favorites-updated"));
+  }
+
+  function removeFavorite(movie) {
+    if (!movie) return;
+    const key = movieKey(movie);
+    const index = state.favorites.findIndex(item => item && (item.key === key || item.title === movie.title));
+    if (index !== -1) removeFavoriteAt(index);
   }
 
   function mountModal(id, content, size = "md") {
@@ -172,7 +243,7 @@
   }
 
   function saveReview(review) {
-    state.reviews.unshift(review);
+    state.reviews.unshift({ ...review, createdAt: review.createdAt || Date.now() });
     writeJSON(KEYS.reviews, state.reviews);
     window.dispatchEvent(new CustomEvent("cinecena:social-updated"));
   }
@@ -222,6 +293,11 @@
     icon,
     movieStateFor,
     updateMovieState,
+    collectionMovies,
+    favoriteSlots,
+    addFavorite,
+    removeFavorite,
+    removeFavoriteAt,
     mountModal,
     closeModal,
     toast,

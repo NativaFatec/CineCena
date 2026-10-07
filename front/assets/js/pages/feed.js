@@ -43,5 +43,5 @@
   renderSide();
   window.addEventListener("cinecena:social-updated", renderStream);
   window.addEventListener("cinecena:profile-updated", () => { renderStream(); renderSide(); });
-  window.addEventListener("cinecena:movies-updated", renderSide);
+  window.addEventListener("cinecena:movies-updated", () => { renderStream(); renderSide(); });
 })();

@@ -4,21 +4,21 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#ffffff">
-  <title>CineCena — Amizades</title>
+  <title>CineCena — Lista</title>
   <link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../assets/css/style.css">
 </head>
-<body data-page="friends" class="">
+<body data-page="list" class="">
   <header class="site-header">
   <div class="shell header-inner">
     <a class="brand" href="about.html" aria-label="CineCena — Sobre">
   <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>
   <span class="brand-name">Cine<span>Cena</span></span>
 </a>
-    <nav class="main-nav" aria-label="Navegação principal"><a class="nav-link" href="home.html">Home</a><a class="nav-link" href="feed.html">Feed</a><a class="nav-link" href="movies.html">Filmes</a><a class="nav-link" href="lists.html">Listas</a><a class="nav-link active" href="friends.html">Amizades</a></nav>
+    <nav class="main-nav" aria-label="Navegação principal"><a class="nav-link" href="home.html">Home</a><a class="nav-link" href="feed.html">Feed</a><a class="nav-link" href="movies.html">Filmes</a><a class="nav-link" href="lists.html">Listas</a><a class="nav-link" href="friends.html">Amizades</a></nav>
     <a class="profile-shortcut" href="profile.html">
       <span class="mini-avatar" data-own-avatar>UC</span>
       <span class="profile-shortcut-copy"><small>Perfil</small><strong data-own-name>Usuário CineCena</strong></span>
@@ -26,13 +26,18 @@
     <button class="mobile-menu-toggle" type="button" data-mobile-menu aria-label="Abrir menu">☰</button>
   </div>
   <div class="mobile-nav-panel" data-mobile-panel>
-    <nav><a class="nav-link" href="home.html">Home</a><a class="nav-link" href="feed.html">Feed</a><a class="nav-link" href="movies.html">Filmes</a><a class="nav-link" href="lists.html">Listas</a><a class="nav-link active" href="friends.html">Amizades</a><a class="nav-link" href="profile.html">Perfil</a></nav>
+    <nav><a class="nav-link" href="home.html">Home</a><a class="nav-link" href="feed.html">Feed</a><a class="nav-link" href="movies.html">Filmes</a><a class="nav-link" href="lists.html">Listas</a><a class="nav-link" href="friends.html">Amizades</a><a class="nav-link" href="profile.html">Perfil</a></nav>
   </div>
 </header>
   <main class="site-main">
-    <section class="shell page-intro"><div class="page-intro-copy"><h1>Amizades</h1><p>Encontre pessoas e acompanhe o que elas estão assistindo, amando e escrevendo.</p></div></section>
-    <section class="shell friends-tools"><label class="search-field"><span aria-hidden="true">⌕</span><input type="search" data-friend-search placeholder="Pesquisar por nome ou usuário"></label></section>
-    <section class="shell friends-grid" data-friend-results></section>
+    <section class="shell page-intro">
+      <div class="page-intro-copy"><h1 data-list-title>Lista</h1><p data-list-description>Filmes selecionados.</p></div>
+    </section>
+    <section class="shell movie-tools">
+      <label class="search-field"><span aria-hidden="true">⌕</span><input type="search" data-list-search placeholder="Pesquisar nesta lista"></label>
+      <div class="movie-tool-status"><span class="search-count" data-list-count></span></div>
+    </section>
+    <section class="shell movie-catalog" data-list-catalog></section>
   </main>
   <footer class="site-footer">
   <div class="shell footer-inner footer-simple">
@@ -46,6 +51,6 @@
   <script src="../assets/js/tmdb.js"></script>
   <script src="../assets/js/core.js"></script>
   <script src="../assets/js/components.js"></script>
-  <script src="../assets/js/pages/friends.js"></script>
+  <script src="../assets/js/pages/list.js"></script>
 </body>
 </html>

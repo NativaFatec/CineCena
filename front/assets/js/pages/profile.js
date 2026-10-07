@@ -3,17 +3,45 @@
   const UI = window.CineCenaComponents;
   if (!App || !UI) return;
 
-  const { state, movieStateFor, initials, icon, escapeHTML } = App;
+  const { state, collectionMovies, favoriteSlots, initials, icon, escapeHTML, posterURL, movieKey, movieYear } = App;
+  const LIMIT = 15;
 
-  function stats() {
-    const interactions = state.movies.filter(movie => movieStateFor(movie).watched);
-    const loved = state.movies.filter(movie => movieStateFor(movie).loved);
-    const listed = state.movies.filter(movie => movieStateFor(movie).listed);
-    return { watched: interactions, loved, listed };
+  function sectionMovies(target, movies, emptyTitle, emptyText, action, moreHref = "") {
+    if (!target) return;
+    if (!movies.length) {
+      target.innerHTML = empty(emptyTitle, emptyText, action);
+      return;
+    }
+    target.innerHTML = `<div class="profile-movie-grid wide">${movies.slice(0, LIMIT).map(movie => UI.movieCard(movie, { compact: true })).join("")}</div>${movies.length > LIMIT && moreHref ? `<div class="section-more"><a class="btn btn-secondary" href="${moreHref}">Ver mais</a></div>` : ""}`;
+  }
+
+  function renderFavoriteSlots(target) {
+    if (!target) return;
+    target.innerHTML = `<div class="favorite-slots">${favoriteSlots().map((movie, index) => {
+      if (!movie) {
+        return `<button class="favorite-slot empty" type="button" data-new-favorite data-favorite-slot="${index}">
+          <span class="favorite-add-icon">${icon("plus")}</span>
+          <strong>Adicionar filme</strong>
+          <small>Favorito ${index + 1}</small>
+        </button>`;
+      }
+
+      const poster = posterURL(movie);
+      return `<div class="favorite-slot filled">
+        <button class="favorite-remove" type="button" data-remove-favorite="${index}" aria-label="Remover ${escapeHTML(movie.title)} dos favoritos">${icon("close")}</button>
+        <button class="favorite-movie" type="button" data-movie-key="${escapeHTML(movieKey(movie))}" aria-label="Abrir ${escapeHTML(movie.title)}">
+          <span class="favorite-poster">${poster ? `<img src="${poster}" alt="Pôster de ${escapeHTML(movie.title)}" loading="lazy">` : `<span class="poster-fallback"><small>CineCena</small><strong>${escapeHTML(movie.title)}</strong><i>${escapeHTML(movieYear(movie))}</i></span>`}</span>
+          <span class="favorite-copy"><strong>${escapeHTML(movie.title)}</strong><small>${escapeHTML(movieYear(movie))}</small></span>
+        </button>
+      </div>`;
+    }).join("")}</div>`;
   }
 
   function render() {
-    const current = stats();
+    const watched = collectionMovies("watched");
+    const loved = collectionMovies("loved");
+    const listed = collectionMovies("listed");
+
     const avatar = document.querySelector("[data-profile-avatar]");
     if (avatar) avatar.textContent = initials(state.profile.name);
     const name = document.querySelector("[data-profile-name]");
@@ -24,24 +52,37 @@
     const counters = document.querySelector("[data-profile-counters]");
     if (counters) counters.innerHTML = `
       <div><strong>${state.friend ? 1 : 0}</strong><span>Amigos</span></div>
-      <div><strong>${current.watched.length}</strong><span>Filmes assistidos</span></div>
+      <div><strong>${watched.length}</strong><span>Filmes assistidos</span></div>
       <div><strong>${state.reviews.length}</strong><span>Reviews</span></div>
-      <div><strong>${current.listed.length ? 1 : 0}</strong><span>Listas</span></div>`;
+      <div><strong>${listed.length ? 1 : 0}</strong><span>Listas</span></div>`;
 
-    const favorites = document.querySelector("[data-profile-favorites]");
-    if (favorites) favorites.innerHTML = current.loved.length
-      ? `<div class="profile-movie-grid">${current.loved.slice(0, 4).map(movie => UI.movieCard(movie, { compact: true })).join("")}</div>`
-      : empty("Nenhum filme favorito ainda", "Use “Amei” em um filme para começar a construir seus favoritos.", `<a class="btn btn-secondary" href="movies.html">Adicionar filmes</a>`);
+    renderFavoriteSlots(document.querySelector("[data-profile-favorites]"));
 
     const reviews = document.querySelector("[data-profile-reviews]");
     if (reviews) reviews.innerHTML = state.reviews.length
       ? `<div class="feed-stream">${state.reviews.map(review => UI.feedEntryFromReview(review, true)).join("")}</div>`
       : empty("Nenhuma review publicada", "Quando você escrever uma review, ela aparecerá aqui.", `<button class="btn btn-secondary" type="button" data-new-review>Adicionar review</button>`);
 
-    const lists = document.querySelector("[data-profile-lists]");
-    if (lists) lists.innerHTML = current.listed.length
-      ? `<div class="profile-list-summary"><strong>Minha lista</strong><span>${current.listed.length} ${current.listed.length === 1 ? "filme" : "filmes"}</span></div><div class="profile-movie-grid">${current.listed.slice(0, 4).map(movie => UI.movieCard(movie, { compact: true })).join("")}</div>`
-      : empty("Nenhuma lista criada", "Adicione filmes à sua lista e organize suas próximas sessões.", `<a class="btn btn-secondary" href="movies.html">Adicionar filmes</a>`);
+    sectionMovies(
+      document.querySelector("[data-profile-loved]"), loved,
+      "Nenhum filme curtido", "Use “Amei” em um filme para adicioná-lo aqui.",
+      `<a class="btn btn-secondary" href="movies.html">Explorar filmes</a>`,
+      "list.html?type=loved"
+    );
+
+    sectionMovies(
+      document.querySelector("[data-profile-watched]"), watched,
+      "Nenhum filme assistido", "Marque filmes como assistidos para montar seu histórico.",
+      `<a class="btn btn-secondary" href="movies.html">Explorar filmes</a>`,
+      "list.html?type=watched"
+    );
+
+    sectionMovies(
+      document.querySelector("[data-profile-lists]"), listed,
+      "Nenhuma lista criada", "Adicione filmes à sua lista e organize suas próximas sessões.",
+      `<a class="btn btn-secondary" href="movies.html">Adicionar filmes</a>`,
+      "list.html?type=listed"
+    );
   }
 
   function empty(title, text, action) {
@@ -53,5 +94,6 @@
   window.addEventListener("cinecena:social-updated", render);
   window.addEventListener("cinecena:movies-updated", render);
   window.addEventListener("cinecena:movie-state-updated", render);
+  window.addEventListener("cinecena:favorites-updated", render);
   window.addEventListener("cinecena:friend-updated", render);
 })();
