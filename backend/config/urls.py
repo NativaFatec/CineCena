@@ -16,6 +16,7 @@ router.register("communities", CommunityViewSet, basename="community")
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path('api/accounts/', include('accounts.urls')),
     path("api/auth/register/", RegisterView.as_view(), name="register"),
     path("api/auth/token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
     path("api/auth/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),

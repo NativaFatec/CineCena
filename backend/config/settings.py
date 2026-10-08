@@ -10,22 +10,20 @@ load_dotenv(BASE_DIR / ".env")
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "unsafe-dev-key-change-before-deployment")
 DEBUG = os.getenv("DJANGO_DEBUG", "False").lower() == "true"
 ALLOWED_HOSTS = [host.strip() for host in os.getenv("DJANGO_ALLOWED_HOSTS", "127.0.0.1,localhost").split(",") if host.strip()]
-
 INSTALLED_APPS = [
-    "django.contrib.admin",
-    "django.contrib.auth",
-    "django.contrib.contenttypes",
-    "django.contrib.sessions",
-    "django.contrib.messages",
-    "django.contrib.staticfiles",
-    "rest_framework",
-    "rest_framework_simplejwt",
-    "corsheaders",
-    "accounts",
-    "movies",
-    "social",
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'rest_framework',
+    'rest_framework.authtoken',
+    'corsheaders',
+    'accounts',
+    'movies',
+    'social',
 ]
-
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "corsheaders.middleware.CorsMiddleware",
@@ -92,3 +90,5 @@ SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": __import__("datetime").timedelta(minutes=30),
     "REFRESH_TOKEN_LIFETIME": __import__("datetime").timedelta(days=7),
 }
+
+CORS_ALLOW_ALL_ORIGINS = True

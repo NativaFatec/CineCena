@@ -1,34 +1,30 @@
-from django.contrib.auth import get_user_model
+# accounts/serializers.py
 from rest_framework import serializers
+from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
-class UserPublicSerializer(serializers.ModelSerializer):
-    review_count = serializers.IntegerField(read_only=True, required=False)
-    followers_count = serializers.IntegerField(read_only=True, required=False)
-    following_count = serializers.IntegerField(read_only=True, required=False)
-
-    class Meta:
-        model = User
-        fields = ("id", "username", "first_name", "last_name", "bio", "avatar_url",
-                  "favorite_genres", "date_joined", "review_count", "followers_count",
-                  "following_count")
-        read_only_fields = ("id", "username", "date_joined")
-
 class RegisterSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(write_only=True, min_length=8, style={"input_type": "password"})
+    password = serializers.CharField(write_only=True, min_length=6)
 
     class Meta:
         model = User
-        fields = ("id", "username", "email", "password", "first_name", "last_name")
-        read_only_fields = ("id",)
+        fields = ['username', 'email', 'password']
+
+    def validate_email(self, value):
+        if User.objects.filter(email__iexact=value).exists():
+            raise serializers.ValidationError("Este e-mail já está cadastrado.")
+        return value
+
+    def validate_username(self, value):
+        if User.objects.filter(username__iexact=value).exists():
+            raise serializers.ValidationError("Este nome de usuário já está em uso.")
+        return value
 
     def create(self, validated_data):
-        return User.objects.create_user(**validated_data)
-
-class MeSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ("id", "username", "email", "first_name", "last_name", "bio",
-                  "avatar_url", "favorite_genres", "date_joined")
-        read_only_fields = ("id", "username", "email", "date_joined")
+        user = User.objects.create_user(
+            username=validated_data['username'],
+            email=validated_data['email'],
+            password=validated_data['password']
+        )
+        return user
