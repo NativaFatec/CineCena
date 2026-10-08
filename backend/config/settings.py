@@ -50,8 +50,22 @@ TEMPLATES = [{
 WSGI_APPLICATION = "config.wsgi.application"
 ASGI_APPLICATION = "config.asgi.application"
 
-DATABASE_URL = os.getenv("DATABASE_URL", f"sqlite:///{BASE_DIR / 'db.sqlite3'}")
-DATABASES = {"default": dj_database_url.parse(DATABASE_URL, conn_max_age=600)}
+SUPABASE_DB_URL = os.environ.get(
+    'DATABASE_URL', 
+    'postgresql://postgres.azswziymxvwrgtgvqixaCineCena0101@aws-0-us-east-1.pooler.supabase.com:6543/postgres'
+)
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'postgres',
+        'USER': 'postgres.azswziymxvwrgtgvqixa', # Usuário correto do Pooler
+        'PASSWORD': 'CineCena0101',               # Senha separada
+        'HOST': 'aws-0-us-east-1.pooler.supabase.com',
+        'PORT': '6543',
+    }
+}
+
 
 AUTH_USER_MODEL = "accounts.User"
 AUTH_PASSWORD_VALIDATORS = [
