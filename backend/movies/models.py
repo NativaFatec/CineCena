@@ -40,3 +40,17 @@ class Review(models.Model):
 
     def __str__(self):
         return f"{self.user} — {self.movie} ({self.rating}/5)"
+
+class FavoriteMovie(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='favorites')
+    tmdb_id = models.IntegerField()
+    title = models.CharField(max_length=255)
+    poster_path = models.CharField(max_length=255, null=True, blank=True)
+    position = models.PositiveSmallIntegerField()  # Vaga de 1 a 5
+
+    class Meta:
+        unique_together = ('user', 'position') # Garante 1 filme por vaga por usuário
+        ordering = ['position']
+
+    def __str__(self):
+        return f"{self.user.username} - Vaga {self.position}: {self.title}"

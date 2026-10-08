@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.db import models
 
+
 class Comment(models.Model):
     review = models.ForeignKey("movies.Review", on_delete=models.CASCADE, related_name="comments")
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="comments")
@@ -14,13 +15,20 @@ class Comment(models.Model):
     def __str__(self):
         return f"Comentário de {self.user} na avaliação {self.review_id}"
 
+
 class ReviewLike(models.Model):
     review = models.ForeignKey("movies.Review", on_delete=models.CASCADE, related_name="likes")
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="review_likes")
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        constraints = [models.UniqueConstraint(fields=["review", "user"], name="unique_review_like")]
+        constraints = [
+            models.UniqueConstraint(fields=["review", "user"], name="unique_review_like")
+        ]
+
+    def __str__(self):
+        return f"Curtida de {self.user} na review {self.review_id}"
+
 
 class Follow(models.Model):
     follower = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="following")
@@ -33,6 +41,26 @@ class Follow(models.Model):
             models.CheckConstraint(condition=~models.Q(follower=models.F("following")), name="cannot_follow_self"),
         ]
         ordering = ["-created_at"]
+
+    def __str__(self):
+        return f"{self.follower} segue {self.following}"
+
+
+class Friendship(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="friendships_initiated")
+    friend = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="friendships_received")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=["user", "friend"], name="unique_friendship"),
+            models.CheckConstraint(condition=~models.Q(user=models.F("friend")), name="cannot_friend_self"),
+        ]
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return f"Amizade: {self.user} e {self.friend}"
+
 
 class MovieList(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="movie_lists")
@@ -49,6 +77,7 @@ class MovieList(models.Model):
     def __str__(self):
         return f"{self.title} — {self.user}"
 
+
 class ListItem(models.Model):
     movie_list = models.ForeignKey(MovieList, on_delete=models.CASCADE, related_name="items")
     movie = models.ForeignKey("movies.Movie", on_delete=models.CASCADE, related_name="list_items")
@@ -57,7 +86,13 @@ class ListItem(models.Model):
 
     class Meta:
         ordering = ["position", "added_at"]
-        constraints = [models.UniqueConstraint(fields=["movie_list", "movie"], name="unique_movie_in_list")]
+        constraints = [
+            models.UniqueConstraint(fields=["movie_list", "movie"], name="unique_movie_in_list")
+        ]
+
+    def __str__(self):
+        return f"{self.movie} na lista {self.movie_list.title}"
+
 
 class Community(models.Model):
     name = models.CharField(max_length=100, unique=True)
@@ -74,6 +109,7 @@ class Community(models.Model):
     def __str__(self):
         return self.name
 
+
 class CommunityMembership(models.Model):
     community = models.ForeignKey(Community, on_delete=models.CASCADE, related_name="memberships")
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="community_memberships")
@@ -81,4 +117,9 @@ class CommunityMembership(models.Model):
     is_moderator = models.BooleanField(default=False)
 
     class Meta:
-        constraints = [models.UniqueConstraint(fields=["community", "user"], name="unique_community_member")]
+        constraints = [
+            models.UniqueConstraint(fields=["community", "user"], name="unique_community_member")
+        ]
+
+    def __str__(self):
+        return f"{self.user} em {self.community.name}"
