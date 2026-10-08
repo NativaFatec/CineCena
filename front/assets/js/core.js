@@ -352,18 +352,22 @@ if (user && user.username) {
         const username = user.username;
         const initials = username.substring(0, 2).toUpperCase();
 
-        // Atualiza TODAS as iniciais da página (topo e avatar grande)
-        document.querySelectorAll('[data-own-avatar], [data-feed-own-avatar]').forEach(el => {
-            el.textContent = initials;
+        // 1. Atualiza os avatares (se tiver URL de avatar vinda da API, insere <img>, senão insere as iniciais)
+        document.querySelectorAll('[data-own-avatar], [data-feed-own-avatar], [data-profile-avatar]').forEach(el => {
+            if (user.avatar) {
+                el.innerHTML = `<img src="${user.avatar}" alt="${username}" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">`;
+            } else {
+                el.textContent = initials;
+            }
         });
 
-        // Atualiza o handle (@usuario)
+        // 2. Atualiza o handle (@usuario)
         document.querySelectorAll('[data-own-name]').forEach(el => {
             el.textContent = `@${username}`;
         });
 
-        // Atualiza o título grande central do perfil
-        document.querySelectorAll('[data-own-title]').forEach(el => {
+        // 3. Atualiza o título grande central do perfil
+        document.querySelectorAll('[data-own-title], [data-profile-name]').forEach(el => {
             el.textContent = username;
         });
     }

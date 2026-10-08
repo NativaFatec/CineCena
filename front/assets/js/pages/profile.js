@@ -97,3 +97,94 @@
   window.addEventListener("cinecena:favorites-updated", render);
   window.addEventListener("cinecena:friend-updated", render);
 })();
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    const avatarInput = document.getElementById('avatar-file-input');
+    const btnChangeAvatar = document.getElementById('btn-change-avatar');
+    const profileAvatar = document.querySelector('[data-profile-avatar]');
+
+    const cropModal = document.getElementById('crop-modal');
+    const cropImage = document.getElementById('crop-image');
+    const btnCancel = document.getElementById('btn-cancel-crop');
+    const btnSave = document.getElementById('btn-save-crop');
+    let cropper = null;
+
+    if (!avatarInput) return;
+
+    // 1. Dispara o seletor de arquivo ao clicar no botão ou no círculo do avatar
+    if (btnChangeAvatar) {
+        btnChangeAvatar.addEventListener('click', () => avatarInput.click());
+    }
+    if (profileAvatar) {
+        profileAvatar.addEventListener('click', () => avatarInput.click());
+    }
+
+    // 2. Quando o usuário seleciona uma imagem no computador
+    avatarInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            cropImage.src = event.target.result;
+            cropModal.style.display = 'flex';
+
+            if (cropper) cropper.destroy();
+            cropper = new Cropper(cropImage, {
+                aspectRatio: 1, // Quadrado 1:1 para o avatar
+                viewMode: 1,
+                dragMode: 'move',
+                autoCropArea: 1,
+            });
+        };
+        reader.readAsDataURL(file);
+    });
+
+    // 3. Botão Cancelar no modal
+    btnCancel.addEventListener('click', () => {
+        cropModal.style.display = 'none';
+        avatarInput.value = '';
+        if (cropper) cropper.destroy();
+    });
+
+    // 4. Botão Cortar e Salvar
+    btnSave.addEventListener('click', () => {
+        if (!cropper) return;
+
+        // Gera a imagem cortada em resolução 300x300
+        const canvas = cropper.getCroppedCanvas({
+            width: 300,
+            height: 300,
+        });
+
+        canvas.toBlob(async (blob) => {
+            const token = localStorage.getItem('token');
+            const formData = new FormData();
+            formData.append('avatar', blob, 'avatar.jpg');
+
+            try {
+                const response = await fetch('http://127.0.0.1:8000/api/accounts/me/', {
+                    method: 'PATCH',
+                    headers: {
+                        'Authorization': `Token ${token}`
+                    },
+                    body: formData
+                });
+
+                if (response.ok) {
+                    const updatedUser = await response.json();
+                    localStorage.setItem('user', JSON.stringify(updatedUser));
+                    window.location.reload();
+                } else {
+                    alert('Erro ao salvar foto.');
+                }
+            } catch (err) {
+                console.error('Erro ao enviar avatar:', err);
+                alert('Erro ao conectar com o servidor.');
+            } finally {
+                cropModal.style.display = 'none';
+            }
+        }, 'image/jpeg', 0.9);
+    });
+});

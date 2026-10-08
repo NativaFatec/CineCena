@@ -10,6 +10,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
 </head>
 <body data-page="profile" class="">
   <header class="site-header">
@@ -43,19 +45,24 @@
   </div>
 </header>
   <main class="site-main">
-    <section class="profile-hero shell">
-      <!-- Adicionado data-own-avatar no avatar grande do centro -->
-      <span class="person-avatar xxl own" data-profile-avatar data-own-avatar>UC</span>
-      <div class="profile-identity">
-        <!-- Adicionado data-own-title no nome grande do centro -->
-        <h1 data-profile-name data-own-title>Usuário CineCena</h1>
-        <span>Seu perfil</span>
-        <p data-profile-description>Apaixonado por cinema brasileiro.</p>
-      </div>
-      <div class="profile-hero-actions">
-        <button class="btn btn-secondary" type="button" data-edit-profile>Editar perfil</button>
-      </div>
-    </section>
+    <!-- Localize a tag <section class="profile-hero shell"> no profile.html e substitua por: -->
+<section class="profile-hero shell">
+  <div style="position: relative; display: inline-block;">
+    <span class="person-avatar xxl own" data-profile-avatar data-own-avatar style="cursor: pointer;" title="Clique para alterar a foto">UC</span>
+    <input type="file" id="avatar-file-input" accept="image/*" style="display: none;">
+  </div>
+
+  <div class="profile-identity">
+    <h1 data-profile-name data-own-title>Usuário CineCena</h1>
+    <span>Seu perfil</span>
+    <p data-profile-description>Apaixonado por cinema brasileiro.</p>
+  </div>
+
+  <div class="profile-hero-actions">
+    <button class="btn btn-secondary" type="button" id="btn-change-avatar">Alterar foto</button>
+    <button class="btn btn-secondary" type="button" data-edit-profile>Editar perfil</button>
+  </div>
+</section>
     <section class="shell profile-stats" data-profile-counters></section>
     <section class="shell profile-content">
       <section class="profile-section"><div class="section-heading"><div><h2>Filmes favoritos</h2><p>Escolha até cinco filmes. Cada vaga pode ser preenchida ou liberada individualmente.</p></div></div><div data-profile-favorites></div></section>
@@ -78,5 +85,18 @@
   <script src="../assets/js/core.js"></script>
   <script src="../assets/js/components.js"></script>
   <script src="../assets/js/pages/profile.js"></script>
+
+  <div id="crop-modal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.75); z-index: 9999; align-items: center; justify-content: center;">
+  <div style="background: #fff; padding: 20px; border-radius: 12px; max-width: 450px; width: 90%;">
+    <h3 style="margin-bottom: 15px;">Ajuste sua foto de perfil</h3>
+    <div style="max-height: 350px; overflow: hidden;">
+      <img id="crop-image" src="" style="max-width: 100%;">
+    </div>
+    <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 15px;">
+      <button id="btn-cancel-crop" class="btn btn-secondary" type="button">Cancelar</button>
+      <button id="btn-save-crop" class="btn btn-primary" type="button">Cortar e Salvar</button>
+    </div>
+  </div>
+</div>
 </body>
 </html>
