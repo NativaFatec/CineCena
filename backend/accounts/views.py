@@ -5,6 +5,7 @@ from rest_framework import status, permissions
 from rest_framework.authtoken.models import Token
 from django.contrib.auth import get_user_model
 from .serializers import RegisterSerializer
+from rest_framework.authentication import TokenAuthentication
 
 User = get_user_model()
 
@@ -75,6 +76,7 @@ class RegisterView(APIView):
 
 # --- VIEW DO USUÁRIO AUTENTICADO ---
 class MeView(APIView):
+    authentication_classes = [TokenAuthentication]
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request):

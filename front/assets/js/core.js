@@ -311,3 +311,60 @@
   initNavigation();
   if (!["about", "terms"].includes(document.body.dataset.page)) hydrateFromTMDB();
 })();
+
+
+// assets/js/core.js
+
+document.addEventListener('DOMContentLoaded', async () => {
+    const token = localStorage.getItem('token');
+    const storedUser = localStorage.getItem('user');
+
+    // 1. Se o usuário tentar acessar qualquer página sem estar logado, volta para o index (login)
+    if (!token) {
+        window.location.href = '../index.html';
+        return;
+    }
+
+    let user = storedUser ? JSON.parse(storedUser) : null;
+
+    // 2. Tenta buscar os dados mais recentes do perfil no Django REST API
+    try {
+        const response = await fetch('http://127.0.0.1:8000/api/accounts/me/', {
+            headers: {
+                'Authorization': `Token ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (response.ok) {
+            user = await response.json();
+            localStorage.setItem('user', JSON.stringify(user));
+        } else if (response.status === 401) {
+            // Se o token for inválido/expirado
+            localStorage.clear();
+            window.location.href = '../index.html';
+            return;
+        }
+    } catch (err) {
+        console.warn('Backend off-line ou erro na requisição. Usando dados locais.', err);
+    }
+if (user && user.username) {
+        const username = user.username;
+        const initials = username.substring(0, 2).toUpperCase();
+
+        // Atualiza TODAS as iniciais da página (topo e avatar grande)
+        document.querySelectorAll('[data-own-avatar], [data-feed-own-avatar]').forEach(el => {
+            el.textContent = initials;
+        });
+
+        // Atualiza o handle (@usuario)
+        document.querySelectorAll('[data-own-name]').forEach(el => {
+            el.textContent = `@${username}`;
+        });
+
+        // Atualiza o título grande central do perfil
+        document.querySelectorAll('[data-own-title]').forEach(el => {
+            el.textContent = username;
+        });
+    }
+});
