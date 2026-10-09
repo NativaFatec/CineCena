@@ -4,6 +4,9 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.exceptions import ValidationError
 
+from .models import FavoriteMovie
+from .serializers import FavoriteMovieSerializer
+
 from .models import Movie, Review, FavoriteMovie
 from .serializers import (
     MovieSerializer,
@@ -109,10 +112,7 @@ class ReviewViewSet(viewsets.ModelViewSet):
 
 class FavoriteMovieViewSet(viewsets.ModelViewSet):
     serializer_class = FavoriteMovieSerializer
-
-    permission_classes = [
-        permissions.IsAuthenticated
-    ]
+    permission_classes = [permissions.IsAuthenticated]
 
     http_method_names = [
         "get",
@@ -124,66 +124,37 @@ class FavoriteMovieViewSet(viewsets.ModelViewSet):
     ]
 
     def get_queryset(self):
-        """
-        IMPORTANTÍSSIMO:
-        cada usuário só enxerga seus próprios favoritos.
-        """
+        # Cada usuário só acessa seus próprios favoritos.
         return FavoriteMovie.objects.filter(
             user=self.request.user
         )
 
     def perform_create(self, serializer):
-        """
-        O usuário NUNCA vem do frontend.
-        O Django pega o usuário autenticado.
-        """
-
         user = self.request.user
+        data = serializer.validated_data
 
-        # Limite de 5 favoritos
-        if FavoriteMovie.objects.filter(
-            user=user
-        ).count() >= 5:
+        if FavoriteMovie.objects.filter(user=user).count() >= 5:
             raise ValidationError({
-                "detail": (
-                    "Você já possui cinco filmes favoritos."
-                )
+                "detail": "Você já possui cinco filmes favoritos."
             })
 
-        tmdb_id = serializer.validated_data[
-            "tmdb_id"
-        ]
-
-        # Não permite o mesmo filme duas vezes
         if FavoriteMovie.objects.filter(
             user=user,
-            tmdb_id=tmdb_id
+            tmdb_id=data["tmdb_id"],
         ).exists():
             raise ValidationError({
-                "tmdb_id": (
-                    "Este filme já está nos seus favoritos."
-                )
+                "detail": "Este filme já está nos seus favoritos."
             })
 
-        position = serializer.validated_data[
-            "position"
-        ]
-
-        # Não permite ocupar uma posição já usada
         if FavoriteMovie.objects.filter(
             user=user,
-            position=position
+            position=data["position"],
         ).exists():
             raise ValidationError({
-                "position": (
-                    "Esta vaga já está ocupada."
-                )
+                "detail": "Esta vaga já está ocupada."
             })
 
-        serializer.save(
-            user=user
-        )
-
+        serializer.save(user=user)
     def perform_update(self, serializer):
         """
         O queryset já limita o registro ao usuário atual.

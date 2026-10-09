@@ -66,23 +66,21 @@ class ReviewSerializer(serializers.ModelSerializer):
             "updated_at",
         )
 
-
 class FavoriteMovieSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = FavoriteMovie
+
         fields = (
             "id",
             "tmdb_id",
             "title",
             "poster_path",
             "position",
-            "created_at",
-            "updated_at",
         )
+
         read_only_fields = (
             "id",
-            "created_at",
-            "updated_at",
         )
 
     def validate_position(self, value):
@@ -90,4 +88,5 @@ class FavoriteMovieSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 "A posição deve estar entre 1 e 5."
             )
+
         return value
