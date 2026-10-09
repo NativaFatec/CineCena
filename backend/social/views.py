@@ -1,11 +1,14 @@
-from django.db.models import Count
+from django.db.models import Count, Q
 from rest_framework import permissions, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
-from .models import Comment, MovieList, Follow, Community, CommunityMembership
-from .serializers import CommentSerializer, MovieListSerializer, FollowSerializer, CommunitySerializer
+from .models import Comment, MovieList, Follow, Friendship, Community, CommunityMembership
+from .serializers import CommentSerializer, MovieListSerializer, FollowSerializer, CommunitySerializer, FriendshipSerializer
 from .permissions import IsOwnerOrReadOnly
+from django.contrib.auth import get_user_model
+from accounts.models import Profile
+
 
 class CommentViewSet(viewsets.ModelViewSet):
     serializer_class = CommentSerializer
@@ -111,3 +114,215 @@ class CommunityViewSet(viewsets.ModelViewSet):
             return Response({"is_member": True, "created": created}, status=status.HTTP_201_CREATED if created else status.HTTP_200_OK)
         CommunityMembership.objects.filter(community=community, user=request.user).delete()
         return Response({"is_member": False}, status=status.HTTP_200_OK)
+
+
+class FriendshipViewSet(viewsets.ModelViewSet):
+    serializer_class = FriendshipSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    http_method_names = [
+        "get",
+        "post",
+        "delete",
+        "head",
+        "options",
+    ]
+
+    def get_queryset(self):
+        """
+        Retorna apenas amizades das quais
+        o usuário autenticado participa.
+        """
+        return (
+            Friendship.objects
+            .filter(
+                Q(user=self.request.user)
+                | Q(friend=self.request.user)
+            )
+            .select_related("user", "friend")
+        )
+
+    @action(
+        detail=False,
+        methods=["get"],
+        url_path="search-users",
+    )
+    def search_users(self, request):
+        """
+        Pesquisa usuários cadastrados.
+        Sem termo de pesquisa, sugere até seis contas.
+        """
+
+        User = get_user_model()
+
+        term = request.query_params.get(
+            "search", ""
+        ).strip()
+
+        if term and len(term) < 2:
+            return Response([])
+
+        users_queryset = User.objects.filter(
+            is_active=True
+        ).exclude(
+            pk=request.user.pk
+        )
+
+        if term:
+            users_queryset = users_queryset.filter(
+                username__icontains=term
+            ).order_by("username")
+
+            limit = 30
+        else:
+            users_queryset = users_queryset.order_by("-id")
+            limit = 6
+
+        users = list(users_queryset[:limit])
+
+        if not users:
+            return Response([])
+
+        # Busca relações existentes entre o usuário logado
+        # e as contas encontradas.
+        friendships = Friendship.objects.filter(
+            (
+                Q(
+                    user=request.user,
+                    friend__in=users,
+                )
+                |
+                Q(
+                    friend=request.user,
+                    user__in=users,
+                )
+            )
+        )
+
+        friendship_by_user = {}
+
+        for friendship in friendships:
+            if friendship.user_id == request.user.pk:
+                other_user_id = friendship.friend_id
+            else:
+                other_user_id = friendship.user_id
+
+            friendship_by_user[other_user_id] = friendship.id
+
+        # Recupera os perfis e seus avatares em uma consulta.
+        profiles = {
+            profile.user_id: profile
+            for profile in Profile.objects.filter(
+                user_id__in=[user.pk for user in users]
+            )
+        }
+
+        results = []
+
+        for user in users:
+            profile = profiles.get(user.pk)
+            avatar_url = None
+
+            if profile and profile.avatar:
+                try:
+                    avatar_url = request.build_absolute_uri(
+                        profile.avatar.url
+                    )
+                except (ValueError, AttributeError):
+                    avatar_url = None
+
+            friendship_id = friendship_by_user.get(user.pk)
+
+            results.append({
+                "id": user.pk,
+                "username": user.username,
+                "avatar": avatar_url,
+                "is_friend": friendship_id is not None,
+                "friendship_id": friendship_id,
+            })
+
+        return Response(results)
+
+    def create(self, request, *args, **kwargs):
+        """
+        Cria uma amizade entre o usuário autenticado
+        e o usuário informado pelo frontend.
+        """
+
+        target_id = (
+            request.data.get("friend")
+            or request.data.get("user_id")
+        )
+
+        if not target_id:
+            raise ValidationError({
+                "friend": "Informe o ID do usuário."
+            })
+
+        User = get_user_model()
+
+        try:
+            target = User.objects.filter(
+                pk=target_id,
+                is_active=True,
+            ).first()
+        except (ValueError, TypeError):
+            target = None
+
+        if not target:
+            raise ValidationError({
+                "friend": "Usuário não encontrado."
+            })
+
+        if target.pk == request.user.pk:
+            raise ValidationError({
+                "friend": "Você não pode adicionar a si mesmo."
+            })
+
+        # Verifica a relação nos dois sentidos para não
+        # duplicar amizades que já existem.
+        existing = Friendship.objects.filter(
+            (
+                Q(
+                    user=request.user,
+                    friend=target,
+                )
+                |
+                Q(
+                    user=target,
+                    friend=request.user,
+                )
+            )
+        ).first()
+
+        if existing:
+            serializer = self.get_serializer(existing)
+
+            return Response(
+                serializer.data,
+                status=status.HTTP_200_OK,
+            )
+
+        # Guarda os IDs numa ordem consistente.
+        first_id, second_id = sorted(
+            [request.user.pk, target.pk],
+            key=str,
+        )
+
+        friendship, created = (
+            Friendship.objects.get_or_create(
+                user_id=first_id,
+                friend_id=second_id,
+            )
+        )
+
+        serializer = self.get_serializer(friendship)
+
+        return Response(
+            serializer.data,
+            status=(
+                status.HTTP_201_CREATED
+                if created
+                else status.HTTP_200_OK
+            ),
+        )

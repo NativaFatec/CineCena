@@ -8,6 +8,9 @@ from rest_framework.authtoken.models import Token
 from django.contrib.auth import get_user_model
 from .serializers import RegisterSerializer
 from .models import Profile
+from django.db.models import Count, Q
+from movies.models import FavoriteMovie, Review
+from social.models import Friendship, MovieList
 
 User = get_user_model()
 
@@ -110,16 +113,194 @@ class MeView(APIView):
             "bio": profile.bio
         }, status=status.HTTP_200_OK)
 
-# --- VIEW DE PERFIL PÚBLICO ---
 class PublicProfileView(APIView):
+    authentication_classes = [TokenAuthentication]
     permission_classes = [permissions.AllowAny]
 
     def get(self, request, username=None):
-        user_obj = User.objects.filter(username__iexact=username).first()
+        user_obj = User.objects.filter(
+            username__iexact=username
+        ).first()
+
         if not user_obj:
-            return Response({"error": "Perfil não encontrado."}, status=status.HTTP_404_NOT_FOUND)
-        
+            return Response(
+                {"error": "Perfil não encontrado."},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+
+        profile = Profile.objects.filter(
+            user=user_obj
+        ).first()
+
+        avatar_url = None
+
+        if profile and profile.avatar:
+            try:
+                avatar_url = request.build_absolute_uri(
+                    profile.avatar.url
+                )
+            except (ValueError, AttributeError):
+                avatar_url = None
+
+        # Amizades reais no banco
+        friendships = Friendship.objects.filter(
+            Q(user=user_obj) | Q(friend=user_obj)
+        ).select_related(
+            "user", "friend"
+        ).order_by("-created_at")
+
+        friends_count = friendships.count()
+
+        # No máximo três amizades para exibir no perfil
+        preview = list(friendships[:3])
+
+        friend_users = [
+            relation.friend
+            if relation.user_id == user_obj.id
+            else relation.user
+            for relation in preview
+        ]
+
+        friend_profiles = {
+            item.user_id: item
+            for item in Profile.objects.filter(
+                user_id__in=[
+                    friend.id for friend in friend_users
+                ]
+            )
+        }
+
+        friends_data = []
+
+        for friend in friend_users:
+            friend_profile = friend_profiles.get(friend.id)
+            friend_avatar = None
+
+            if friend_profile and friend_profile.avatar:
+                try:
+                    friend_avatar = request.build_absolute_uri(
+                        friend_profile.avatar.url
+                    )
+                except (ValueError, AttributeError):
+                    pass
+
+            friends_data.append({
+                "id": friend.id,
+                "username": friend.username,
+                "avatar": friend_avatar,
+            })
+
+        # Verifica a relação entre o visitante e o perfil
+        friendship = None
+
+        if (
+            request.user.is_authenticated
+            and request.user.id != user_obj.id
+        ):
+            friendship = Friendship.objects.filter(
+                (
+                    Q(
+                        user=request.user,
+                        friend=user_obj,
+                    )
+                    |
+                    Q(
+                        user=user_obj,
+                        friend=request.user,
+                    )
+                )
+            ).first()
+
+        # Cinco vagas de favoritos salvas no banco
+        favorites = list(
+            FavoriteMovie.objects.filter(
+                user=user_obj
+            ).order_by("position").values(
+                "id",
+                "tmdb_id",
+                "title",
+                "poster_path",
+                "position",
+            )
+        )
+
+        # Reviews reais da conta
+        review_queryset = (
+            Review.objects
+            .filter(user=user_obj)
+            .select_related("movie")
+            .order_by("-created_at")
+        )
+
+        reviews_count = review_queryset.count()
+
+        reviews_data = [
+            {
+                "id": review.id,
+                "movie_title": review.movie.title,
+                "rating": review.rating,
+                "title": review.title,
+                "body": review.body,
+                "is_spoiler": review.is_spoiler,
+                "created_at": review.created_at,
+            }
+            for review in review_queryset[:10]
+        ]
+
+        # Listas públicas do usuário
+        lists_queryset = (
+            MovieList.objects
+            .filter(user=user_obj, is_public=True)
+            .annotate(
+                movies_count=Count(
+                    "items",
+                    distinct=True,
+                )
+            )
+            .order_by("-updated_at")
+        )
+
+        lists_count = lists_queryset.count()
+
+        lists_data = [
+            {
+                "id": movie_list.id,
+                "title": movie_list.title,
+                "description": movie_list.description,
+                "movies_count": movie_list.movies_count,
+                "created_at": movie_list.created_at,
+            }
+            for movie_list in lists_queryset[:10]
+        ]
+
         return Response({
             "id": user_obj.id,
             "username": user_obj.username,
+            "avatar": avatar_url,
+            "bio": profile.bio if profile else "",
+
+            "is_self": (
+                request.user.is_authenticated
+                and request.user.id == user_obj.id
+            ),
+
+            "is_friend": friendship is not None,
+            "friendship_id": (
+                friendship.id if friendship else None
+            ),
+
+            "friends_count": friends_count,
+            "friends": friends_data,
+
+            "favorites": favorites,
+
+            "reviews_count": reviews_count,
+            "reviews": reviews_data,
+
+            "lists_count": lists_count,
+            "lists": lists_data,
+
+            # O histórico de assistidos ainda não está
+            # persistido no banco para outros usuários.
+            "watched_count": 0,
         })

@@ -25,6 +25,7 @@ from social.views import (
     CommentViewSet,
     MovieListViewSet,
     FollowViewSet,
+    FriendshipViewSet,
     CommunityViewSet,
 )
 
@@ -37,6 +38,7 @@ router.register("comments", CommentViewSet, basename="comment")
 router.register("lists", MovieListViewSet, basename="movie-list")
 router.register("follows", FollowViewSet, basename="follow")
 router.register("communities", CommunityViewSet, basename="community")
+router.register("friendships", FriendshipViewSet, basename="friendship",)
 
 
 urlpatterns = [

@@ -2,6 +2,7 @@ from django.conf import settings
 from django.db import models
 
 
+
 class Comment(models.Model):
     review = models.ForeignKey("movies.Review", on_delete=models.CASCADE, related_name="comments")
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="comments")

@@ -1,7 +1,15 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 from movies.models import Review
-from .models import Comment, MovieList, ListItem, Follow, Community, CommunityMembership
+from .models import (
+    Comment,
+    MovieList,
+    ListItem,
+    Follow,
+    Friendship,
+    Community,
+    CommunityMembership,
+)
 
 User = get_user_model()
 
@@ -53,3 +61,36 @@ class CommunitySerializer(serializers.ModelSerializer):
     def get_is_member(self, obj):
         request = self.context.get("request")
         return bool(request and request.user.is_authenticated and obj.members.filter(pk=request.user.pk).exists())
+
+
+class FriendshipSerializer(serializers.ModelSerializer):
+    user_username = serializers.CharField(
+        source="user.username",
+        read_only=True,
+    )
+
+    friend_username = serializers.CharField(
+        source="friend.username",
+        read_only=True,
+    )
+
+    class Meta:
+        model = Friendship
+
+        fields = (
+            "id",
+            "user",
+            "user_username",
+            "friend",
+            "friend_username",
+            "created_at",
+        )
+
+        read_only_fields = (
+            "id",
+            "user",
+            "user_username",
+            "friend",
+            "friend_username",
+            "created_at",
+        )
