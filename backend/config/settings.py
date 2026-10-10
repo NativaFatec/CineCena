@@ -9,7 +9,15 @@ load_dotenv(BASE_DIR / ".env")
 
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "unsafe-dev-key-change-before-deployment")
 DEBUG = os.getenv("DJANGO_DEBUG", "False").lower() == "true"
-ALLOWED_HOSTS = [host.strip() for host in os.getenv("DJANGO_ALLOWED_HOSTS", "127.0.0.1,localhost").split(",") if host.strip()]
+ALLOWED_HOSTS = [
+    host.strip()
+    for host in os.getenv(
+        "DJANGO_ALLOWED_HOSTS",
+        "127.0.0.1,localhost,.app.github.dev"
+    ).split(",")
+    if host.strip()
+]
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -85,9 +93,12 @@ MEDIA_ROOT = BASE_DIR / "media"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 CORS_ALLOWED_ORIGINS = [
-    origin.strip() for origin in os.getenv(
-        "CORS_ALLOWED_ORIGINS", "http://127.0.0.1:5500,http://localhost:5500"
-    ).split(",") if origin.strip()
+    origin.strip()
+    for origin in os.getenv(
+        "CORS_ALLOWED_ORIGINS",
+        "https://musical-couscous-pjw65g4xpj9rhrqjg-5500.app.github.dev,http://127.0.0.1:5500,http://localhost:5500"
+    ).split(",")
+    if origin.strip()
 ]
 
 REST_FRAMEWORK = {
@@ -106,7 +117,7 @@ SIMPLE_JWT = {
     "REFRESH_TOKEN_LIFETIME": __import__("datetime").timedelta(days=7),
 }
 
-CORS_ALLOW_ALL_ORIGINS = True
+#CORS_ALLOW_ALL_ORIGINS = True
 
 
 REST_FRAMEWORK = {
