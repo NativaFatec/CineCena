@@ -6,7 +6,7 @@
     const { escapeHTML, icon, toast } = App;
 
     const API_URL =
-        "http://127.0.0.1:8000/api/friendships/";
+        window.CINECENA_API.endpoint("friendships/");
 
     const target = document.querySelector(
         "[data-friend-results]"
