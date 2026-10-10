@@ -1,7 +1,7 @@
 (() => {
   const portal = document.getElementById("portal") || document.body;
-  const API_URL = "http://127.0.0.1:8000/api/accounts";
-
+  const API_URL = window.CINECENA_API.accounts;
+  
   function icon(name) {
     const paths = {
       close: '<path d="M6 6l12 12M18 6 6 18"/>',

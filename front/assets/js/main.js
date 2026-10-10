@@ -52,7 +52,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // 2. Busca os dados atualizados do usuário logado na API (/api/accounts/me/)
     try {
-        const response = await fetch('http://127.0.0.1:8000/api/accounts/me/', {
+        const response = await fetch(window.CINECENA_API.endpoint("accounts/me/"), {
             headers: {
                 'Authorization': `Token ${token}`,
                 'Content-Type': 'application/json'
