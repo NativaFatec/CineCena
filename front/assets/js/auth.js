@@ -1,6 +1,7 @@
 (() => {
   const portal = document.getElementById("portal") || document.body;
-  const API_URL = "http://127.0.0.1:8000/api/accounts";
+  // Utiliza a URL gerada dinamicamente pelo api.js
+  const API_URL = `${window.CINECENA_API?.baseUrl || 'http://127.0.0.1:8000'}/api/auth`;
 
   function icon(name) {
     const paths = {
@@ -41,20 +42,22 @@
     submitBtn.textContent = "A entrar...";
 
     try {
-      const response = await fetch(`${API_URL}/login/`, {
+      // Ajustado para o endpoint de token JWT
+      const response = await fetch(`${API_URL}/token/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ login: loginInput, password: passwordInput })
+        body: JSON.stringify({ username: loginInput, password: passwordInput })
       });
 
       const data = await response.json();
 
       if (response.ok) {
-        localStorage.setItem("token", data.token);
-        localStorage.setItem("user", JSON.stringify(data.user));
+        localStorage.setItem("token", data.access || data.token);
+        if (data.refresh) localStorage.setItem("refreshToken", data.refresh);
+        if (data.user) localStorage.setItem("user", JSON.stringify(data.user));
         window.location.href = "pages/home.html";
       } else {
-        alert(data.error || "Erro ao efetuar login.");
+        alert(data.detail || data.error || "Erro ao efetuar login.");
       }
     } catch (err) {
       console.error("Erro na requisição:", err);
@@ -88,6 +91,7 @@
       submitBtn.textContent = "A criar conta...";
 
       try {
+        // Ajustado para a rota de registo /api/auth/register/
         const response = await fetch(`${API_URL}/register/`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -97,12 +101,12 @@
         const data = await response.json();
 
         if (response.ok) {
-          localStorage.setItem("token", data.token);
-          localStorage.setItem("user", JSON.stringify(data.user));
+          if (data.token || data.access) localStorage.setItem("token", data.access || data.token);
+          if (data.user) localStorage.setItem("user", JSON.stringify(data.user));
           close();
           window.location.href = "pages/home.html";
         } else {
-          alert(data.error || "Erro ao criar a conta.");
+          alert(JSON.stringify(data) || "Erro ao criar a conta.");
         }
       } catch (err) {
         console.error("Erro na requisição:", err);
