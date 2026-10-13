@@ -300,7 +300,7 @@ class PublicProfileView(APIView):
             "lists_count": lists_count,
             "lists": lists_data,
 
-            # O histórico de assistidos ainda não está
+            # O historico de assistidos ainda não está
             # persistido no banco para outros usuários.
             "watched_count": 0,
         })
