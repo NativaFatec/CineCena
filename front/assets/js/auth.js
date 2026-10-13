@@ -1,8 +1,8 @@
 (() => {
   const portal = document.getElementById("portal") || document.body;
   // Utiliza a URL gerada dinamicamente pelo api.js
-  const API_URL = `${window.CINECENA_API?.baseUrl || 'http://127.0.0.1:8000'}/api/auth`;
-
+const API_URL =
+  `${window.CINECENA_API?.baseUrl || 'http://127.0.0.1:8000'}/api/accounts`;
   function icon(name) {
     const paths = {
       close: '<path d="M6 6l12 12M18 6 6 18"/>',
@@ -43,22 +43,28 @@
 
     try {
       // Ajustado para o endpoint de token JWT
-      const response = await fetch(`${API_URL}/token/`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username: loginInput, password: passwordInput })
-      });
+const response = await fetch(`${API_URL}/login/`, {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({
+    login: loginInput,
+    password: passwordInput
+  })
+});
 
-      const data = await response.json();
+const data = await response.json();
 
-      if (response.ok) {
-        localStorage.setItem("token", data.access || data.token);
-        if (data.refresh) localStorage.setItem("refreshToken", data.refresh);
-        if (data.user) localStorage.setItem("user", JSON.stringify(data.user));
-        window.location.href = "pages/home.html";
-      } else {
-        alert(data.detail || data.error || "Erro ao efetuar login.");
-      }
+if (response.ok) {
+  localStorage.setItem("token", data.token);
+  localStorage.setItem("user", JSON.stringify(data.user));
+
+  window.location.href = "pages/home.html";
+} else {
+  alert(data.error || "Erro ao efetuar login.");
+}
+
     } catch (err) {
       console.error("Erro na requisição:", err);
       alert("Não foi possível conectar ao servidor backend.");
