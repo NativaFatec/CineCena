@@ -27,10 +27,10 @@
     const username = params.get("username");
 
     const PROFILE_API_BASE =
-    "http://127.0.0.1:8000/api/users/";
+    window.CINECENA_API.endpoint("users/");
 
     const FRIENDSHIPS_API =
-    "http://127.0.0.1:8000/api/friendships/";
+    window.CINECENA_API.endpoint("friendships/");
 
     let currentProfile = null;
 
@@ -42,7 +42,7 @@
     try {
         return new URL(
             value,
-            "http://127.0.0.1:8000"
+            window.CINECENA_API.baseUrl
         ).href;
     } catch (error) {
         console.error(

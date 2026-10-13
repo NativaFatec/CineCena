@@ -947,7 +947,7 @@ document.addEventListener(
 
                             const response =
                                 await fetch(
-                                    'http://127.0.0.1:8000/api/accounts/me/',
+                                    window.CINECENA_API.endpoint("accounts/me/"),
                                     {
                                         method: 'PATCH',
 

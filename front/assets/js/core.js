@@ -20,8 +20,8 @@
    *
    */
   const FAVORITES_API_URL =
-    "http://127.0.0.1:8000/api/movies/favorites/";
-
+  window.CINECENA_API.endpoint("movies/favorites/");
+  
   /*
    * Limite de favoritos exibidos no perfil.
    */
@@ -1507,7 +1507,7 @@ document.addEventListener(
 
       const response =
         await fetch(
-          "http://127.0.0.1:8000/api/accounts/me/",
+          window.CINECENA_API.endpoint("accounts/me/"),
           {
             headers: {
               "Authorization":
