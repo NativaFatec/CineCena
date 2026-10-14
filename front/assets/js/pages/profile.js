@@ -1049,13 +1049,13 @@ window.CineCenaLogout =
 
 // Executa automaticamente quando a página é aberta/recarregada
 document.addEventListener('DOMContentLoaded', async () => {
-    await loadUserProfile();
+    await carregarFavoritosDoPerfil();
 });
 
-// Função 1: Procura os dados atualizados no Backend
-async function loadUserProfile() {
+// 1. Busca os dados do perfil no Backend ao carregar a página
+async function carregarFavoritosDoPerfil() {
     try {
-        const token = localStorage.getItem('token'); // Ajusta se usares outro nome para o token no localStorage
+        const token = localStorage.getItem('token'); // Ajuste se a chave no localStorage tiver outro nome (ex: 'access_token')
         
         const response = await fetch('/api/accounts/profile/', {
             method: 'GET',
@@ -1065,44 +1065,52 @@ async function loadUserProfile() {
             }
         });
 
-        if (!response.ok) throw new Error('Erro ao carregar perfil');
+        if (!response.ok) {
+            console.error('Erro na requisição do perfil:', response.status);
+            return;
+        }
 
-        const profileData = await response.json();
+        const data = await response.json();
         
-        // Renderiza os filmes favoritos no HTML
-        renderTopFiveMovies(profileData.favorite_movies); 
+        // Renderiza os filmes na div data-profile-favorites
+        renderizarFilmesFavoritos(data.favorite_movies);
+
     } catch (error) {
-        console.error('Erro ao recarregar favoritos:', error);
+        console.error('Erro ao buscar favoritos do backend:', error);
     }
 }
 
-// Função 2: Desenha os cartões na tela
-function renderTopFiveMovies(favorites) {
-    // Tenta encontrar o elemento na página HTML (podes ajustar o seletor se o teu HTML usar outra classe/ID)
-    const container = document.querySelector('.favorites-grid') || document.getElementById('top-5-container');
+// 2. Renderiza os cards dentro do container [data-profile-favorites]
+function renderizarFilmesFavoritos(listaFavoritos) {
+    // Seleciona a div usando o atributo data do seu HTML
+    const container = document.querySelector('[data-profile-favorites]');
     if (!container) return;
 
-    container.innerHTML = ''; // Limpa os dados antigos
+    container.innerHTML = ''; // Limpa o estado anterior
 
-    if (!favorites || favorites.length === 0) {
-        container.innerHTML = '<p>Nenhum filme favorito adicionado.</p>';
+    if (!listaFavoritos || listaFavoritos.length === 0) {
+        container.innerHTML = '<p class="empty-favorites">Nenhum filme favorito selecionado ainda.</p>';
         return;
     }
 
-    favorites.forEach(movie => {
-        const movieCard = document.createElement('div');
-        movieCard.className = 'favorite-card';
-        movieCard.innerHTML = `
-            <img src="${movie.poster_url || movie.poster_path}" alt="${movie.title}">
-            <h4>${movie.title}</h4>
-            <button onclick="removeFavorite('${movie.id}')" class="btn-remove">Remover</button>
+    listaFavoritos.forEach(filme => {
+        const card = document.createElement('div');
+        card.className = 'favorite-item';
+        card.innerHTML = `
+            <div class="favorite-poster">
+                <img src="${filme.poster_url || filme.poster_path}" alt="${filme.title}">
+                <button type="button" onclick="removerFavorito(${filme.id})" class="btn-remove-favorite" title="Remover filme">
+                    &times;
+                </button>
+            </div>
+            <p class="favorite-title">${filme.title}</p>
         `;
-        container.appendChild(movieCard);
+        container.appendChild(card);
     });
 }
 
-// Função 3: Remove um filme dos favoritos
-async function removeFavorite(movieId) {
+// 3. Função para remover o filme dos favoritos
+async function removerFavorito(movieId) {
     try {
         const token = localStorage.getItem('token');
         const response = await fetch(`/api/movies/favorites/${movieId}/`, {
@@ -1113,10 +1121,10 @@ async function removeFavorite(movieId) {
         });
 
         if (response.ok) {
-            // Atualiza a lista na tela sem precisar de dar F5 manual
-            await loadUserProfile();
+            // Atualiza a lista na tela sem precisar de recarregar a página manualmente
+            await carregarFavoritosDoPerfil();
         } else {
-            console.error('Erro ao remover o filme.');
+            console.error('Erro ao remover o filme do servidor.');
         }
     } catch (error) {
         console.error('Erro na requisição de remoção:', error);
