@@ -2,8 +2,12 @@ const body = document.body;
 const themeToggle = document.getElementById("themeToggle");
 const mobileThemeToggle = document.getElementById("mobileThemeToggle");
 
-// Configuração centralizada da URL da API (Backend no Codespaces na porta 8000)
-const API_BASE_URL = window.CINECENA_API?.baseUrl || 'cinecena.onrender.com';
+// Configuração centralizada da URL da API (Garante que começa com https://)
+let rawBaseUrl = window.CINECENA_API?.baseUrl || 'https://cinecena.onrender.com';
+if (!rawBaseUrl.startsWith('http://') && !rawBaseUrl.startsWith('https://')) {
+  rawBaseUrl = `https://${rawBaseUrl}`;
+}
+const API_BASE_URL = rawBaseUrl.replace(/\/$/, '');
 
 function updateThemeButtons() {
   const isDark = body.classList.contains("theme-dark");
@@ -30,8 +34,8 @@ if (mobileThemeToggle) mobileThemeToggle.addEventListener("click", toggleTheme);
 
 updateThemeButtons();
 
-// FUNÇÃO PARA ADICIONAR UM FILME AOS FAVORITOS
-async function adicionarFavorito(movieDbId, title, posterUrl) {
+// FUNÇÃO PARA ADICIONAR UM FILME AOS FAVORITOS (TRATANDO ERRO 400 DE DUPLICIDADE)
+async function adicionarFavorito(tmdbId, title, posterUrl, position = 1) {
   const token = localStorage.getItem('token');
   if (!token) {
     alert("Você precisa estar logado para favoritar!");
@@ -46,14 +50,20 @@ async function adicionarFavorito(movieDbId, title, posterUrl) {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        movie_id: movieDbId,
+        tmdb_id: tmdbId,
         title: title,
-        poster_url: posterUrl
+        poster_path: posterUrl,
+        position: position
       })
     });
 
     if (response.ok) {
       alert("Filme adicionado aos favoritos!");
+    } else if (response.status === 400) {
+      // TRATAMENTO DO ERRO 400: Se o filme já estiver nos favoritos
+      const errData = await response.json();
+      console.warn("Filme já favoritado:", errData);
+      alert("Este filme já está na sua lista de favoritos!");
     } else {
       const errData = await response.json();
       alert(`Erro ao favoritar: ${errData.detail || response.statusText}`);
