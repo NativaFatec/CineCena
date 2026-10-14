@@ -1,0 +1,39 @@
+/* =========================================================
+   CineCena — ponto de entrada do CSS
+   Importa todos os módulos na ordem certa de cascata:
+   base -> layout -> components -> pages -> responsive (por último,
+   para que os breakpoints sempre vençam as regras "de base").
+   ========================================================= */
+
+/* Base */
+@import url("base/variables.css");
+@import url("base/reset.css");
+
+/* Layout (cabeçalho e rodapé, usados em quase todas as páginas) */
+@import url("layout/header.css");
+@import url("layout/footer.css");
+
+/* Componentes reutilizáveis */
+@import url("components/buttons.css");
+@import url("components/page-header.css");
+@import url("components/movie-card.css");
+@import url("components/carousel.css");
+@import url("components/list-card.css");
+@import url("components/avatar.css");
+@import url("components/empty-state.css");
+@import url("components/post-card.css");
+@import url("components/modal.css");
+
+/* Páginas específicas */
+@import url("pages/login.css");
+@import url("pages/home.css");
+@import url("pages/feed.css");
+@import url("pages/friends.css");
+@import url("pages/lists.css");
+@import url("pages/profile.css");
+@import url("pages/movie.css");
+@import url("pages/about.css");
+@import url("pages/terms.css");
+
+/* Responsivo: por último, para sobrepor as regras acima nos breakpoints */
+@import url("base/responsive.css");

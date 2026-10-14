@@ -1,0 +1,53 @@
+/* Avatar de usuário (vários tamanhos), usado em feed, perfil etc. */
+
+/* ---- person-avatar e variações de tamanho (original: linhas 802-851) ---- */
+.person-avatar {
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: white;
+  background: var(--blue-deep);
+  font-weight: 850;
+  overflow: hidden;
+}
+
+.person-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.person-avatar.sm {
+  width: 38px;
+  height: 38px;
+  font-size: .72rem;
+}
+
+.person-avatar.md {
+  width: 54px;
+  height: 54px;
+  font-size: .85rem;
+}
+
+.person-avatar.lg {
+  width: 72px;
+  height: 72px;
+}
+
+.person-avatar.xl {
+  width: 92px;
+  height: 92px;
+  font-size: 1.15rem;
+}
+
+.person-avatar.xxl {
+  width: 142px;
+  height: 142px;
+  font-size: 2rem;
+  border: 1px solid var(--line);
+}
+
+.person-avatar.own {
+  background: var(--blue);
+}

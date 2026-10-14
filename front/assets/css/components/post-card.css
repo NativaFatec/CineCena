@@ -1,0 +1,318 @@
+/* Post do feed: atividade simples e review completa (com filme anexado).
+   Renderizado dinamicamente pelo components.js. */
+
+/* ---- Atividade: card, pessoa (sem o grid, que é específico da Home) (original: linhas 775-801) ---- */
+.activity-card {
+  padding: 22px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: white;
+}
+
+.activity-person {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.activity-person>div {
+  display: grid;
+}
+
+.activity-person strong {
+  font-size: .88rem;
+}
+
+.activity-person small {
+  margin-top: 2px;
+  color: var(--muted);
+  font-size: .72rem;
+}
+
+
+/* ---- Atividade: tipo e metadados (original: linhas 853-891) ---- */
+.activity-type {
+  margin-top: 18px;
+  color: #627187;
+  font-size: .78rem;
+}
+
+.activity-type strong {
+  color: var(--ink);
+}
+
+.activity-card>p {
+  margin: 12px 0 17px;
+  color: var(--ink-soft);
+  line-height: 1.6;
+}
+
+.activity-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  color: var(--muted);
+  font-size: .74rem;
+}
+
+.activity-meta span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.activity-meta .icon {
+  width: 15px;
+}
+
+.activity-meta .loved {
+  color: var(--red);
+  font-weight: 700;
+}
+
+
+/* ---- Post do feed: stream, card, autor, texto, ações (original: linhas 948-1051) ---- */
+.feed-stream {
+  display: grid;
+  gap: 14px;
+}
+
+.feed-card {
+  padding: 22px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: white;
+}
+
+.feed-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.feed-author {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+
+.feed-author>span:last-child {
+  display: grid;
+}
+
+.feed-author strong {
+  font-size: .89rem;
+}
+
+.feed-author small {
+  margin-top: 2px;
+  color: var(--muted);
+  font-size: .72rem;
+}
+
+.content-badge {
+  padding: 6px 9px;
+  border-radius: 999px;
+  color: var(--blue);
+  background: var(--paper-blue);
+  font-size: .68rem;
+  font-weight: 800;
+}
+
+.content-badge.neutral {
+  color: #607088;
+  background: #f2f4f7;
+}
+
+.review-movie-line {
+  margin-top: 17px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--blue);
+  font-size: .82rem;
+}
+
+.review-movie-line .icon {
+  width: 16px;
+}
+
+.review-movie-line span {
+  color: var(--muted);
+}
+
+.feed-text {
+  margin: 16px 0;
+  color: var(--ink-soft);
+  font-size: .98rem;
+  line-height: 1.7;
+}
+
+.feed-actions {
+  padding-top: 12px;
+  display: flex;
+  gap: 8px;
+  border-top: 1px solid var(--line-soft);
+}
+
+.feed-actions button {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  border: 0;
+  padding: 7px 9px;
+  color: var(--muted);
+  background: transparent;
+  font-size: .78rem;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.feed-actions button:hover {
+  color: var(--blue);
+}
+
+.feed-actions .icon {
+  width: 16px;
+}
+
+
+/* ---- Review: layout e card de filme citado (original: linhas 2631-2696) ---- */
+.review-content-layout {
+  margin-top: 15px;
+  display: grid;
+  grid-template-columns: 145px minmax(0, 1fr);
+  gap: 18px;
+  align-items: start;
+}
+
+.review-content-layout>p {
+  margin: 0;
+  color: var(--ink-soft);
+  line-height: 1.65;
+}
+
+.feed-review-layout {
+  grid-template-columns: 130px minmax(0, 1fr);
+}
+
+.review-movie-card {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 46px minmax(0, 1fr);
+  gap: 10px;
+  align-items: center;
+  padding: 8px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--paper);
+  text-align: left;
+  cursor: pointer;
+}
+
+.review-movie-card:disabled {
+  cursor: default;
+}
+
+.review-movie-poster {
+  width: 46px;
+  aspect-ratio: 2/3;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  border-radius: 6px;
+  background: #e8eef5;
+  color: var(--blue-deep);
+  font-weight: 800;
+}
+
+.review-movie-poster img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.review-movie-card strong {
+  display: block;
+  font-size: .78rem;
+  line-height: 1.25;
+}
+
+.review-movie-card small {
+  display: block;
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: .68rem;
+}
+
+
+/* ---- Review completa dentro do feed (feed-review-*) (original: linhas 2713-2768) ---- */
+.feed-review-main {
+  min-width: 0;
+  min-height: 285px;
+  padding: 22px 24px;
+  display: flex;
+  flex-direction: column;
+}
+
+.feed-review-main .feed-text {
+  margin: 24px 0;
+  flex: 1;
+}
+
+.feed-review-main .feed-actions {
+  margin-top: auto;
+}
+
+.feed-review-movie {
+  padding: 18px;
+  display: flex;
+  align-items: center;
+  border-left: 1px solid var(--line);
+  background: var(--paper);
+}
+
+.review-movie-card.featured {
+  width: 100%;
+  display: block;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+.review-movie-card.featured .review-movie-poster {
+  width: 100%;
+  aspect-ratio: 2/3;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: #e8eef5;
+}
+
+.review-movie-card.featured .review-movie-copy {
+  display: block;
+  padding-top: 10px;
+}
+
+.review-movie-card.featured strong {
+  font-size: .86rem;
+  line-height: 1.3;
+}
+
+.review-movie-card.featured small {
+  margin-top: 5px;
+  font-size: .7rem;
+}
+
+
+/* ---- Ajuste de empilhamento (position) de feed-text/feed-card (original: linhas 3440-3447) ---- */
+.feed-text {
+  position: relative;
+  z-index: 1;
+}
+
+.feed-card {
+  position: relative;
+}

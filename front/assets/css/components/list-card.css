@@ -1,0 +1,77 @@
+/* Card de lista (preview com pôsteres empilhados), usado em home/lists/profile */
+
+/* ---- Card de lista: list-card, poster-stack, list-link (original: linhas 1118-1191) ---- */
+.list-card {
+  min-height: 350px;
+  padding: 23px;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: white;
+}
+
+.list-card.accent-blue {
+  border-top: 4px solid var(--blue);
+}
+
+.list-card.accent-yellow {
+  border-top: 4px solid var(--yellow);
+}
+
+.list-card.accent-green {
+  border-top: 4px solid var(--green);
+}
+
+.poster-stack {
+  height: 140px;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  padding-left: 20px;
+}
+
+.poster-stack img,
+.poster-stack>span {
+  width: 84px;
+  aspect-ratio: 2/3;
+  margin-left: -20px;
+  border: 3px solid white;
+  border-radius: 9px;
+  object-fit: cover;
+  background: var(--blue-deep);
+}
+
+.poster-stack>span {
+  display: grid;
+  place-items: center;
+  color: white;
+  font-weight: 900;
+}
+
+.list-card h3 {
+  margin: 0;
+  font-size: 1.5rem;
+  letter-spacing: -.04em;
+}
+
+.list-card p {
+  margin: 10px 0 23px;
+  color: var(--muted);
+  line-height: 1.6;
+  font-size: .87rem;
+}
+
+.list-link {
+  margin-top: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--blue);
+  font-size: .84rem;
+  font-weight: 750;
+}
+
+.list-link .icon {
+  width: 16px;
+}

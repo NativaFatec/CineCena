@@ -1,0 +1,25 @@
+/* Variáveis globais (cores, raio, largura máxima do container) */
+
+/* ---- Variáveis :root (original: linhas 1-22) ---- */
+:root {
+  --white: #ffffff;
+  --paper: #f6f8fb;
+  --paper-blue: #eef5ff;
+  --ink: #0b1728;
+  --ink-soft: #2f4058;
+  --muted: #708096;
+  --line: #dce4ed;
+  --line-soft: #edf1f5;
+  --blue: #0b5fc6;
+  --blue-strong: #074c9d;
+  --blue-deep: #0a315f;
+  --green: #168b4c;
+  --green-soft: #eaf6ee;
+  --yellow: #e3b926;
+  --yellow-soft: #fff7d8;
+  --red: #bd3550;
+  --radius-sm: 10px;
+  --radius: 16px;
+  --radius-lg: 24px;
+  --shell: 1240px;
+}

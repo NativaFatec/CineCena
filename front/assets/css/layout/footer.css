@@ -1,0 +1,78 @@
+/* Rodapé (usado em todas as páginas internas) */
+
+/* ---- Rodapé padrão (original: linhas 2168-2204) ---- */
+.site-footer {
+  border-top: 1px solid var(--line);
+  background: var(--paper);
+}
+
+.footer-inner {
+  min-height: 210px;
+  padding: 42px 0;
+  display: grid;
+  grid-template-columns: 1.2fr .7fr 1fr;
+  gap: 44px;
+  align-items: start;
+}
+
+.brand-footer {
+  margin-bottom: 13px;
+}
+
+.footer-inner>div:first-child>p,
+.tmdb-credit {
+  margin: 0;
+  max-width: 420px;
+  color: var(--muted);
+  font-size: .78rem;
+  line-height: 1.65;
+}
+
+.footer-links {
+  display: grid;
+  gap: 10px;
+  font-size: .8rem;
+  font-weight: 650;
+}
+
+.footer-links a:hover {
+  color: var(--blue);
+}
+
+
+/* ---- .pending-link (link "em breve" usado no rodapé/about) (original: linhas 2535-2541) ---- */
+.pending-link {
+  color: var(--muted);
+  background: var(--paper);
+  border-color: var(--line);
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+
+/* ---- Variante "footer-simple" (rodapé enxuto usado em páginas internas) (original: linhas 3302-3319) ---- */
+.footer-inner.footer-simple {
+  min-width: 0;
+}
+
+.footer-rights {
+  max-width: 100%;
+  margin: 0;
+  justify-self: end;
+  overflow-wrap: anywhere;
+  color: var(--muted);
+  font-size: .75rem;
+  text-align: right;
+}
+
+
+.footer-simple .brand-footer {
+  margin: 0;
+}
+
+
+/* ---- .site-footer (ajuste de empilhamento/z-index) (original: linhas 3449-3452) ---- */
+.site-footer {
+  position: relative;
+  z-index: 2;
+}

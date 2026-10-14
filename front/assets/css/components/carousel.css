@@ -1,0 +1,69 @@
+/* Mecânica genérica de carrossel/trilho horizontal (setas, scroll),
+   reaproveitada tanto para filmes quanto para listas. */
+
+/* ---- Trilhos (original: linhas 722-766) ---- */
+.rail-wrap {
+  position: relative;
+}
+
+.movie-rail {
+  padding: 2px 2px 14px;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 178px;
+  gap: 17px;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scrollbar-width: none;
+}
+
+.movie-rail::-webkit-scrollbar {
+  display: none;
+}
+
+.rail-arrow {
+  position: absolute;
+  z-index: 3;
+  top: 37%;
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  color: var(--blue);
+  background: white;
+  cursor: pointer;
+}
+
+.rail-arrow.left {
+  left: -18px;
+}
+
+.rail-arrow.right {
+  right: -18px;
+}
+
+.rail-arrow:hover {
+  background: var(--paper-blue);
+}
+
+
+/* ---- Carrossel de listas (usa a mesma seta .rail-arrow) (original: linhas 1100-1116) ---- */
+.lists-carousel {
+  padding: 2px 2px 14px;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(330px, 38%);
+  gap: 18px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.lists-carousel::-webkit-scrollbar {
+  display: none;
+}
+
+.list-carousel-wrap .rail-arrow {
+  top: 45%;
+}

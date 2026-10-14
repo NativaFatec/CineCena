@@ -1,0 +1,68 @@
+/* Cabeçalho de página (título + intro) usado por várias páginas de listagem */
+
+/* ---- Títulos e seções (original: linhas 358-423) ---- */
+/* Títulos e seções */
+.site-main {
+  min-height: calc(100vh - 250px);
+}
+
+.page-intro {
+  padding: 64px 0 30px;
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 32px;
+}
+
+.page-intro-copy h1 {
+  margin: 0;
+  font-size: clamp(2.7rem, 6vw, 5.5rem);
+  line-height: .94;
+  letter-spacing: -.065em;
+}
+
+.page-intro-copy p {
+  max-width: 720px;
+  margin: 18px 0 0;
+  color: var(--muted);
+  line-height: 1.7;
+  font-size: .98rem;
+}
+
+.page-intro-actions {
+  flex: 0 0 auto;
+  padding-bottom: 5px;
+}
+
+.section-block {
+  padding: 68px 0;
+}
+
+.section-tint {
+  background: var(--paper);
+  border-top: 1px solid var(--line-soft);
+  border-bottom: 1px solid var(--line-soft);
+}
+
+.section-heading {
+  margin-bottom: 25px;
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 28px;
+}
+
+.section-heading h2 {
+  margin: 0;
+  font-size: clamp(1.7rem, 3vw, 2.45rem);
+  line-height: 1;
+  letter-spacing: -.05em;
+}
+
+.section-heading p {
+  max-width: 670px;
+  margin: 10px 0 0;
+  color: var(--muted);
+  font-size: .88rem;
+  line-height: 1.6;
+}

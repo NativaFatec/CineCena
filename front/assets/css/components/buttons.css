@@ -1,0 +1,89 @@
+/* Botões e links de ação, usados em todo o site */
+
+/* ---- Botões e elementos comuns (original: linhas 271-357) ---- */
+/* Botões e elementos comuns */
+.btn {
+  min-height: 44px;
+  padding: 0 17px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 1px solid transparent;
+  border-radius: 11px;
+  font-weight: 750;
+  font-size: .86rem;
+  cursor: pointer;
+  background: white;
+}
+
+.btn-primary {
+  color: white;
+  background: var(--blue);
+  border-color: var(--blue);
+}
+
+.btn-primary:hover {
+  background: var(--blue-strong);
+  border-color: var(--blue-strong);
+}
+
+.btn-secondary {
+  color: var(--blue);
+  background: white;
+  border-color: #b9cee4;
+}
+
+.btn-secondary:hover {
+  background: var(--paper-blue);
+}
+
+.btn-ghost {
+  color: var(--ink-soft);
+  background: white;
+  border-color: var(--line);
+}
+
+.btn-ghost:hover {
+  background: var(--paper);
+}
+
+.text-link,
+.button-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--blue);
+  font-weight: 750;
+  font-size: .83rem;
+}
+
+.button-link {
+  border: 0;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+}
+
+.text-action {
+  border: 0;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: white;
+  background: transparent;
+  font-weight: 750;
+  cursor: pointer;
+}
+
+.icon-btn {
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: white;
+  cursor: pointer;
+}

@@ -1,0 +1,476 @@
+/* Breakpoints responsivos do site inteiro.
+   Mantidos juntos (em vez de divididos por componente) porque cada
+   bloco já mistura regras de várias páginas/; dividir aumentaria
+   o risco de quebrar algo sem ganho real de organização. */
+
+/* ---- max-width: 1080px (original: linhas 2206-2251) ---- */
+@media (max-width: 1080px) {
+  .main-nav {
+    display: none;
+  }
+
+  .profile-shortcut {
+    margin-left: auto;
+  }
+
+  .mobile-menu-toggle {
+    display: block;
+  }
+
+  .home-hero-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-feature-card {
+    max-width: 760px;
+  }
+
+  .movie-catalog {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .activity-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .about-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .about-sidebar {
+    position: static;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .footer-inner {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .tmdb-credit {
+    grid-column: 1 / -1;
+  }
+}
+
+
+/* ---- max-width: 820px (original: linhas 2253-2368) ---- */
+@media (max-width: 820px) {
+  .shell {
+    width: min(100% - 32px, var(--shell));
+  }
+
+  .profile-shortcut-copy {
+    display: none;
+  }
+
+  .page-intro {
+    padding-top: 44px;
+    align-items: start;
+    flex-direction: column;
+  }
+
+  .movie-tools {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .movie-tool-status {
+    justify-content: space-between;
+  }
+
+  .movie-catalog {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 24px 14px;
+  }
+
+  .feed-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .feed-side {
+    position: static;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .lists-carousel {
+    grid-auto-columns: 72%;
+  }
+
+  .friend-card {
+    grid-template-columns: 1fr;
+  }
+
+  .friend-card-actions {
+    grid-column: 1;
+    grid-row: auto;
+    display: flex;
+  }
+
+  .friend-card-stats {
+    padding-left: 114px;
+  }
+
+  .profile-hero {
+    grid-template-columns: auto 1fr;
+  }
+
+  .profile-hero-actions {
+    grid-column: 1 / -1;
+    padding: 0;
+  }
+
+  .profile-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .profile-stats>div:nth-child(2) {
+    border-right: 0;
+  }
+
+  .profile-stats>div:nth-child(n+3) {
+    border-top: 1px solid var(--line);
+  }
+
+  .profile-stats>div:nth-child(3) {
+    padding-left: 0;
+  }
+
+  .profile-movie-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .movie-modal-content {
+    grid-template-columns: 180px 1fr;
+    padding: 58px 28px 32px;
+    gap: 26px;
+  }
+
+  .movie-info-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .login-page {
+    grid-template-columns: 1fr;
+  }
+
+  .login-visual {
+    min-height: 620px;
+  }
+
+  .login-panel {
+    min-height: auto;
+    padding: 50px 24px;
+  }
+
+  .footer-inner {
+    grid-template-columns: 1fr;
+  }
+
+  .tmdb-credit {
+    grid-column: auto;
+  }
+}
+
+
+/* ---- max-width: 600px (original: linhas 2370-2533) ---- */
+@media (max-width: 600px) {
+  .header-inner {
+    min-height: 68px;
+    gap: 10px;
+  }
+
+  .profile-shortcut {
+    display: none;
+  }
+
+  .mobile-menu-toggle {
+    margin-left: auto;
+  }
+
+  .home-hero {
+    padding-top: 42px;
+  }
+
+  .home-hero-copy h1 {
+    font-size: clamp(3.4rem, 18vw, 5.3rem);
+  }
+
+  .hero-feature-card {
+    min-height: auto;
+    grid-template-columns: 115px 1fr;
+    padding: 18px;
+    gap: 16px;
+  }
+
+  .hero-feature-poster .movie-card {
+    width: 115px;
+  }
+
+  .hero-feature-copy h2 {
+    font-size: 1.55rem;
+  }
+
+  .section-block {
+    padding: 48px 0;
+  }
+
+  .section-heading {
+    align-items: start;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .movie-catalog {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 23px 12px;
+  }
+
+  .movie-rail {
+    grid-auto-columns: 145px;
+  }
+
+  .rail-arrow {
+    display: none;
+  }
+
+  .lists-carousel {
+    grid-auto-columns: 88%;
+  }
+
+  .friend-card-main {
+    flex-direction: column;
+  }
+
+  .friend-card-stats {
+    padding-left: 0;
+    flex-wrap: wrap;
+  }
+
+  .friend-card-actions {
+    flex-direction: column;
+  }
+
+  .profile-hero {
+    grid-template-columns: 1fr;
+  }
+
+  .person-avatar.xxl {
+    width: 100px;
+    height: 100px;
+  }
+
+  .profile-stats {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .profile-stats>div {
+    padding: 12px;
+  }
+
+  .profile-stats>div:first-child,
+  .profile-stats>div:nth-child(3) {
+    padding-left: 0;
+  }
+
+  .profile-movie-grid {
+    gap: 12px;
+  }
+
+  .feed-side {
+    grid-template-columns: 1fr;
+  }
+
+  .about-sidebar {
+    grid-template-columns: 1fr;
+  }
+
+  .about-hero h1 {
+    font-size: clamp(3rem, 15vw, 5rem);
+  }
+
+  .modal-backdrop {
+    padding: 0;
+    align-items: end;
+  }
+
+  .app-modal {
+    width: 100%;
+    max-height: 92vh;
+    border-radius: 18px 18px 0 0;
+  }
+
+  .app-modal.md {
+    padding: 25px 20px;
+  }
+
+  .app-modal.movie-size {
+    border-radius: 18px 18px 0 0;
+  }
+
+  .movie-modal-content {
+    grid-template-columns: 1fr;
+    padding: 64px 20px 30px;
+  }
+
+  .movie-modal-poster {
+    width: 145px;
+  }
+
+  .movie-modal-main h2 {
+    font-size: 2.8rem;
+  }
+
+  .login-visual {
+    padding: 32px 24px;
+    min-height: 540px;
+  }
+
+  .login-story h1 {
+    font-size: clamp(4rem, 21vw, 6.4rem);
+  }
+
+  .login-poster-wall {
+    display: none;
+  }
+
+  .login-card {
+    padding: 26px 21px;
+  }
+}
+
+
+/* ---- min-width:621px e max-width:820px (review no feed) (original: linhas 2699-2711) ---- */
+@media (min-width: 621px) and (max-width: 820px) {
+  .feed-card.feed-review-card {
+    grid-template-columns: minmax(0, 1fr) 180px;
+  }
+
+  .feed-review-main {
+    padding: 18px;
+  }
+
+  .feed-review-movie {
+    padding: 14px;
+  }
+}
+
+
+/* ---- max-width: 900px (original: linhas 3321-3348) ---- */
+@media (max-width: 900px) {
+  .profile-movie-grid.wide {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .favorite-slots {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .movie-page-banner-inner {
+    grid-template-columns: 180px 1fr;
+  }
+
+  .movie-page-body {
+    grid-template-columns: 1fr;
+    gap: 35px;
+  }
+
+  .footer-inner.footer-simple {
+    grid-template-columns: 1fr;
+    justify-items: start;
+  }
+
+  .footer-rights {
+    justify-self: start;
+    text-align: left;
+  }
+}
+
+
+/* ---- max-width: 620px (original: linhas 3350-3437) ---- */
+@media (max-width: 620px) {
+  .feature-carousel-card {
+    min-height: auto;
+    grid-template-columns: 115px 1fr;
+    gap: 16px;
+    padding: 18px;
+  }
+
+  .feature-carousel-copy h2 {
+    font-size: 1.6rem;
+  }
+
+  .review-content-layout,
+  .feed-review-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .review-movie-card {
+    max-width: 240px;
+  }
+
+  .feed-card.feed-review-card {
+    grid-template-columns: 1fr;
+  }
+
+  .feed-review-main {
+    min-height: 0;
+  }
+
+  .feed-review-movie {
+    border-left: 0;
+    border-top: 1px solid var(--line);
+  }
+
+  .review-movie-card.featured {
+    display: grid;
+    grid-template-columns: 82px minmax(0, 1fr);
+    gap: 12px;
+    align-items: center;
+    max-width: none;
+  }
+
+  .review-movie-card.featured .review-movie-copy {
+    padding-top: 0;
+  }
+
+  .favorite-slots {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .quick-movie-card {
+    grid-template-columns: 1fr;
+    padding: 58px 20px 24px;
+  }
+
+  .quick-movie-poster {
+    width: 135px;
+  }
+
+  .quick-more {
+    margin-top: 25px;
+  }
+
+  .profile-movie-grid.wide {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .movie-page-banner {
+    min-height: auto;
+  }
+
+  .movie-page-banner-inner {
+    grid-template-columns: 1fr;
+    padding-top: 55px;
+  }
+
+  .movie-page-poster {
+    width: 145px;
+  }
+
+  .movie-page-heading h1 {
+    font-size: clamp(3rem, 15vw, 5rem);
+  }
+
+  .cast-grid {
+    grid-template-columns: 1fr;
+  }
+}
