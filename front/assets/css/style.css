@@ -47,7 +47,12 @@ svg { display: block; }
 .brand { display: inline-flex; align-items: center; gap: 11px; font-weight: 900; letter-spacing: -.04em; }
 .brand-name { font-size: 1.42rem; line-height: 1; }
 .brand-name span { color: var(--blue); }
-.brand-mark { position: relative; display: grid; place-items: center; width: 34px; height: 34px; border-radius: 9px; background: var(--blue); overflow: hidden; }
+.brand-mark {
+  display: block;
+  width: 34px;
+  height: 34px;
+  object-fit: contain;
+}
 .brand-mark::before { content: ""; position: absolute; inset: 6px 7px 8px; border: 2px solid white; border-radius: 3px; }
 .brand-mark i { position: absolute; top: 5px; width: 8px; height: 3px; border-radius: 999px; background: var(--yellow); }
 .brand-mark i:nth-child(1) { left: 6px; }
