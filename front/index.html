@@ -31,11 +31,23 @@
     <section class="login-panel">
       <div class="login-card">
         <h2>Entrar no CineCena</h2><br>
-        <form data-login-form><label>E-mail ou usuário<input type="text" required
-              placeholder="@usuario ou email@exemplo.com" value="@usuario"></label><label>Senha<span
-              class="label-row"></span><input type="password" required placeholder="Sua senha"
-              value="123456"></label><button class="btn btn-primary login-submit" type="submit">Entrar no
-            CineCena</button><button type="button" class="link-button" data-forgot>Esqueci a senha</button></form>
+        <form data-login-form>
+          <label>
+            <input type="text" required placeholder="Usuário ou E-mail">
+          </label>
+          <label>
+            <input type="password" required placeholder="Senha">
+          </label>
+
+          <button class="btn btn-primary login-submit" type="submit">
+            Entrar no CineCena
+          </button>
+
+          <button type="button" class="link-button" data-forgot>
+            Esqueci a senha
+          </button>
+        </form>
+        
         <div class="login-divider"><span>ou</span></div><button class="btn btn-secondary w-full" type="button"
           data-signup>Criar uma conta</button>
         <div class="login-legal"><a href="pages/terms.html">Termos e condições</a></div>

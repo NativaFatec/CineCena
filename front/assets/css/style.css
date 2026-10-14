@@ -1690,6 +1690,11 @@ svg {
   font-weight: 700;
 }
 
+.login-card input::placeholder {
+  font-style: italic;
+  opacity: 1;
+}
+
 .modal-form input,
 .modal-form textarea,
 .modal-form select,
