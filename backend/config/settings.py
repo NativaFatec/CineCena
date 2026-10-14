@@ -41,6 +41,7 @@ def env_list(name, default=""):
 ALLOWED_HOSTS = env_list(
     "DJANGO_ALLOWED_HOSTS",
     "127.0.0.1,localhost",
+    'cinecena.onrender.com',
 )
 
 render_hostname = os.getenv("RENDER_EXTERNAL_HOSTNAME")
