@@ -3427,3 +3427,18 @@ svg {
     grid-template-columns: 1fr;
   }
 }
+
+
+.feed-text {
+  position: relative;
+  z-index: 1;
+}
+
+.feed-card {
+  position: relative;
+}
+
+.site-footer {
+  position: relative;
+  z-index: 2;
+}
