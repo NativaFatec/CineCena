@@ -30,16 +30,16 @@ if (mobileThemeToggle) mobileThemeToggle.addEventListener("click", toggleTheme);
 
 updateThemeButtons();
 
-// FUNÇÃO PARA ADICIONAR UM FILME AOS FAVORITOS
-async function adicionarFavorito(movieDbId, title, posterUrl) {
+// FUNÇÃO PARA ADICIONAR UM FILME AOS CURTIDOS/FAVORITOS DO USUÁRIO LOGADO
+async function adicionarCurtido(movieDbId, title, posterUrl) {
   const token = localStorage.getItem('token');
   if (!token) {
-    alert("Você precisa estar logado para favoritar!");
+    alert("Você precisa estar logado para curtir um filme!");
     return;
   }
 
   try {
-    const response = await fetch(`${API_BASE_URL}/api/movies/favorites/`, {
+    const response = await fetch(`${API_BASE_URL}/api/movies/liked/`, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${token}`,
@@ -53,13 +53,13 @@ async function adicionarFavorito(movieDbId, title, posterUrl) {
     });
 
     if (response.ok) {
-      alert("Filme adicionado aos favoritos!");
+      alert("Filme adicionado aos curtidos!");
     } else {
       const errData = await response.json();
-      alert(`Erro ao favoritar: ${errData.detail || response.statusText}`);
+      alert(`Erro ao curtir: ${errData.detail || response.statusText}`);
     }
   } catch (err) {
-    console.error("Erro na requisição de favoritos:", err);
+    console.error("Erro na requisição de curtidos:", err);
   }
 }
 
@@ -88,8 +88,8 @@ async function carregarFilmesDoBanco() {
         <div class="movie-info">
           <h3>${filme.title}</h3>
           <span class="movie-year">${filme.release_date ? filme.release_date.split('-')[0] : 'Brasil'}</span>
-          <button onclick="adicionarFavorito(${filme.tmdb_id}, '${filme.title.replace(/'/g, "\\'")}', '${filme.poster_url}')" class="btn-fav">
-            ♥ Favoritar
+          <button onclick="adicionarCurtido(${filme.tmdb_id}, '${filme.title.replace(/'/g, "\\'")}', '${filme.poster_url}')" class="btn-liked">
+             Curtir
           </button>
         </div>
       </div>
