@@ -99,7 +99,7 @@ async function carregarFilmesDoBanco() {
           <h3>${filme.title}</h3>
           <span class="movie-year">${filme.release_date ? filme.release_date.split('-')[0] : 'Brasil'}</span>
           <button onclick="adicionarFavorito(${filme.tmdb_id}, '${filme.title.replace(/'/g, "\\'")}', '${filme.poster_url}')" class="btn-fav">
-            ♥ Favoritar
+             Favoritar
           </button>
         </div>
       </div>

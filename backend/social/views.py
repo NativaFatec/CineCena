@@ -326,3 +326,20 @@ class FriendshipViewSet(viewsets.ModelViewSet):
                 else status.HTTP_200_OK
             ),
         )
+
+        from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status, permissions
+from .models import Movie
+
+class FavoriteMovieDetailView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def delete(self, request, movie_id):
+        profile = request.user.profile
+        try:
+            movie = profile.favorite_movies.get(id=movie_id)
+            profile.favorite_movies.remove(movie)
+            return Response({'message': 'Filme removido com sucesso'}, status=status.HTTP_200_OK)
+        except Movie.DoesNotExist:
+            return Response({'error': 'Filme não encontrado nos favoritos'}, status=status.HTTP_404_NOT_FOUND)

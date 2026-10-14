@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
+from accounts.models import Profile
 from movies.models import Review
 from .models import (
     Comment,

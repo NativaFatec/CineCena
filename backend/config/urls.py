@@ -99,3 +99,5 @@ if settings.DEBUG:
         settings.MEDIA_URL,
         document_root=settings.MEDIA_ROOT,
     )
+
+    path('api/movies/favorites/<int:movie_id>/', FavoriteMovieDetailView.as_view(), name='favorite-movie-detail'),
