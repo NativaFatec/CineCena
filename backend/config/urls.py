@@ -1,4 +1,5 @@
 
+from social.views import FavoriteMovieDetailView
 from django.conf.urls.static import static
 from django.conf import settings
 from django.contrib import admin
@@ -100,4 +101,8 @@ if settings.DEBUG:
         document_root=settings.MEDIA_ROOT,
     )
 
-    path('api/movies/favorites/<int:movie_id>/', FavoriteMovieDetailView.as_view(), name='favorite-movie-detail'),
+    path(
+    'api/movies/favorites/<int:movie_id>/',
+    FavoriteMovieDetailView.as_view(),
+    name='favorite-movie-detail',
+),

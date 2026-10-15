@@ -30,17 +30,28 @@ if not SECRET_KEY:
         )
 
 
-def env_list(name, default=""):
+
+def env_list(name, default=None):
+    value = os.getenv(name)
+
+    if value:
+        values = value.split(",")
+    else:
+        values = default or []
+
+        if isinstance(values, str):
+            values = values.split(",")
+
     return [
-        value.strip()
-        for value in os.getenv(name, default).split(",")
-        if value.strip()
+        item.strip()
+        for item in values
+        if item.strip()
     ]
 
 
 ALLOWED_HOSTS = env_list(
     "DJANGO_ALLOWED_HOSTS",
-    default=["127.0.0.1", "localhost", "cinecena.onrender.com", "*"]
+    default=["127.0.0.1", "localhost", "cinecena.onrender.com",]
 )
 
 render_hostname = os.getenv("RENDER_EXTERNAL_HOSTNAME")
