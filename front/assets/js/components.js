@@ -85,7 +85,7 @@
       <div class="feed-review-main">
         <header class="feed-card-head"><a href="${href}" class="feed-author">${avatar}<span><strong>${escapeHTML(name)}</strong><small>${escapeHTML(review.date || "Agora")}</small></span></a><span class="content-badge">Review</span></header>
         ${review.title ? `<h3 class="feed-review-title">${escapeHTML(review.title)}</h3>` : ""}
-        ${review.rating ? `<div class="feed-review-rating" aria-label="Nota ${Number(review.rating)} de 5">${[1,2,3,4,5].map(n => `<span class="${n <= Number(review.rating) ? "is-active" : ""}">★</span>`).join("")}<small>${Number(review.rating)}/5</small></div>` : ""}
+        ${review.reaction ? `<div class="feed-review-reaction reaction-${escapeHTML(review.reaction)}"><span>${review.reaction === "amei" ? "❤️" : review.reaction === "gostei" ? "👍" : "👎"}</span><strong>${review.reaction === "amei" ? "Amei" : review.reaction === "gostei" ? "Gostei" : "Não gostei"}</strong></div>` : (review.rating ? `<div class="feed-review-reaction"><span>${Number(review.rating) >= 4 ? "❤️" : Number(review.rating) >= 3 ? "👍" : "👎"}</span><strong>${Number(review.rating) >= 4 ? "Amei" : Number(review.rating) >= 3 ? "Gostei" : "Não gostei"}</strong></div>` : "")}
         <p class="feed-text">${escapeHTML(review.text)}</p>
         <footer class="feed-actions"><button type="button">${icon("heart")} Amei</button><button type="button">${icon("comment")} Comentar</button></footer>
       </div>
@@ -198,12 +198,14 @@
         </div>` : `<div class="review-movie-required">${icon("film")}<span>Abra a página de um filme para avaliá-lo.</span></div>`}
         <form class="modal-form review-form" data-review-form novalidate>
           <fieldset class="review-rating">
-            <legend>Sua nota</legend>
-            <div class="review-stars" role="group" aria-label="Nota de 1 a 5 estrelas">
-              ${[1,2,3,4,5].map(n => `<button type="button" class="review-star" data-rating="${n}" aria-label="${n} ${n === 1 ? 'estrela' : 'estrelas'}" aria-pressed="false">${icon("star")}</button>`).join("")}
+            <legend>O que você achou do filme?</legend>
+            <div class="review-reactions" role="group" aria-label="Escolha sua reação">
+              <button type="button" class="review-reaction" data-reaction="nao_gostei" data-rating="1" aria-pressed="false"><span aria-hidden="true">👎</span><strong>Não gostei</strong></button>
+              <button type="button" class="review-reaction" data-reaction="gostei" data-rating="3" aria-pressed="false"><span aria-hidden="true">👍</span><strong>Gostei</strong></button>
+              <button type="button" class="review-reaction" data-reaction="amei" data-rating="5" aria-pressed="false"><span aria-hidden="true">❤️</span><strong>Amei</strong></button>
             </div>
-            <p class="review-rating-hint" data-rating-hint>Toque para avaliar</p>
             <input type="hidden" name="rating" value="">
+            <input type="hidden" name="reaction" value="">
             <p class="review-field-error" data-rating-error role="alert"></p>
           </fieldset>
           <label class="review-body-field">Seu comentário<textarea name="text" rows="5" maxlength="1200" required placeholder="O que você achou do filme? Fale sobre a história, atuações ou o que sentiu…"></textarea><span class="review-char-count"><span data-review-count>0</span>/1200</span></label>
@@ -215,24 +217,18 @@
 
     const form = modal.querySelector("[data-review-form]");
     const ratingInput = form.querySelector('[name="rating"]');
-    const ratingHint = modal.querySelector("[data-rating-hint]");
-    const ratingLabels = ["", "Não gostei", "Poderia ser melhor", "Bom", "Muito bom", "Obra-prima!"];
-    const stars = [...modal.querySelectorAll("[data-rating]")];
-    stars.forEach((star, index) => {
-      star.addEventListener("click", () => {
-        const rating = Number(star.dataset.rating);
-        ratingInput.value = String(rating);
-        stars.forEach((item, i) => {
-          item.classList.toggle("is-active", i < rating);
-          item.setAttribute("aria-pressed", String(i < rating));
+    const reactionInput = form.querySelector('[name="reaction"]');
+    const reactions = [...modal.querySelectorAll("[data-reaction]")];
+    reactions.forEach(button => {
+      button.addEventListener("click", () => {
+        ratingInput.value = button.dataset.rating;
+        reactionInput.value = button.dataset.reaction;
+        reactions.forEach(item => {
+          const active = item === button;
+          item.classList.toggle("is-active", active);
+          item.setAttribute("aria-pressed", String(active));
         });
-        ratingHint.textContent = ratingLabels[rating];
         modal.querySelector("[data-rating-error]").textContent = "";
-      });
-      star.addEventListener("keydown", event => {
-        if (!["ArrowLeft", "ArrowRight"].includes(event.key)) return;
-        event.preventDefault();
-        stars[Math.max(0, Math.min(4, index + (event.key === "ArrowRight" ? 1 : -1)))].focus();
       });
     });
 
@@ -247,10 +243,11 @@
       event.preventDefault();
       const text = textarea.value.trim();
       const rating = Number(ratingInput.value);
+      const reaction = reactionInput.value;
       let valid = true;
       if (!selectedMovie) return;
       if (!rating) {
-        modal.querySelector("[data-rating-error]").textContent = "Escolha uma nota para o filme.";
+        modal.querySelector("[data-rating-error]").textContent = "Escolha uma reação para o filme.";
         valid = false;
       }
       if (text.length < 10) {
@@ -315,7 +312,7 @@
         const response = await fetch(api.endpoint("reviews/"), {
           method: "POST",
           headers,
-          body: JSON.stringify({ movie: dbMovie.id, rating, body: text, title: "", is_spoiler: false })
+          body: JSON.stringify({ movie: dbMovie.id, rating, reaction, body: text, title: "", is_spoiler: false })
         });
         const result = await response.json().catch(() => ({}));
         if (!response.ok) {
@@ -332,6 +329,7 @@
           movieKey: movieKey(selectedMovie),
           year: movieYear(selectedMovie),
           rating: result.rating,
+          reaction: result.reaction,
           text: result.body,
           date: "Agora"
         });
