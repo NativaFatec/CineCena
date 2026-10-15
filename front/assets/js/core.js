@@ -407,80 +407,63 @@
    * ============================================================
    */
 
+  
   async function loadFavorites() {
-    const token =
-      localStorage.getItem("token");
+      const token = localStorage.getItem("token");
 
-    if (!token) {
-      favoriteState.items = [];
-      return [];
-    }
-
-    favoriteState.loading = true;
-
-    try {
-      const response =
-        await fetch(
-          FAVORITES_API_URL,
-          {
-            method: "GET",
-
-            headers: {
-              "Authorization":
-                `Token ${token}`,
-
-              "Content-Type":
-                "application/json"
-            }
-          }
-        );
-
-      if (!response.ok) {
-        throw new Error(
-          `Erro ao carregar favoritos: ${response.status}`
-        );
+      if (!token) {
+          favoriteState.items = [];
+          window.dispatchEvent(
+              new CustomEvent("cinecena:favorites-updated", {
+                  detail: { favorites: [] }
+              })
+          );
+          return [];
       }
 
-      const data =
-        await response.json();
+      favoriteState.loading = true;
 
-      favoriteState.items =
-        Array.isArray(data)
-          ? data.sort(
-              (a, b) =>
-                Number(a.position) -
-                Number(b.position)
-            )
-          : [];
+      try {
+          const response = await fetch(FAVORITES_API_URL, {
+              method: "GET",
+              headers: {
+                  Authorization: `Token ${token}`,
+                  "Content-Type": "application/json"
+              }
+          });
 
-      window.dispatchEvent(
-        new CustomEvent(
-          "cinecena:favorites-updated",
-          {
-            detail: {
-              favorites:
-                favoriteState.items
-            }
+          if (!response.ok) {
+              throw new Error(`Erro ao carregar favoritos: ${response.status}`);
           }
-        )
-      );
 
-      return favoriteState.items;
+          const data = await response.json();
 
-    } catch (error) {
-      console.error(
-        "CineCena: erro ao carregar favoritos:",
-        error
-      );
+          const favorites = Array.isArray(data)
+              ? data
+              : Array.isArray(data.results)
+                  ? data.results
+                  : [];
 
-      favoriteState.items = [];
+          favoriteState.items = favorites.sort(
+              (a, b) => Number(a.position) - Number(b.position)
+          );
 
-      return [];
+          window.dispatchEvent(
+              new CustomEvent("cinecena:favorites-updated", {
+                  detail: { favorites: favoriteState.items }
+              })
+          );
 
-    } finally {
-      favoriteState.loading = false;
-    }
+          return favoriteState.items;
+      } catch (error) {
+          console.error("CineCena: erro ao carregar favoritos:", error);
+          favoriteState.items = [];
+          return [];
+      } finally {
+          favoriteState.loading = false;
+      }
   }
+
 
   /*
    * Retorna os cinco slots.
