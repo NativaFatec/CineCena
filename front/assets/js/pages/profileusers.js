@@ -258,7 +258,7 @@
 
                             <p>
                                 ${escapeHTML(review.movie_title)}
-                                · ${Number(review.rating)}/5
+                                · ${review.reaction === "amei" ? "❤️ Amei" : review.reaction === "gostei" ? "👍 Gostei" : review.reaction === "nao_gostei" ? "👎 Não gostei" : `${Number(review.rating)}/5`}
                             </p>
 
                             ${

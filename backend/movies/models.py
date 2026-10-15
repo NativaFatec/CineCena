@@ -92,11 +92,24 @@ class Review(models.Model):
         related_name="reviews"
     )
 
+    REACTION_CHOICES = [
+        ("nao_gostei", "Não gostei"),
+        ("gostei", "Gostei"),
+        ("amei", "Amei"),
+    ]
+
     rating = models.PositiveSmallIntegerField(
         validators=[
             MinValueValidator(1),
             MaxValueValidator(5)
         ]
+    )
+
+    reaction = models.CharField(
+        "reação",
+        max_length=12,
+        choices=REACTION_CHOICES,
+        default="gostei",
     )
 
     title = models.CharField(

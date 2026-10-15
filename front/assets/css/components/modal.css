@@ -644,3 +644,18 @@
 .review-movie-required { display:flex; align-items:center; gap:10px; padding:14px; margin:18px 0; border-radius:12px; background:var(--surface-soft, rgba(128,128,128,.1)); color:var(--text-muted, #858b98); font-size:.9rem; }
 .review-form .review-body-field textarea { resize:vertical; min-height:125px; }
 .review-form .review-rating { margin-bottom:20px; }
+
+
+/* Reações da review: Não gostei, Gostei e Amei */
+.review-reactions { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; }
+.review-reaction { min-width:0; min-height:82px; padding:12px 8px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:7px; border:1px solid var(--line); border-radius:13px; color:var(--ink-soft); background:var(--paper); cursor:pointer; transition:transform .15s,border-color .15s,background .15s,color .15s; }
+.review-reaction:hover { transform:translateY(-2px); border-color:#9bb9d8; }
+.review-reaction > span { font-size:1.45rem; line-height:1; }
+.review-reaction strong { font-size:.78rem; }
+.review-reaction.is-active { color:var(--blue); border-color:var(--blue); background:var(--paper-blue); box-shadow:0 0 0 2px color-mix(in srgb,var(--blue) 12%,transparent); }
+.review-reaction[data-reaction="nao_gostei"].is-active { color:#b54747; border-color:#d98b8b; background:#fff0f0; }
+.review-reaction[data-reaction="amei"].is-active { color:#c13c61; border-color:#e7a0b3; background:#fff0f5; }
+.feed-review-reaction { display:inline-flex; align-items:center; gap:7px; margin:5px 0 10px; padding:6px 10px; border:1px solid var(--line); border-radius:999px; color:var(--ink-soft); font-size:.78rem; }
+.feed-review-reaction span { font-size:1rem; }
+.feed-review-reaction strong { font-weight:750; }
+@media (max-width: 420px) { .review-reactions { grid-template-columns:1fr; } .review-reaction { min-height:56px; flex-direction:row; } }

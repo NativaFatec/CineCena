@@ -52,6 +52,7 @@ class ReviewSerializer(serializers.ModelSerializer):
             "movie",
             "movie_title",
             "rating",
+            "reaction",
             "title",
             "body",
             "is_spoiler",
@@ -65,6 +66,34 @@ class ReviewSerializer(serializers.ModelSerializer):
             "created_at",
             "updated_at",
         )
+
+    def validate(self, attrs):
+        """Keep the legacy numeric rating synchronized with the reaction buttons."""
+        reaction_to_rating = {
+            "nao_gostei": 1,
+            "gostei": 3,
+            "amei": 5,
+        }
+        rating_to_reaction = {
+            1: "nao_gostei",
+            2: "nao_gostei",
+            3: "gostei",
+            4: "amei",
+            5: "amei",
+        }
+
+        reaction = attrs.get("reaction")
+        rating = attrs.get("rating")
+
+        if reaction:
+            attrs["rating"] = reaction_to_rating[reaction]
+        elif rating is not None:
+            attrs["reaction"] = rating_to_reaction[rating]
+        elif self.instance is None:
+            attrs["reaction"] = "gostei"
+            attrs["rating"] = 3
+
+        return attrs
 
 class FavoriteMovieSerializer(serializers.ModelSerializer):
 
