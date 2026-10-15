@@ -1,235 +1,9 @@
 (() => {
-    /* =========================================================
-       FAVORITOS POR USUÁRIO
-       ---------------------------------------------------------
-       O restante do projeto pode continuar usando a chave antiga
-       "cinecena_favorites". Este bloco redireciona essa chave para
-       uma chave exclusiva do usuário logado.
-       ========================================================= */
-
-    const LEGACY_FAVORITES_KEY = 'cinecena_favorites';
-    const GUEST_FAVORITES_KEY = 'cinecena_favorites_guest';
-
-    function getLoggedUser() {
-        try {
-            const rawUser = localStorage.getItem('user');
-
-            if (!rawUser) {
-                return null;
-            }
-
-            return JSON.parse(rawUser);
-        } catch (error) {
-            console.error(
-                'CineCena: erro ao ler usuário logado:',
-                error
-            );
-
-            return null;
-        }
-    }
-
-    function getFavoritesStorageKey() {
-        const user = getLoggedUser();
-
-        /*
-         * Sem usuário logado:
-         * usa uma área separada para visitante.
-         */
-        if (!user) {
-            return GUEST_FAVORITES_KEY;
-        }
-
-        /*
-         * O ID é o identificador ideal.
-         *
-         * Exemplo:
-         * usuário 1 -> cinecena_favorites_1
-         * usuário 2 -> cinecena_favorites_2
-         */
-        if (
-            user.id !== undefined &&
-            user.id !== null &&
-            String(user.id).trim() !== ''
-        ) {
-            return `cinecena_favorites_${String(user.id).trim()}`;
-        }
-
-        /*
-         * Fallback caso o backend ainda não esteja enviando o ID.
-         */
-        const fallback = user.username || user.email;
-
-        if (fallback) {
-            return `cinecena_favorites_${encodeURIComponent(
-                String(fallback).trim().toLowerCase()
-            )}`;
-        }
-
-        return GUEST_FAVORITES_KEY;
-    }
-
-    function getFavorites() {
-        try {
-            const saved = localStorage.getItem(
-                getFavoritesStorageKey()
-            );
-
-            if (!saved) {
-                return [];
-            }
-
-            const parsed = JSON.parse(saved);
-
-            return Array.isArray(parsed) ? parsed : [];
-        } catch (error) {
-            console.error(
-                'CineCena: erro ao carregar favoritos:',
-                error
-            );
-
-            return [];
-        }
-    }
-
-    function saveFavorites(favoritesList) {
-        try {
-            const favorites = Array.isArray(favoritesList)
-                ? favoritesList
-                : [];
-
-            localStorage.setItem(
-                getFavoritesStorageKey(),
-                JSON.stringify(favorites)
-            );
-
-            /*
-             * Impede que a chave antiga continue sendo usada.
-             */
-            localStorage.removeItem(
-                LEGACY_FAVORITES_KEY
-            );
-
-        } catch (error) {
-            console.error(
-                'CineCena: erro ao salvar favoritos:',
-                error
-            );
-        }
-    }
-
-    /* =========================================================
-       COMPATIBILIDADE COM CÓDIGO ANTIGO
-       ---------------------------------------------------------
-       Caso outro arquivo ainda faça:
-
-       localStorage.getItem('cinecena_favorites')
-       localStorage.setItem('cinecena_favorites', ...)
-       localStorage.removeItem('cinecena_favorites')
-
-       ele será automaticamente direcionado para o usuário atual.
-       ========================================================= */
-
-    function installFavoritesStorageBridge() {
-        if (
-            !window.localStorage ||
-            Storage.prototype.__cineCenaFavoritesBridgeInstalled
-        ) {
-            return;
-        }
-
-        const originalGetItem =
-            Storage.prototype.getItem;
-
-        const originalSetItem =
-            Storage.prototype.setItem;
-
-        const originalRemoveItem =
-            Storage.prototype.removeItem;
-
-        Storage.prototype.getItem = function (key) {
-            if (
-                this === window.localStorage &&
-                key === LEGACY_FAVORITES_KEY
-            ) {
-                return originalGetItem.call(
-                    this,
-                    getFavoritesStorageKey()
-                );
-            }
-
-            return originalGetItem.call(this, key);
-        };
-
-        Storage.prototype.setItem = function (key, value) {
-            if (
-                this === window.localStorage &&
-                key === LEGACY_FAVORITES_KEY
-            ) {
-                const userKey =
-                    getFavoritesStorageKey();
-
-                originalSetItem.call(
-                    this,
-                    userKey,
-                    value
-                );
-
-                /*
-                 * Nunca deixa a chave global continuar existindo.
-                 */
-                originalRemoveItem.call(
-                    this,
-                    LEGACY_FAVORITES_KEY
-                );
-
-                return;
-            }
-
-            return originalSetItem.call(
-                this,
-                key,
-                value
-            );
-        };
-
-        Storage.prototype.removeItem = function (key) {
-            if (
-                this === window.localStorage &&
-                key === LEGACY_FAVORITES_KEY
-            ) {
-                return originalRemoveItem.call(
-                    this,
-                    getFavoritesStorageKey()
-                );
-            }
-
-            return originalRemoveItem.call(
-                this,
-                key
-            );
-        };
-
-        Storage.prototype.__cineCenaFavoritesBridgeInstalled = true;
-    }
-
-    /*
-     * Instala a proteção antes da lógica do perfil.
-     */
-    installFavoritesStorageBridge();
-
-    /* =========================================================
-       CINECENA
-       ========================================================= */
-
     const App = window.CineCena;
     const UI = window.CineCenaComponents;
 
     if (!App || !UI) {
-        console.error(
-            'CineCena: App ou componentes não encontrados.'
-        );
-
+        console.error('CineCena: App ou componentes não encontrados.');
         return;
     }
 
@@ -246,10 +20,6 @@
     } = App;
 
     const LIMIT = 15;
-
-    /* =========================================================
-       SEÇÕES DE FILMES
-       ========================================================= */
 
     function sectionMovies(
         target,
@@ -269,7 +39,6 @@
                 emptyText,
                 action
             );
-
             return;
         }
 
@@ -302,10 +71,6 @@
         `;
     }
 
-    /* =========================================================
-       FAVORITOS
-       ========================================================= */
-
     function renderFavoriteSlots(target) {
         if (!target) {
             return;
@@ -315,10 +80,6 @@
             <div class="favorite-slots">
                 ${favoriteSlots()
                     .map((movie, index) => {
-
-                        /*
-                         * Slot vazio
-                         */
                         if (!movie) {
                             return `
                                 <button
@@ -344,19 +105,13 @@
 
                         const poster = posterURL(movie);
 
-                        /*
-                         * Slot preenchido
-                         */
                         return `
                             <div class="favorite-slot filled">
-
                                 <button
                                     class="favorite-remove"
                                     type="button"
                                     data-remove-favorite="${index}"
-                                    aria-label="Remover ${escapeHTML(
-                                        movie.title
-                                    )} dos favoritos"
+                                    aria-label="Remover ${escapeHTML(movie.title)} dos favoritos"
                                 >
                                     ${icon("close")}
                                 </button>
@@ -364,70 +119,34 @@
                                 <button
                                     class="favorite-movie"
                                     type="button"
-                                    data-movie-key="${escapeHTML(
-                                        movieKey(movie)
-                                    )}"
-                                    aria-label="Abrir ${escapeHTML(
-                                        movie.title
-                                    )}"
+                                    data-movie-key="${escapeHTML(movieKey(movie))}"
+                                    aria-label="Abrir ${escapeHTML(movie.title)}"
                                 >
-
                                     <span class="favorite-poster">
-
                                         ${
                                             poster
                                                 ? `
                                                     <img
                                                         src="${poster}"
-                                                        alt="Pôster de ${escapeHTML(
-                                                            movie.title
-                                                        )}"
+                                                        alt="Pôster de ${escapeHTML(movie.title)}"
                                                         loading="lazy"
                                                     >
                                                 `
                                                 : `
                                                     <span class="poster-fallback">
-
-                                                        <small>
-                                                            CineCena
-                                                        </small>
-
-                                                        <strong>
-                                                            ${escapeHTML(
-                                                                movie.title
-                                                            )}
-                                                        </strong>
-
-                                                        <i>
-                                                            ${escapeHTML(
-                                                                movieYear(movie)
-                                                            )}
-                                                        </i>
-
+                                                        <small>CineCena</small>
+                                                        <strong>${escapeHTML(movie.title)}</strong>
+                                                        <i>${escapeHTML(movieYear(movie))}</i>
                                                     </span>
                                                 `
                                         }
-
                                     </span>
 
                                     <span class="favorite-copy">
-
-                                        <strong>
-                                            ${escapeHTML(
-                                                movie.title
-                                            )}
-                                        </strong>
-
-                                        <small>
-                                            ${escapeHTML(
-                                                movieYear(movie)
-                                            )}
-                                        </small>
-
+                                        <strong>${escapeHTML(movie.title)}</strong>
+                                        <small>${escapeHTML(movieYear(movie))}</small>
                                     </span>
-
                                 </button>
-
                             </div>
                         `;
                     })
@@ -436,158 +155,109 @@
         `;
     }
 
-    /* =========================================================
-       RENDER DO PERFIL
-       ========================================================= */
-
     function render() {
-        const watched =
-            collectionMovies("watched");
+        const watched = collectionMovies("watched");
+        const loved = collectionMovies("loved");
+        const listed = collectionMovies("listed");
 
-        const loved =
-            collectionMovies("loved");
-
-        const listed =
-            collectionMovies("listed");
-
-        /* Avatar */
-        const avatar =
-            document.querySelector(
-                "[data-profile-avatar]"
-            );
+        const avatar = document.querySelector(
+            "[data-profile-avatar]"
+        );
 
         if (avatar) {
-            avatar.textContent =
-                initials(state.profile.name);
+            avatar.textContent = initials(state.profile.name);
         }
 
-        /* Nome */
-        const name =
-            document.querySelector(
-                "[data-profile-name]"
-            );
+        const name = document.querySelector(
+            "[data-profile-name]"
+        );
 
         if (name) {
-            name.textContent =
-                state.profile.name;
+            name.textContent = state.profile.name;
         }
 
-        /* Descrição */
-        const description =
-            document.querySelector(
-                "[data-profile-description]"
-            );
+        const description = document.querySelector(
+            "[data-profile-description]"
+        );
 
         if (description) {
-            description.textContent =
-                state.profile.description;
+            description.textContent = state.profile.description;
         }
 
-        /* Contadores */
-        const counters =
-            document.querySelector(
-                "[data-profile-counters]"
-            );
+        const counters = document.querySelector(
+            "[data-profile-counters]"
+        );
 
         if (counters) {
             counters.innerHTML = `
                 <div>
-                    <strong>
-                        ${state.friend ? 1 : 0}
-                    </strong>
-                    <span>
-                        Amigos
-                    </span>
+                    <strong>${state.friend ? 1 : 0}</strong>
+                    <span>Amigos</span>
                 </div>
 
                 <div>
-                    <strong>
-                        ${watched.length}
-                    </strong>
-                    <span>
-                        Filmes assistidos
-                    </span>
+                    <strong>${watched.length}</strong>
+                    <span>Filmes assistidos</span>
                 </div>
 
                 <div>
-                    <strong>
-                        ${state.reviews.length}
-                    </strong>
-                    <span>
-                        Reviews
-                    </span>
+                    <strong>${state.reviews.length}</strong>
+                    <span>Reviews</span>
                 </div>
 
                 <div>
-                    <strong>
-                        ${listed.length ? 1 : 0}
-                    </strong>
-                    <span>
-                        Listas
-                    </span>
+                    <strong>${listed.length ? 1 : 0}</strong>
+                    <span>Listas</span>
                 </div>
             `;
         }
 
-        /* Favoritos */
         renderFavoriteSlots(
             document.querySelector(
                 "[data-profile-favorites]"
             )
         );
 
-        /* Reviews */
-        const reviews =
-            document.querySelector(
-                "[data-profile-reviews]"
-            );
+        const reviews = document.querySelector(
+            "[data-profile-reviews]"
+        );
 
         if (reviews) {
-            reviews.innerHTML =
-                state.reviews.length
-
-                    ? `
-                        <div class="feed-stream">
-                            ${state.reviews
-                                .map(review =>
-                                    UI.feedEntryFromReview(
-                                        review,
-                                        true
-                                    )
+            reviews.innerHTML = state.reviews.length
+                ? `
+                    <div class="feed-stream">
+                        ${state.reviews
+                            .map(review =>
+                                UI.feedEntryFromReview(
+                                    review,
+                                    true
                                 )
-                                .join("")}
-                        </div>
+                            )
+                            .join("")}
+                    </div>
+                `
+                : empty(
+                    "Nenhuma review publicada",
+                    "Quando você escrever uma review, ela aparecerá aqui.",
                     `
-
-                    : empty(
-                        "Nenhuma review publicada",
-
-                        "Quando você escrever uma review, ela aparecerá aqui.",
-
-                        `
-                            <button
-                                class="btn btn-secondary"
-                                type="button"
-                                data-new-review
-                            >
-                                Adicionar review
-                            </button>
-                        `
-                    );
+                        <button
+                            class="btn btn-secondary"
+                            type="button"
+                            data-new-review
+                        >
+                            Adicionar review
+                        </button>
+                    `
+                );
         }
 
-        /* Filmes curtidos */
         sectionMovies(
             document.querySelector(
                 "[data-profile-loved]"
             ),
-
             loved,
-
             "Nenhum filme curtido",
-
             "Use “Amei” em um filme para adicioná-lo aqui.",
-
             `
                 <a
                     class="btn btn-secondary"
@@ -596,22 +266,16 @@
                     Explorar filmes
                 </a>
             `,
-
             "list.html?type=loved"
         );
 
-        /* Filmes assistidos */
         sectionMovies(
             document.querySelector(
                 "[data-profile-watched]"
             ),
-
             watched,
-
             "Nenhum filme assistido",
-
             "Marque filmes como assistidos para montar seu histórico.",
-
             `
                 <a
                     class="btn btn-secondary"
@@ -620,22 +284,16 @@
                     Explorar filmes
                 </a>
             `,
-
             "list.html?type=watched"
         );
 
-        /* Listas */
         sectionMovies(
             document.querySelector(
                 "[data-profile-lists]"
             ),
-
             listed,
-
             "Nenhuma lista criada",
-
             "Adicione filmes à sua lista e organize suas próximas sessões.",
-
             `
                 <a
                     class="btn btn-secondary"
@@ -644,58 +302,29 @@
                     Adicionar filmes
                 </a>
             `,
-
             "list.html?type=listed"
         );
     }
 
-    /* =========================================================
-       ESTADO VAZIO
-       ========================================================= */
-
     function empty(title, text, action) {
         return `
             <div class="empty-state slim">
-
                 <div class="empty-icon">
                     ${icon("plus")}
                 </div>
 
                 <div>
-
-                    <strong>
-                        ${escapeHTML(title)}
-                    </strong>
-
-                    <p>
-                        ${escapeHTML(text)}
-                    </p>
-
+                    <strong>${escapeHTML(title)}</strong>
+                    <p>${escapeHTML(text)}</p>
                 </div>
 
                 ${action}
-
             </div>
         `;
     }
 
-    /* =========================================================
-       DISPONIBILIZA AS FUNÇÕES PARA OUTROS JS
-       ========================================================= */
-
-    App.getFavorites =
-        getFavorites;
-
-    App.saveFavorites =
-        saveFavorites;
-
-    App.getFavoritesStorageKey =
-        getFavoritesStorageKey;
-
-    /* Render inicial */
     render();
 
-    /* Atualizações */
     window.addEventListener(
         "cinecena:profile-updated",
         render
@@ -725,58 +354,41 @@
         "cinecena:friend-updated",
         render
     );
-
 })();
 
-
-/* =============================================================
-   AVATAR / RECORTE
-   ============================================================= */
-
 document.addEventListener(
-    'DOMContentLoaded',
+    "DOMContentLoaded",
     () => {
+        const avatarInput = document.getElementById(
+            "avatar-file-input"
+        );
 
-        const avatarInput =
-            document.getElementById(
-                'avatar-file-input'
-            );
+        const btnChangeAvatar = document.getElementById(
+            "btn-change-avatar"
+        );
 
-        const btnChangeAvatar =
-            document.getElementById(
-                'btn-change-avatar'
-            );
+        const profileAvatar = document.querySelector(
+            "[data-profile-avatar]"
+        );
 
-        const profileAvatar =
-            document.querySelector(
-                '[data-profile-avatar]'
-            );
+        const cropModal = document.getElementById(
+            "crop-modal"
+        );
 
-        const cropModal =
-            document.getElementById(
-                'crop-modal'
-            );
+        const cropImage = document.getElementById(
+            "crop-image"
+        );
 
-        const cropImage =
-            document.getElementById(
-                'crop-image'
-            );
+        const btnCancel = document.getElementById(
+            "btn-cancel-crop"
+        );
 
-        const btnCancel =
-            document.getElementById(
-                'btn-cancel-crop'
-            );
-
-        const btnSave =
-            document.getElementById(
-                'btn-save-crop'
-            );
+        const btnSave = document.getElementById(
+            "btn-save-crop"
+        );
 
         let cropper = null;
 
-        /*
-         * Não trava a página caso esses elementos não existam.
-         */
         if (
             !avatarInput ||
             !cropModal ||
@@ -787,237 +399,158 @@ document.addEventListener(
             return;
         }
 
-        /* Botão alterar foto */
         if (btnChangeAvatar) {
             btnChangeAvatar.addEventListener(
-                'click',
+                "click",
                 () => avatarInput.click()
             );
         }
 
-        /* Círculo do avatar */
         if (profileAvatar) {
             profileAvatar.addEventListener(
-                'click',
+                "click",
                 () => avatarInput.click()
             );
         }
 
-        /* Selecionou imagem */
         avatarInput.addEventListener(
-            'change',
-            (e) => {
-
-                const file =
-                    e.target.files[0];
+            "change",
+            event => {
+                const file = event.target.files[0];
 
                 if (!file) {
                     return;
                 }
 
-                if (
-                    !file.type.startsWith(
-                        'image/'
-                    )
-                ) {
-                    alert(
-                        'Selecione uma imagem válida.'
-                    );
-
-                    avatarInput.value = '';
-
+                if (!file.type.startsWith("image/")) {
+                    alert("Selecione uma imagem válida.");
+                    avatarInput.value = "";
                     return;
                 }
 
-                const reader =
-                    new FileReader();
+                const reader = new FileReader();
 
-                reader.onload =
-                    (event) => {
+                reader.onload = event => {
+                    cropImage.src = event.target.result;
+                    cropModal.style.display = "flex";
 
-                        cropImage.src =
-                            event.target.result;
+                    if (cropper) {
+                        cropper.destroy();
+                    }
 
-                        cropModal.style.display =
-                            'flex';
-
-                        if (cropper) {
-                            cropper.destroy();
+                    cropper = new Cropper(
+                        cropImage,
+                        {
+                            aspectRatio: 1,
+                            viewMode: 1,
+                            dragMode: "move",
+                            autoCropArea: 1
                         }
+                    );
+                };
 
-                        cropper =
-                            new Cropper(
-                                cropImage,
-                                {
-                                    aspectRatio: 1,
-                                    viewMode: 1,
-                                    dragMode: 'move',
-                                    autoCropArea: 1,
-                                }
-                            );
-                    };
-
-                reader.readAsDataURL(
-                    file
-                );
+                reader.readAsDataURL(file);
             }
         );
 
-        /* Cancelar */
         btnCancel.addEventListener(
-            'click',
+            "click",
             () => {
-
-                cropModal.style.display =
-                    'none';
-
-                avatarInput.value = '';
+                cropModal.style.display = "none";
+                avatarInput.value = "";
 
                 if (cropper) {
-
                     cropper.destroy();
-
                     cropper = null;
                 }
             }
         );
 
-        /* Salvar */
         btnSave.addEventListener(
-            'click',
+            "click",
             () => {
-
                 if (!cropper) {
                     return;
                 }
 
-                const canvas =
-                    cropper.getCroppedCanvas(
-                        {
-                            width: 300,
-                            height: 300,
-                        }
-                    );
+                const canvas = cropper.getCroppedCanvas({
+                    width: 300,
+                    height: 300
+                });
 
                 if (!canvas) {
-
-                    alert(
-                        'Não foi possível recortar a imagem.'
-                    );
-
+                    alert("Não foi possível recortar a imagem.");
                     return;
                 }
 
                 canvas.toBlob(
-                    async (blob) => {
-
+                    async blob => {
                         if (!blob) {
-
-                            alert(
-                                'Não foi possível preparar a imagem.'
-                            );
-
+                            alert("Não foi possível preparar a imagem.");
                             return;
                         }
 
-                        const token =
-                            localStorage.getItem(
-                                'token'
-                            );
+                        const token = localStorage.getItem("token");
 
                         if (!token) {
-
-                            alert(
-                                'Sua sessão expirou. Faça login novamente.'
-                            );
-
+                            alert("Sua sessão expirou. Faça login novamente.");
                             return;
                         }
 
-                        const formData =
-                            new FormData();
+                        const formData = new FormData();
 
                         formData.append(
-                            'avatar',
+                            "avatar",
                             blob,
-                            'avatar.jpg'
+                            "avatar.jpg"
                         );
 
                         try {
-
-                            const response =
-                                await fetch(
-                                    window.CINECENA_API.endpoint("accounts/me/"),
-                                    {
-                                        method: 'PATCH',
-
-                                        headers: {
-                                            'Authorization':
-                                                `Token ${token}`
-                                        },
-
-                                        body:
-                                            formData
-                                    }
-                                );
+                            const response = await fetch(
+                                window.CINECENA_API.endpoint("accounts/me/"),
+                                {
+                                    method: "PATCH",
+                                    headers: {
+                                        "Authorization": `Token ${token}`
+                                    },
+                                    body: formData
+                                }
+                            );
 
                             if (response.ok) {
-
-                                const updatedUser =
-                                    await response.json();
+                                const updatedUser = await response.json();
 
                                 localStorage.setItem(
-                                    'user',
-                                    JSON.stringify(
-                                        updatedUser
-                                    )
+                                    "user",
+                                    JSON.stringify(updatedUser)
                                 );
 
                                 window.location.reload();
-
                             } else {
-
-                                let message =
-                                    'Erro ao salvar foto.';
+                                let message = "Erro ao salvar foto.";
 
                                 try {
-
-                                    const data =
-                                        await response.json();
+                                    const data = await response.json();
 
                                     if (data?.detail) {
-                                        message =
-                                            data.detail;
+                                        message = data.detail;
                                     }
-
-                                } catch (_) {
-                                    /*
-                                     * API sem JSON.
-                                     */
-                                }
+                                } catch (_) {}
 
                                 alert(message);
                             }
-
-                        } catch (err) {
-
+                        } catch (error) {
                             console.error(
-                                'Erro ao enviar avatar:',
-                                err
+                                "Erro ao enviar avatar:",
+                                error
                             );
 
-                            alert(
-                                'Erro ao conectar com o servidor.'
-                            );
-
+                            alert("Erro ao conectar com o servidor.");
                         } finally {
-
-                            cropModal.style.display =
-                                'none';
+                            cropModal.style.display = "none";
                         }
-
                     },
-                    'image/jpeg',
+                    "image/jpeg",
                     0.9
                 );
             }
@@ -1025,108 +558,8 @@ document.addEventListener(
     }
 );
 
-
-window.CineCenaLogout =
-    function CineCenaLogout() {
-
-        localStorage.removeItem(
-            'token'
-        );
-
-        localStorage.removeItem(
-            'user'
-        );
-
-        window.location.href =
-            'login.html';
-    };
-
-
-
-    // =ins========================================
-// LÓGICA DE FILMES FAVORITOS DO PERFIL
-// ==========================================
-
-// Executa automaticamente quando a página é aberta/recarregada
-document.addEventListener('DOMContentLoaded', async () => {
-    await carregarFavoritosDoPerfil();
-});
-
-// 1. Busca os dados do perfil no Backend ao carregar a página
-async function carregarFavoritosDoPerfil() {
-    try {
-        const token = localStorage.getItem('token'); // Ajuste se a chave no localStorage tiver outro nome (ex: 'access_token')
-        
-        const response = await fetch('/api/accounts/profile/', {
-            method: 'GET',
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json'
-            }
-        });
-
-        if (!response.ok) {
-            console.error('Erro na requisição do perfil:', response.status);
-            return;
-        }
-
-        const data = await response.json();
-        
-        // Renderiza os filmes na div data-profile-favorites
-        renderizarFilmesFavoritos(data.favorite_movies);
-
-    } catch (error) {
-        console.error('Erro ao buscar favoritos do backend:', error);
-    }
-}
-
-// 2. Renderiza os cards dentro do container [data-profile-favorites]
-function renderizarFilmesFavoritos(listaFavoritos) {
-    // Seleciona a div usando o atributo data do seu HTML
-    const container = document.querySelector('[data-profile-favorites]');
-    if (!container) return;
-
-    container.innerHTML = ''; // Limpa o estado anterior
-
-    if (!listaFavoritos || listaFavoritos.length === 0) {
-        container.innerHTML = '<p class="empty-favorites">Nenhum filme favorito selecionado ainda.</p>';
-        return;
-    }
-
-    listaFavoritos.forEach(filme => {
-        const card = document.createElement('div');
-        card.className = 'favorite-item';
-        card.innerHTML = `
-            <div class="favorite-poster">
-                <img src="${filme.poster_url || filme.poster_path}" alt="${filme.title}">
-                <button type="button" onclick="removerFavorito(${filme.id})" class="btn-remove-favorite" title="Remover filme">
-                    &times;
-                </button>
-            </div>
-            <p class="favorite-title">${filme.title}</p>
-        `;
-        container.appendChild(card);
-    });
-}
-
-// 3. Função para remover o filme dos favoritos
-async function removerFavorito(movieId) {
-    try {
-        const token = localStorage.getItem('token');
-        const response = await fetch(`/api/movies/favorites/${movieId}/`, {
-            method: 'DELETE',
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        });
-
-        if (response.ok) {
-            // Atualiza a lista na tela sem precisar de recarregar a página manualmente
-            await carregarFavoritosDoPerfil();
-        } else {
-            console.error('Erro ao remover o filme do servidor.');
-        }
-    } catch (error) {
-        console.error('Erro na requisição de remoção:', error);
-    }
-}
+window.CineCenaLogout = function CineCenaLogout() {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    window.location.href = "login.html";
+};
