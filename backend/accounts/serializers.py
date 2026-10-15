@@ -18,7 +18,7 @@ class RegisterSerializer(serializers.ModelSerializer):
 
     def validate_username(self, value):
         if User.objects.filter(username__iexact=value).exists():
-            raise serializers.ValidationError("Este nome de usuário já está em uso.")
+            raise serializers.ValidationError("Este nome de usuário já está em uso.") #feat: adicionar validacao
         return value
 
     def create(self, validated_data):
