@@ -174,44 +174,105 @@
     return () => selectedMovie;
   }
 
-  function openReviewModal(preselectedMovie = "") {
+  function openReviewModal(preselectedMovie = "") { //teste
     let selectedMovie = null;
+    
+    // Injeta a nova estrutura visual
     const modal = mountModal("review", `
-      <div class="modal-form-head"><h2>Escrever review</h2><p>Escolha um filme e escreva o que ficou com você depois da sessão.</p></div>
-      <form class="modal-form" data-review-form>
-        <div class="movie-picker-block">
-          <label for="review-movie-search">Filme</label>
-          <div class="search-field picker-search">${icon("search")}<input id="review-movie-search" type="search" data-picker-search placeholder="Pesquisar filme por nome, ano ou gênero" autocomplete="off"></div>
-          <div class="picker-selected hidden" data-picker-selected></div>
-          <div class="movie-picker-results" data-picker-results></div>
+      <div class="letterboxd-modal">
+        <div class="modal-header">
+          <h2>REGISTAR FILME</h2>
+          <button class="modal-close-btn" type="button" data-close-modal>&times;</button>
         </div>
-        <label>Sua review<textarea name="text" rows="6" maxlength="1200" required placeholder="O que ficou com você depois do filme?"></textarea></label>
-        <label class="check-line"><input type="checkbox" name="spoiler"><span>Esta review contém spoilers</span></label>
-        <div class="form-footer"><small>Máximo de 1200 caracteres.</small><button class="btn btn-primary" type="submit">Publicar review ${icon("arrow")}</button></div>
-      </form>
+
+        <div class="modal-body">
+          <div class="modal-poster-wrapper" data-poster-container>
+            <span class="poster-fallback"><small>CineCena</small></span>
+          </div>
+
+          <form class="modal-form" data-review-form id="review-form-element">
+            <div class="movie-picker-block">
+              <label for="review-movie-search" class="rating-label">Pesquisar Filme</label>
+              <div class="search-field picker-search" style="margin-top: 4px;">
+                <input id="review-movie-search" type="search" data-picker-search placeholder="Digite o nome do filme..." autocomplete="off">
+              </div>
+              <div class="picker-selected hidden" data-picker-selected></div>
+              <div class="movie-picker-results" data-picker-results style="max-height: 120px; overflow-y: auto; margin-top: 6px;"></div>
+            </div>
+
+            <!-- Classificação com Estrelas -->
+            <div class="rating-section">
+              <span class="rating-label">Avaliação:</span>
+              <div class="star-rating">
+                <input type="radio" id="star5" name="rating" value="5" /><label for="star5" title="5 estrelas">★</label>
+                <input type="radio" id="star4" name="rating" value="4" /><label for="star4" title="4 estrelas">★</label>
+                <input type="radio" id="star3" name="rating" value="3" /><label for="star3" title="3 estrelas">★</label>
+                <input type="radio" id="star2" name="rating" value="2" /><label for="star2" title="2 estrelas">★</label>
+                <input type="radio" id="star1" name="rating" value="1" /><label for="star1" title="1 estrela">★</label>
+              </div>
+            </div>
+
+            <!-- Review -->
+            <div class="form-group">
+              <textarea name="text" rows="4" maxlength="1200" required placeholder="O que ficou com você depois do filme?"></textarea>
+            </div>
+
+            <!-- Opção Spoiler -->
+            <label class="check-line" style="display: flex; align-items: center; gap: 8px; font-size: 0.85rem; color: var(--text-secondary);">
+              <input type="checkbox" name="spoiler">
+              <span>Esta review contém spoilers</span>
+            </label>
+          </form>
+        </div>
+
+        <div class="modal-footer">
+          <small style="color: var(--text-muted);">Máx. 1200 caracteres</small>
+          <div class="modal-footer-right">
+            <button class="btn-cancel" type="button" data-close-modal>Cancelar</button>
+            <button class="btn-save" type="submit" form="review-form-element">Publicar</button>
+          </div>
+        </div>
+      </div>
     `, "md");
 
-    const getSelected = bindMoviePicker(modal, { preselectedMovie, onSelect: movie => { selectedMovie = movie; } });
+    const getSelected = bindMoviePicker(modal, { //teste
+      preselectedMovie,
+      onSelect: movie => {
+        selectedMovie = movie;
+        const posterContainer = modal.querySelector("[data-poster-container]");
+        if (posterContainer) {
+          const url = movie ? posterURL(movie) : "";
+          posterContainer.innerHTML = url 
+            ? `<img src="${url}" alt="${escapeHTML(movie.title)}">`
+            : `<span class="poster-fallback"><small>CineCena</small><strong>${movie ? escapeHTML(movie.title) : ""}</strong></span>`;
+        }
+      }
+    });
 
+    // Submissão do formulário
     modal.querySelector("[data-review-form]")?.addEventListener("submit", event => {
       event.preventDefault();
       selectedMovie = getSelected() || selectedMovie;
       const form = new FormData(event.currentTarget);
       const text = String(form.get("text") || "").trim();
+      const rating = form.get("rating") || 0;
+
       if (!selectedMovie) return toast("Selecione um filme para publicar a review.");
       if (!text) return;
+
       saveReview({
         movie: selectedMovie.title,
         movieKey: movieKey(selectedMovie),
         year: movieYear(selectedMovie),
+        rating: Number(rating),
         text,
         date: "Agora",
         spoiler: form.get("spoiler") === "on"
       });
       closeModal(modal);
-      toast("Review publicada no protótipo.");
+      toast("Review publicada com sucesso.");
     });
-  }
+  } //aq
 
   function openFavoriteModal(slotIndex = null) {
     let selectedMovie = null;
