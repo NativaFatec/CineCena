@@ -84,6 +84,8 @@
     return `<article class="feed-card feed-review-card" data-feed-kind="review ${own ? "own" : "friend"}">
       <div class="feed-review-main">
         <header class="feed-card-head"><a href="${href}" class="feed-author">${avatar}<span><strong>${escapeHTML(name)}</strong><small>${escapeHTML(review.date || "Agora")}</small></span></a><span class="content-badge">Review</span></header>
+        ${review.title ? `<h3 class="feed-review-title">${escapeHTML(review.title)}</h3>` : ""}
+        ${review.rating ? `<div class="feed-review-rating" aria-label="Nota ${Number(review.rating)} de 5">${[1,2,3,4,5].map(n => `<span class="${n <= Number(review.rating) ? "is-active" : ""}">★</span>`).join("")}<small>${Number(review.rating)}/5</small></div>` : ""}
         <p class="feed-text">${escapeHTML(review.text)}</p>
         <footer class="feed-actions"><button type="button">${icon("heart")} Amei</button><button type="button">${icon("comment")} Comentar</button></footer>
       </div>
@@ -174,105 +176,181 @@
     return () => selectedMovie;
   }
 
-  function openReviewModal(preselectedMovie = "") { //teste
-    let selectedMovie = null;
-    
-    // Injeta a nova estrutura visual
+  function openReviewModal(preselectedMovie = "") {
+    const requestedTitle = typeof preselectedMovie === "string" ? preselectedMovie : preselectedMovie?.title;
+    const pageTitle = new URLSearchParams(window.location.search).get("movie");
+    const selectedMovie = state.movies.find(movie =>
+      movie.title === requestedTitle || movie.title === pageTitle
+    ) || null;
+    const poster = selectedMovie ? posterURL(selectedMovie) : "";
     const modal = mountModal("review", `
-      <div class="letterboxd-modal">
-        <div class="modal-header">
-          <h2>REGISTAR FILME</h2>
-          <button class="modal-close-btn" type="button" data-close-modal>&times;</button>
-        </div>
-
-        <div class="modal-body">
-          <div class="modal-poster-wrapper" data-poster-container>
-            <span class="poster-fallback"><small>CineCena</small></span>
-          </div>
-
-          <form class="modal-form" data-review-form id="review-form-element">
-            <div class="movie-picker-block">
-              <label for="review-movie-search" class="rating-label">Pesquisar Filme</label>
-              <div class="search-field picker-search" style="margin-top: 4px;">
-                <input id="review-movie-search" type="search" data-picker-search placeholder="Digite o nome do filme..." autocomplete="off">
-              </div>
-              <div class="picker-selected hidden" data-picker-selected></div>
-              <div class="movie-picker-results" data-picker-results style="max-height: 120px; overflow-y: auto; margin-top: 6px;"></div>
-            </div>
-
-            <!-- Classificação com Estrelas -->
-            <div class="rating-section">
-              <span class="rating-label">Avaliação:</span>
-              <div class="star-rating">
-                <input type="radio" id="star5" name="rating" value="5" /><label for="star5" title="5 estrelas">★</label>
-                <input type="radio" id="star4" name="rating" value="4" /><label for="star4" title="4 estrelas">★</label>
-                <input type="radio" id="star3" name="rating" value="3" /><label for="star3" title="3 estrelas">★</label>
-                <input type="radio" id="star2" name="rating" value="2" /><label for="star2" title="2 estrelas">★</label>
-                <input type="radio" id="star1" name="rating" value="1" /><label for="star1" title="1 estrela">★</label>
-              </div>
-            </div>
-
-            <!-- Review -->
-            <div class="form-group">
-              <textarea name="text" rows="4" maxlength="1200" required placeholder="O que ficou com você depois do filme?"></textarea>
-            </div>
-
-            <!-- Opção Spoiler -->
-            <label class="check-line" style="display: flex; align-items: center; gap: 8px; font-size: 0.85rem; color: var(--text-secondary);">
-              <input type="checkbox" name="spoiler">
-              <span>Esta review contém spoilers</span>
-            </label>
-          </form>
-        </div>
-
-        <div class="modal-footer">
-          <small style="color: var(--text-muted);">Máx. 1200 caracteres</small>
-          <div class="modal-footer-right">
-            <button class="btn-cancel" type="button" data-close-modal>Cancelar</button>
-            <button class="btn-save" type="submit" form="review-form-element">Publicar</button>
+      <div class="review-modal">
+        <div class="review-modal-heading">
+          <span class="review-eyebrow">${icon("clapperboard")} CINECENA</span>
+          <div class="modal-form-head">
+            <h2>Como foi sua experiência?</h2>
+            <p>Sua opinião sobre o filme, em poucas palavras.</p>
           </div>
         </div>
+        ${selectedMovie ? `<div class="review-selected-movie">
+          <div class="review-selected-poster">${poster ? `<img src="${escapeHTML(poster)}" alt="Pôster de ${escapeHTML(selectedMovie.title)}">` : `<span>${escapeHTML(selectedMovie.title.slice(0, 1))}</span>`}</div>
+          <div class="review-selected-copy"><strong>${escapeHTML(selectedMovie.title)}</strong><span>${escapeHTML(movieYear(selectedMovie))}</span><small>${escapeHTML(genresText(selectedMovie, 3))}</small></div>
+        </div>` : `<div class="review-movie-required">${icon("film")}<span>Abra a página de um filme para avaliá-lo.</span></div>`}
+        <form class="modal-form review-form" data-review-form novalidate>
+          <fieldset class="review-rating">
+            <legend>Sua nota</legend>
+            <div class="review-stars" role="group" aria-label="Nota de 1 a 5 estrelas">
+              ${[1,2,3,4,5].map(n => `<button type="button" class="review-star" data-rating="${n}" aria-label="${n} ${n === 1 ? 'estrela' : 'estrelas'}" aria-pressed="false">${icon("star")}</button>`).join("")}
+            </div>
+            <p class="review-rating-hint" data-rating-hint>Toque para avaliar</p>
+            <input type="hidden" name="rating" value="">
+            <p class="review-field-error" data-rating-error role="alert"></p>
+          </fieldset>
+          <label class="review-body-field">Seu comentário<textarea name="text" rows="5" maxlength="1200" required placeholder="O que você achou do filme? Fale sobre a história, atuações ou o que sentiu…"></textarea><span class="review-char-count"><span data-review-count>0</span>/1200</span></label>
+          <p class="review-field-error" data-body-error role="alert"></p>
+          <div class="review-form-footer"><small>Respeite outras opiniões e evite spoilers sem aviso.</small><button class="btn btn-primary" type="submit" ${selectedMovie ? "" : "disabled"}>Publicar review ${icon("arrow")}</button></div>
+        </form>
       </div>
     `, "md");
 
-    const getSelected = bindMoviePicker(modal, { //teste
-      preselectedMovie,
-      onSelect: movie => {
-        selectedMovie = movie;
-        const posterContainer = modal.querySelector("[data-poster-container]");
-        if (posterContainer) {
-          const url = movie ? posterURL(movie) : "";
-          posterContainer.innerHTML = url 
-            ? `<img src="${url}" alt="${escapeHTML(movie.title)}">`
-            : `<span class="poster-fallback"><small>CineCena</small><strong>${movie ? escapeHTML(movie.title) : ""}</strong></span>`;
+    const form = modal.querySelector("[data-review-form]");
+    const ratingInput = form.querySelector('[name="rating"]');
+    const ratingHint = modal.querySelector("[data-rating-hint]");
+    const ratingLabels = ["", "Não gostei", "Poderia ser melhor", "Bom", "Muito bom", "Obra-prima!"];
+    const stars = [...modal.querySelectorAll("[data-rating]")];
+    stars.forEach((star, index) => {
+      star.addEventListener("click", () => {
+        const rating = Number(star.dataset.rating);
+        ratingInput.value = String(rating);
+        stars.forEach((item, i) => {
+          item.classList.toggle("is-active", i < rating);
+          item.setAttribute("aria-pressed", String(i < rating));
+        });
+        ratingHint.textContent = ratingLabels[rating];
+        modal.querySelector("[data-rating-error]").textContent = "";
+      });
+      star.addEventListener("keydown", event => {
+        if (!["ArrowLeft", "ArrowRight"].includes(event.key)) return;
+        event.preventDefault();
+        stars[Math.max(0, Math.min(4, index + (event.key === "ArrowRight" ? 1 : -1)))].focus();
+      });
+    });
+
+    const textarea = form.querySelector('[name="text"]');
+    const count = modal.querySelector("[data-review-count]");
+    textarea.addEventListener("input", () => {
+      count.textContent = String(textarea.value.length);
+      modal.querySelector("[data-body-error]").textContent = "";
+    });
+
+    form.addEventListener("submit", async event => {
+      event.preventDefault();
+      const text = textarea.value.trim();
+      const rating = Number(ratingInput.value);
+      let valid = true;
+      if (!selectedMovie) return;
+      if (!rating) {
+        modal.querySelector("[data-rating-error]").textContent = "Escolha uma nota para o filme.";
+        valid = false;
+      }
+      if (text.length < 10) {
+        modal.querySelector("[data-body-error]").textContent = "Escreva pelo menos 10 caracteres.";
+        valid = false;
+      }
+      if (!valid) return;
+
+      const token = localStorage.getItem("token");
+      if (!token) {
+        toast("Entre na sua conta para publicar uma review.");
+        return;
+      }
+
+      const submitButton = form.querySelector('[type="submit"]');
+      const originalButton = submitButton.innerHTML;
+      submitButton.disabled = true;
+      submitButton.textContent = "Publicando…";
+      form.setAttribute("aria-busy", "true");
+
+      try {
+        const api = window.CINECENA_API;
+        if (!api?.endpoint) throw new Error("A configuração da API do CineCena não foi carregada.");
+        const headers = { "Authorization": `Token ${token}`, "Content-Type": "application/json" };
+        const numericMovieId = Number(selectedMovie.tmdb_id ?? selectedMovie.id);
+        const hasTmdbId = Number.isSafeInteger(numericMovieId) && numericMovieId > 0;
+
+        // Resolve o filme no banco Django. O id usado na review precisa ser a PK do Django,
+        // não o id do TMDB recebido pelo frontend.
+        const searchResponse = await fetch(`${api.endpoint("movies/")}?search=${encodeURIComponent(selectedMovie.title)}`);
+        if (!searchResponse.ok) throw new Error("Não foi possível consultar o catálogo do CineCena.");
+        const searchData = await searchResponse.json();
+        const movies = Array.isArray(searchData) ? searchData : (searchData.results || []);
+        let dbMovie = movies.find(item => hasTmdbId && Number(item.tmdb_id) === numericMovieId)
+          || movies.find(item => String(item.title || "").trim().toLocaleLowerCase("pt-BR") === selectedMovie.title.trim().toLocaleLowerCase("pt-BR"));
+
+        if (!dbMovie) {
+          const releaseDate = /^\d{4}-\d{2}-\d{2}$/.test(selectedMovie.release_date || "")
+            ? selectedMovie.release_date : (selectedMovie.year ? `${selectedMovie.year}-01-01` : null);
+          const poster = posterURL(selectedMovie);
+          const moviePayload = {
+            title: selectedMovie.title,
+            original_title: selectedMovie.original_title || selectedMovie.title,
+            synopsis: selectedMovie.overview || "",
+            release_date: releaseDate,
+            poster_url: /^https?:\/\//i.test(poster || "") ? poster : "",
+            genres: Array.isArray(selectedMovie.genres) ? selectedMovie.genres.map(g => typeof g === "string" ? g : g.name).filter(Boolean) : [],
+            country: "Brasil",
+            ...(hasTmdbId ? { tmdb_id: numericMovieId } : {})
+          };
+          const createMovieResponse = await fetch(api.endpoint("movies/"), {
+            method: "POST", headers, body: JSON.stringify(moviePayload)
+          });
+          const createdMovie = await createMovieResponse.json().catch(() => ({}));
+          if (!createMovieResponse.ok) {
+            const detail = createdMovie.detail || Object.values(createdMovie).flat().find(value => typeof value === "string");
+            throw new Error(detail || "Não foi possível registrar este filme no catálogo.");
+          }
+          dbMovie = createdMovie;
+        }
+
+        const response = await fetch(api.endpoint("reviews/"), {
+          method: "POST",
+          headers,
+          body: JSON.stringify({ movie: dbMovie.id, rating, body: text, title: "", is_spoiler: false })
+        });
+        const result = await response.json().catch(() => ({}));
+        if (!response.ok) {
+          const detail = result.detail || result.movie?.[0] || result.non_field_errors?.[0]
+            || Object.values(result).flat().find(value => typeof value === "string");
+          if (response.status === 401 || response.status === 403) throw new Error("Sua sessão expirou. Entre novamente para publicar.");
+          throw new Error(detail || "Não foi possível salvar sua review. Tente novamente.");
+        }
+
+        // Atualiza o feed da sessão somente depois que o Django confirmar o salvamento.
+        saveReview({
+          id: result.id,
+          movie: selectedMovie.title,
+          movieKey: movieKey(selectedMovie),
+          year: movieYear(selectedMovie),
+          rating: result.rating,
+          text: result.body,
+          date: "Agora"
+        });
+        closeModal(modal);
+        toast("Review salva no CineCena com sucesso.");
+      } catch (error) {
+        console.error("CineCena: falha ao publicar review", error);
+        let errorMessage = error.message || "Erro ao publicar a review.";
+        if (error instanceof TypeError) errorMessage = "Não foi possível conectar à API. Confira a URL do backend e as configurações de CORS no Render.";
+        toast(errorMessage);
+      } finally {
+        if (modal.isConnected) {
+          submitButton.disabled = false;
+          submitButton.innerHTML = originalButton;
+          form.removeAttribute("aria-busy");
         }
       }
     });
-
-    // Submissão do formulário
-    modal.querySelector("[data-review-form]")?.addEventListener("submit", event => {
-      event.preventDefault();
-      selectedMovie = getSelected() || selectedMovie;
-      const form = new FormData(event.currentTarget);
-      const text = String(form.get("text") || "").trim();
-      const rating = form.get("rating") || 0;
-
-      if (!selectedMovie) return toast("Selecione um filme para publicar a review.");
-      if (!text) return;
-
-      saveReview({
-        movie: selectedMovie.title,
-        movieKey: movieKey(selectedMovie),
-        year: movieYear(selectedMovie),
-        rating: Number(rating),
-        text,
-        date: "Agora",
-        spoiler: form.get("spoiler") === "on"
-      });
-      closeModal(modal);
-      toast("Review publicada com sucesso.");
-    });
-  } //aq
+  }
 
   function openFavoriteModal(slotIndex = null) {
     let selectedMovie = null;

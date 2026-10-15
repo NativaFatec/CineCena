@@ -559,3 +559,88 @@
   margin-top: auto;
   align-self: flex-start;
 }
+
+/* Modal de reviews — interface enxuta e responsiva */
+.app-modal:has(.review-modal) {
+  position: relative;
+  width: min(620px, 100%);
+  max-height: min(90dvh, 900px);
+  overflow-y: auto;
+  padding: 30px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  color: var(--ink);
+  background: var(--paper);
+  box-shadow: 0 24px 90px rgba(0, 0, 0, .28);
+}
+.app-modal:has(.review-modal) .modal-close {
+  color: var(--ink);
+  background: var(--paper);
+  border-color: var(--line);
+}
+.review-modal-heading { padding-right: 38px; }
+.review-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 13px;
+  color: var(--red);
+  font-size: .68rem;
+  font-weight: 800;
+  letter-spacing: .12em;
+}
+.review-eyebrow .icon { width: 15px; height: 15px; }
+.review-modal .modal-form-head h2 { font-size: clamp(1.8rem, 4vw, 2.35rem); letter-spacing: -.055em; }
+.review-modal .modal-form-head p { margin-top: 7px; }
+.review-form { gap: 19px; }
+.review-form .movie-picker-block { gap: 9px; }
+.review-form .movie-picker-results { max-height: 180px; }
+.review-form .movie-picker-results:empty { display: none; }
+.review-form .review-rating { min-width: 0; margin: 0; padding: 0; border: 0; }
+.review-rating legend { margin-bottom: 9px; color: var(--ink-soft); font-size: .78rem; font-weight: 750; }
+.review-rating legend span, .review-title-field > span {
+  margin-left: 5px; color: var(--muted); font-size: .7rem; font-weight: 500;
+}
+.review-stars { display: flex; gap: 7px; }
+.review-star {
+  width: 43px; height: 43px; display: grid; place-items: center;
+  border: 1px solid var(--line); border-radius: 11px;
+  color: var(--muted); background: var(--paper); cursor: pointer;
+  transition: background .15s, color .15s, border-color .15s, transform .15s;
+}
+.review-star:hover { transform: translateY(-1px); border-color: #d9a441; }
+.review-star .icon { width: 19px; height: 19px; }
+.review-star.is-active { color: #b87912; background: #fff5df; border-color: #e7c16f; }
+.review-rating-hint { margin: 7px 0 0; color: var(--muted); font-size: .75rem; }
+.review-title-field, .review-body-field { display: grid; gap: 8px; color: var(--ink-soft); font-size: .78rem; font-weight: 750; }
+.review-form .review-title-field input, .review-form .review-body-field textarea { font-weight: 400; }
+.review-form .review-body-field { position: relative; }
+.review-char-count { justify-self: end; color: var(--muted); font-size: .7rem; font-weight: 500; }
+.review-form .review-spoiler { margin-top: -5px; }
+.review-field-error { margin: 0; color: #c43e47; font-size: .75rem; font-weight: 600; }
+.review-form-footer { display: flex; align-items: center; justify-content: space-between; gap: 15px; padding-top: 5px; border-top: 1px solid var(--line); }
+.review-form-footer small { max-width: 250px; color: var(--muted); font-size: .72rem; line-height: 1.5; }
+.feed-review-title { margin: 12px 0 6px; font-size: 1.08rem; letter-spacing: -.025em; }
+.feed-review-rating { display: flex; align-items: center; gap: 2px; margin: 5px 0 10px; color: var(--line); font-size: 1rem; }
+.feed-review-rating span.is-active { color: #d99b2b; }
+.feed-review-rating small { margin-left: 6px; color: var(--muted); font-size: .7rem; }
+@media (max-width: 600px) {
+  .modal-backdrop { padding: 12px; }
+  .app-modal:has(.review-modal) { padding: 24px 19px; max-height: 94dvh; border-radius: 16px; }
+  .review-modal-heading { padding-right: 28px; }
+  .review-form-footer { align-items: stretch; flex-direction: column; }
+  .review-form-footer small { max-width: none; }
+  .review-form-footer .btn { justify-content: center; }
+  .review-star { width: 40px; height: 40px; }
+}
+
+/* Contexto do filme no modal de review: sem busca ou seleção manual */
+.review-selected-movie { display:flex; align-items:center; gap:14px; padding:13px; margin:18px 0 22px; border:1px solid var(--border, rgba(128,128,128,.22)); border-radius:14px; }
+.review-selected-poster { width:58px; height:78px; flex:0 0 58px; overflow:hidden; border-radius:8px; background:var(--surface-soft, #20242b); display:grid; place-items:center; }
+.review-selected-poster img { width:100%; height:100%; object-fit:cover; }
+.review-selected-copy { min-width:0; display:flex; flex-direction:column; gap:5px; }
+.review-selected-copy strong { font-size:1rem; line-height:1.3; }
+.review-selected-copy span,.review-selected-copy small { color:var(--text-muted, #858b98); font-size:.84rem; }
+.review-movie-required { display:flex; align-items:center; gap:10px; padding:14px; margin:18px 0; border-radius:12px; background:var(--surface-soft, rgba(128,128,128,.1)); color:var(--text-muted, #858b98); font-size:.9rem; }
+.review-form .review-body-field textarea { resize:vertical; min-height:125px; }
+.review-form .review-rating { margin-bottom:20px; }
