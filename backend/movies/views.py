@@ -58,7 +58,7 @@ class ReviewViewSet(viewsets.ModelViewSet):
 
     queryset = (
         Review.objects
-        .select_related("user", "movie")
+        .select_related("user", "user__profile", "movie")
         .annotate(
             likes_count=Count(
                 "likes",
@@ -66,6 +66,11 @@ class ReviewViewSet(viewsets.ModelViewSet):
             )
         )
     )
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        movie_id = self.request.query_params.get("movie")
+        return qs.filter(movie_id=movie_id) if movie_id else qs
 
     def perform_create(self, serializer):
         if Review.objects.filter(

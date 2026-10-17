@@ -7,10 +7,10 @@ from rest_framework.parsers import MultiPartParser, FormParser, JSONParser  # <-
 from rest_framework.authtoken.models import Token
 from django.contrib.auth import get_user_model
 from .serializers import RegisterSerializer
-from .models import Profile
+from .models import Profile, public_avatar_url
 from django.db.models import Count, Q
 from movies.models import FavoriteMovie, Review
-from social.models import Friendship, MovieList
+from social.models import Friendship, MovieList, MovieInteraction
 
 User = get_user_model()
 
@@ -85,7 +85,7 @@ class MeView(APIView):
     def get(self, request):
         user = request.user
         profile, _ = Profile.objects.get_or_create(user=user)
-        avatar_url = request.build_absolute_uri(profile.avatar.url) if profile.avatar else None
+        avatar_url = public_avatar_url(profile, request)
 
         return Response({
             "id": user.id,
@@ -100,10 +100,34 @@ class MeView(APIView):
         profile, _ = Profile.objects.get_or_create(user=user)
 
         if 'avatar' in request.FILES:
-            profile.avatar = request.FILES['avatar']
-            profile.save()
+            upload = request.FILES['avatar']
+            if upload.size > 2 * 1024 * 1024:
+                return Response({"error": "A imagem deve ter até 2 MB."}, status=400)
+            try:
+                from PIL import Image
+                from io import BytesIO
+                image_bytes = upload.read()
+                image = Image.open(BytesIO(image_bytes))
+                image.verify()
+                if image.format not in ("PNG", "JPEG", "WEBP"):
+                    return Response({"error": "Use PNG, JPG ou WebP."}, status=400)
+            except (ValueError, OSError):
+                return Response({"error": "Arquivo de imagem inválido."}, status=400)
+            profile.avatar_blob = image_bytes
+            profile.avatar_content_type = {"PNG": "image/png", "JPEG": "image/jpeg", "WEBP": "image/webp"}[image.format]
+        if 'bio' in request.data:
+            profile.bio = str(request.data['bio'])[:280]
+        if 'username' in request.data:
+            username = str(request.data['username']).strip()
+            if not username or len(username) > 150:
+                return Response({"error": "Nome de usuário inválido."}, status=400)
+            if User.objects.filter(username__iexact=username).exclude(pk=user.pk).exists():
+                return Response({"error": "Nome de usuário já utilizado."}, status=400)
+            user.username = username
+            user.save(update_fields=['username'])
+        profile.save()
 
-        avatar_url = request.build_absolute_uri(profile.avatar.url) if profile.avatar else None
+        avatar_url = public_avatar_url(profile, request)
 
         return Response({
             "id": user.id,
@@ -132,15 +156,7 @@ class PublicProfileView(APIView):
             user=user_obj
         ).first()
 
-        avatar_url = None
-
-        if profile and profile.avatar:
-            try:
-                avatar_url = request.build_absolute_uri(
-                    profile.avatar.url
-                )
-            except (ValueError, AttributeError):
-                avatar_url = None
+        avatar_url = public_avatar_url(profile, request)
 
         # Amizades reais no banco
         friendships = Friendship.objects.filter(
@@ -174,15 +190,7 @@ class PublicProfileView(APIView):
 
         for friend in friend_users:
             friend_profile = friend_profiles.get(friend.id)
-            friend_avatar = None
-
-            if friend_profile and friend_profile.avatar:
-                try:
-                    friend_avatar = request.build_absolute_uri(
-                        friend_profile.avatar.url
-                    )
-                except (ValueError, AttributeError):
-                    pass
+            friend_avatar = public_avatar_url(friend_profile, request)
 
             friends_data.append({
                 "id": friend.id,
@@ -300,7 +308,18 @@ class PublicProfileView(APIView):
             "lists_count": lists_count,
             "lists": lists_data,
 
-            # O historico de assistidos ainda não está
-            # persistido no banco para outros usuários.
-            "watched_count": 0,
+            "watched_count": MovieInteraction.objects.filter(user=user_obj, watched=True).count(),
         })
+
+class PublicAvatarView(APIView):
+    permission_classes = [permissions.AllowAny]
+    authentication_classes = []
+    def get(self, request, username):
+        from django.http import HttpResponse, Http404
+        profile = Profile.objects.filter(user__username__iexact=username).first()
+        if not profile or not profile.avatar_blob:
+            raise Http404
+        response = HttpResponse(bytes(profile.avatar_blob), content_type=profile.avatar_content_type or 'image/jpeg')
+        response['Cache-Control'] = 'no-store'
+        response['X-Content-Type-Options'] = 'nosniff'
+        return response

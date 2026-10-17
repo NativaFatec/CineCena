@@ -42,6 +42,11 @@ class ReviewSerializer(serializers.ModelSerializer):
         read_only=True
     )
     likes_count = serializers.IntegerField(read_only=True)
+    avatar = serializers.SerializerMethodField()
+
+    def get_avatar(self, obj):
+        from accounts.models import public_avatar_url
+        return public_avatar_url(getattr(obj.user, "profile", None), self.context.get("request"))
 
     class Meta:
         model = Review
@@ -49,6 +54,7 @@ class ReviewSerializer(serializers.ModelSerializer):
             "id",
             "user",
             "username",
+            "avatar",
             "movie",
             "movie_title",
             "rating",

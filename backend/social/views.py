@@ -12,7 +12,7 @@ from rest_framework.exceptions import (
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from accounts.models import Profile
+from accounts.models import Profile, public_avatar_url
 from movies.models import Movie
 
 from .models import (
@@ -63,6 +63,11 @@ class CommentViewSet(viewsets.ModelViewSet):
         "user",
         "review",
     )
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        review_id = self.request.query_params.get("review")
+        return qs.filter(review_id=review_id) if review_id else qs
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
@@ -451,15 +456,7 @@ class FriendshipViewSet(viewsets.ModelViewSet):
 
         for user in users:
             profile = profiles.get(user.pk)
-            avatar_url = None
-
-            if profile and profile.avatar:
-                try:
-                    avatar_url = request.build_absolute_uri(
-                        profile.avatar.url
-                    )
-                except (ValueError, AttributeError):
-                    avatar_url = None
+            avatar_url = public_avatar_url(profile, request)
 
             friendship_id = friendship_by_user.get(user.pk)
 
@@ -597,3 +594,74 @@ class FavoriteMovieDetailView(APIView):
                 },
                 status=status.HTTP_404_NOT_FOUND,
             )
+
+
+# Interações persistidas por usuário. Endpoints separados preservam as rotas atuais.
+from django.utils import timezone
+from django.db import transaction
+from .models import Post, PostLike, PostComment, MovieInteraction, ListItem
+from .serializers import PostSerializer, PostCommentSerializer, MovieInteractionSerializer
+
+class PostViewSet(viewsets.ModelViewSet):
+    serializer_class = PostSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
+    queryset = Post.objects.select_related("user", "user__profile").annotate(
+        likes_count=Count("likes", distinct=True), comments_count=Count("comments", distinct=True)
+    )
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+    @action(detail=True, methods=["post"], permission_classes=[permissions.IsAuthenticated])
+    def like(self, request, pk=None):
+        post = self.get_object()
+        obj, created = PostLike.objects.get_or_create(post=post, user=request.user)
+        if not created:
+            obj.delete()
+        return Response({"liked": created})
+
+    @action(detail=True, methods=["get", "post"], url_path="comments")
+    def post_comments(self, request, pk=None):
+        post = self.get_object()
+        if request.method == "GET":
+            return Response(PostCommentSerializer(post.comments.select_related("user"), many=True).data)
+        if not request.user.is_authenticated:
+            raise PermissionDenied("Entre para comentar.")
+        serializer = PostCommentSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save(post=post, user=request.user)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+class MovieInteractionViewSet(viewsets.GenericViewSet):
+    serializer_class = MovieInteractionSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    pagination_class = None
+    def get_queryset(self):
+        return MovieInteraction.objects.filter(user=self.request.user).select_related("movie")
+
+    def list(self, request):
+        return Response(self.get_serializer(self.get_queryset(), many=True).data)
+
+    @transaction.atomic
+    def create(self, request):
+        movie_id = request.data.get("movie")
+        action_name = request.data.get("action")
+        if action_name not in ("watched", "loved", "listed"):
+            raise ValidationError({"action": "Ação inválida."})
+        movie = Movie.objects.filter(pk=movie_id).first() if str(movie_id).isdigit() else None
+        if not movie:
+            raise ValidationError({"movie": "Filme não encontrado."})
+        interaction, _ = MovieInteraction.objects.select_for_update().get_or_create(user=request.user, movie=movie)
+        is_active = not getattr(interaction, action_name)
+        setattr(interaction, action_name, is_active)
+        setattr(interaction, f"{action_name}_at", timezone.now() if is_active else None)
+        interaction.save()
+        if action_name == "listed":
+            movie_list, _ = MovieList.objects.get_or_create(
+                user=request.user, title="Minha lista", defaults={"description": "Minha seleção de filmes."}
+            )
+            if is_active:
+                ListItem.objects.get_or_create(movie_list=movie_list, movie=movie)
+            else:
+                ListItem.objects.filter(movie_list=movie_list, movie=movie).delete()
+        return Response(self.get_serializer(interaction).data)

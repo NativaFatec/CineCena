@@ -1,5 +1,4 @@
 
-from social.views import FavoriteMovieDetailView
 from django.conf.urls.static import static
 from django.conf import settings
 from django.contrib import admin
@@ -28,12 +27,16 @@ from social.views import (
     FollowViewSet,
     FriendshipViewSet,
     CommunityViewSet,
+    PostViewSet,
+    MovieInteractionViewSet,
 )
 
 
 router = DefaultRouter()
 
 router.register("movies", MovieViewSet, basename="movie")
+router.register("posts", PostViewSet, basename="post")
+router.register("movie-interactions", MovieInteractionViewSet, basename="movie-interaction")
 router.register("reviews", ReviewViewSet, basename="review")
 router.register("comments", CommentViewSet, basename="comment")
 router.register("lists", MovieListViewSet, basename="movie-list")
@@ -101,8 +104,3 @@ if settings.DEBUG:
         document_root=settings.MEDIA_ROOT,
     )
 
-    path(
-    'api/movies/favorites/<int:movie_id>/',
-    FavoriteMovieDetailView.as_view(),
-    name='favorite-movie-detail',
-),

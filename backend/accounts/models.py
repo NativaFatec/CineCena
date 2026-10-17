@@ -15,6 +15,8 @@ class User(AbstractUser):
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
     avatar = models.ImageField(upload_to='avatars/', null=True, blank=True)
+    avatar_blob = models.BinaryField(null=True, blank=True, editable=False)
+    avatar_content_type = models.CharField(max_length=40, blank=True, default='')
     bio = models.TextField(blank=True, default='')
 
     def __str__(self):
@@ -30,3 +32,17 @@ def create_user_profile(sender, instance, created, **kwargs):
 def save_user_profile(sender, instance, **kwargs):
     if hasattr(instance, 'profile'):
         instance.profile.save()
+
+def public_avatar_url(profile, request):
+    """Avatar no Postgres para persistir uploads em hospedagens sem disco permanente."""
+    if not profile or not request:
+        return None
+    if profile.avatar_blob:
+        from django.urls import reverse
+        return request.build_absolute_uri(reverse('avatar-image', kwargs={'username': profile.user.username}))
+    if profile.avatar:
+        try:
+            return request.build_absolute_uri(profile.avatar.url)
+        except (ValueError, AttributeError):
+            return None
+    return None
