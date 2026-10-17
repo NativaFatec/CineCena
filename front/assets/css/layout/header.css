@@ -182,3 +182,7 @@
 .mobile-nav-panel .nav-link {
   border-radius: 8px;
 }
+
+/* Logo SVG real do projeto: dimensões estáveis e sem distorção. */
+.brand img.brand-mark { width: 34px; height: 34px; display: block; flex: 0 0 34px; object-fit: contain; }
+.brand img.brand-mark::before { content: none; }

@@ -245,6 +245,7 @@
             users = Array.isArray(data) ? data : [];
 
             renderUsers();
+            window.dispatchEvent(new Event("cinecena:friend-updated"));
 
         } catch (error) {
             console.error(
@@ -334,6 +335,7 @@
             }
 
             renderUsers();
+            window.dispatchEvent(new Event("cinecena:friend-updated"));
 
         } catch (error) {
             console.error(

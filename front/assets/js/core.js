@@ -105,17 +105,10 @@
 
     glauberPhoto: "",
 
-    friend:
-      localStorage.getItem(KEYS.friend) === "true",
+    friend: false,
+    friendIds: [],
 
-    profile: readJSON(
-      KEYS.profile,
-      {
-        name: "Usuário CineCena",
-        description:
-          "Apaixonado por cinema brasileiro."
-      }
-    ),
+    profile: { name: "Usuário CineCena", description: "Apaixonado por cinema brasileiro.", avatar: "" },
 
     /*
      * Estes continuam locais por enquanto.
@@ -123,20 +116,11 @@
      * IMPORTANTE:
      * favorites NÃO está aqui.
      */
-    reviews: readJSON(
-      KEYS.reviews,
-      []
-    ),
+    reviews: [],
 
-    posts: readJSON(
-      KEYS.posts,
-      []
-    ),
+    posts: [],
 
-    movieState: readJSON(
-      KEYS.movieState,
-      {}
-    )
+    movieState: {}
   };
 
   /*
@@ -167,10 +151,8 @@
 
   function posterURL(movie) {
     return (
-      movie?.poster ||
-      TMDB.posterUrl(
-        movie?.poster_path || ""
-      )
+      movie?.poster || movie?.poster_url ||
+      (/^https?:\/\//.test(movie?.poster_path || "") ? movie.poster_path : TMDB.posterUrl(movie?.poster_path || ""))
     );
   }
 
@@ -353,52 +335,73 @@
     };
   }
 
-  function updateMovieState(
-    movie,
-    action
-  ) {
-    const key =
-      movieKey(movie);
-
-    const current =
-      movieStateFor(movie);
-
-    const nextValue =
-      !current[action];
-
-    const timestampField =
-      `${action}At`;
-
-    state.movieState[key] = {
-      ...current,
-
-      [action]:
-        nextValue,
-
-      [timestampField]:
-        nextValue
-          ? Date.now()
-          : 0
-    };
-
-    writeJSON(
-      KEYS.movieState,
-      state.movieState
-    );
-
-    window.dispatchEvent(
-      new CustomEvent(
-        "cinecena:movie-state-updated",
-        {
-          detail: {
-            movie,
-            action
-          }
-        }
-      )
-    );
-
-    return state.movieState[key];
+  async function updateMovieState(movie, action) {
+    if (!["watched", "loved", "listed"].includes(action)) return false;
+    try {
+      const dbMovie = await window.CINECENA_API.ensureMovie(movie);
+      const saved = await window.CINECENA_API.request("movie-interactions/", {
+        method: "POST", body: JSON.stringify({ movie: dbMovie.id, action })
+      });
+      const key = movieKey(movie);
+      state.movieState[key] = {
+        watched: saved.watched, loved: saved.loved, listed: saved.listed,
+        watchedAt: saved.watched_at ? Date.parse(saved.watched_at) : 0,
+        lovedAt: saved.loved_at ? Date.parse(saved.loved_at) : 0,
+        listedAt: saved.listed_at ? Date.parse(saved.listed_at) : 0
+      };
+      window.dispatchEvent(new CustomEvent("cinecena:movie-state-updated", { detail: { movie, action } }));
+      return true;
+    } catch (error) {
+      toast(error.message); return false;
+    }
+  }
+  async function loadMovieState() {
+    try {
+      const rows = await window.CINECENA_API.list("movie-interactions/");
+      state.movieState = {};
+      for (const row of rows) {
+        const movie = state.movies.find(m => (row.tmdb_id && Number(m.tmdb_id || m.id) === Number(row.tmdb_id)) || m.title === row.movie_title);
+        if (!movie) continue;
+        state.movieState[movieKey(movie)] = {
+          watched: row.watched, loved: row.loved, listed: row.listed,
+          watchedAt: row.watched_at ? Date.parse(row.watched_at) : 0,
+          lovedAt: row.loved_at ? Date.parse(row.loved_at) : 0,
+          listedAt: row.listed_at ? Date.parse(row.listed_at) : 0
+        };
+      }
+      window.dispatchEvent(new Event("cinecena:movie-state-updated"));
+    } catch (e) { console.warn("Não foi possível carregar interações:", e); }
+  }
+  const adaptReview = r => ({
+    id: r.id, username: r.username, movie: r.movie_title,
+    year: "", rating: r.rating, reaction: r.reaction,
+    title: r.title, text: r.body, date: new Date(r.created_at).toLocaleDateString("pt-BR"),
+    own: Boolean(r.user && Number(r.user) === Number(JSON.parse(localStorage.getItem("user") || "null")?.id)),
+    friend: state.friendIds.includes(Number(r.user)),
+    avatar: r.avatar || "",
+    likesCount: r.likes_count || 0
+  });
+  const adaptPost = p => ({
+    id: p.id, username: p.username, avatar: p.avatar, text: p.body,
+    own: Number(p.user) === Number(JSON.parse(localStorage.getItem("user") || "null")?.id),
+    friend: state.friendIds.includes(Number(p.user)),
+    liked: p.liked, likesCount: p.likes_count || 0, commentsCount: p.comments_count || 0,
+    date: new Date(p.created_at).toLocaleDateString("pt-BR"), type: "post"
+  });
+  async function loadSocial() {
+    try {
+      const currentId = Number(JSON.parse(localStorage.getItem("user") || "null")?.id);
+      const friends = await window.CINECENA_API.list("friendships/").catch(() => []);
+      state.friendIds = friends.map(f => Number(f.user) === currentId ? Number(f.friend) : Number(f.user));
+      state.friend = state.friendIds.length > 0;
+      window.dispatchEvent(new Event("cinecena:friend-updated"));
+      const [posts, reviews] = await Promise.all([
+        window.CINECENA_API.list("posts/"), window.CINECENA_API.list("reviews/")
+      ]);
+      state.posts = posts.map(adaptPost);
+      state.reviews = reviews.map(adaptReview);
+      window.dispatchEvent(new Event("cinecena:social-updated"));
+    } catch (e) { console.warn("Não foi possível carregar o feed:", e); toast(e.message); }
   }
 
   /*
@@ -697,8 +700,7 @@
                   "",
 
                 poster_path:
-                  movie.poster_path ??
-                  "",
+                  movie.poster_path ?? window.CineCena.posterURL(movie) ?? "",
 
                 position
               })
@@ -1132,120 +1134,40 @@
    */
 
   function refreshProfileShortcut() {
-    document
-      .querySelectorAll(
-        "[data-own-avatar]"
-      )
-      .forEach(
-        node => {
-          node.textContent =
-            initials(
-              state.profile.name
-            );
-        }
-      );
-
-    document
-      .querySelectorAll(
-        "[data-own-name]"
-      )
-      .forEach(
-        node => {
-          node.textContent =
-            state.profile.name;
-        }
-      );
-  }
-
-  function setFriend(value) {
-    state.friend =
-      Boolean(value);
-
-    localStorage.setItem(
-      KEYS.friend,
-      String(
-        state.friend
-      )
-    );
-
-    window.dispatchEvent(
-      new CustomEvent(
-        "cinecena:friend-updated"
-      )
-    );
-  }
-
-  function saveProfile(profile) {
-    state.profile =
-      profile;
-
-    writeJSON(
-      KEYS.profile,
-      profile
-    );
-
-    refreshProfileShortcut();
-
-    window.dispatchEvent(
-      new CustomEvent(
-        "cinecena:profile-updated"
-      )
-    );
-  }
-
-  /*
-   * ============================================================
-   * POSTS
-   * ============================================================
-   *
-   * Esta parte ainda utiliza localStorage,
-   * conforme a estrutura atual do seu projeto.
-   *
-   * Os favoritos NÃO passam por aqui.
-   */
-
-  function savePost(post) {
-    state.posts.unshift(
-      post
-    );
-
-    writeJSON(
-      KEYS.posts,
-      state.posts
-    );
-
-    window.dispatchEvent(
-      new CustomEvent(
-        "cinecena:social-updated"
-      )
-    );
-  }
-
-  /*
-   * ============================================================
-   * REVIEWS
-   * ============================================================
-   */
-
-  function saveReview(review) {
-    state.reviews.unshift({
-      ...review,
-
-      createdAt:
-        review.createdAt ||
-        Date.now()
+    document.querySelectorAll("[data-own-avatar], [data-feed-own-avatar], [data-profile-avatar]").forEach(node => {
+      if (state.profile.avatar) {
+        const img = document.createElement("img");
+        img.src = state.profile.avatar; img.alt = state.profile.name;
+        img.style.cssText = "width:100%;height:100%;object-fit:cover;border-radius:50%";
+        node.replaceChildren(img);
+      } else node.textContent = initials(state.profile.name);
     });
-
-    writeJSON(
-      KEYS.reviews,
-      state.reviews
-    );
-
-    window.dispatchEvent(
-      new CustomEvent(
-        "cinecena:social-updated"
-      )
-    );
+    document.querySelectorAll("[data-own-name], [data-own-title], [data-profile-name]").forEach(node => {
+      node.textContent = state.profile.name;
+    });
+    document.querySelectorAll("[data-profile-description]").forEach(node => node.textContent = state.profile.description);
+  }
+  function setFriend(value) {
+    state.friend = Boolean(value);
+    window.dispatchEvent(new Event("cinecena:friend-updated"));
+  }
+  async function saveProfile(profile) {
+    const saved = await window.CINECENA_API.request("accounts/me/", {
+      method: "PATCH", body: JSON.stringify({ username: profile.name, bio: profile.description })
+    });
+    state.profile = { name: saved.username, description: saved.bio || "", avatar: saved.avatar || "" };
+    localStorage.setItem("user", JSON.stringify(saved));
+    refreshProfileShortcut();
+    window.dispatchEvent(new Event("cinecena:profile-updated"));
+    return saved;
+  }
+  function savePost(post) {
+    state.posts.unshift(adaptPost(post));
+    window.dispatchEvent(new Event("cinecena:social-updated"));
+  }
+  function saveReview(review) {
+    state.reviews.unshift(adaptReview(review));
+    window.dispatchEvent(new Event("cinecena:social-updated"));
   }
 
   /*
@@ -1404,6 +1326,8 @@
     saveProfile,
     savePost,
     saveReview,
+    loadSocial,
+    loadMovieState,
 
     hydrateFromTMDB
   };
@@ -1435,192 +1359,34 @@
 })();
 
 
-/*
- * ============================================================
- * AUTENTICAÇÃO / USUÁRIO ATUAL
- * ============================================================
- *
- * IMPORTANTE:
- * O localStorage abaixo NÃO guarda favoritos.
- *
- * Ele guarda apenas:
- * - token
- * - usuário atual
- *
- * Isso é necessário para autenticar as requisições
- * feitas ao Django.
- * ============================================================
- */
-
-document.addEventListener(
-  "DOMContentLoaded",
-  async () => {
-
-    const token =
-      localStorage.getItem(
-        "token"
-      );
-
-    const storedUser =
-      localStorage.getItem(
-        "user"
-      );
-
-    /*
-     * Usuário não autenticado.
-     */
-    if (!token) {
-      window.location.href =
-        "../index.html";
-
-      return;
-    }
-
-    let user =
-      storedUser
-        ? JSON.parse(
-            storedUser
-          )
-        : null;
-
-    /*
-     * Busca os dados atualizados do usuário.
-     */
+// Sessão validada pelo Django; no localStorage permanecem apenas token e dados da sessão.
+if (!["about", "terms"].includes(document.body.dataset.page)) {
+  (async () => {
+    const token = localStorage.getItem("token");
+    if (!token) { window.location.replace("../index.html"); return; }
     try {
-
-      const response =
-        await fetch(
-          window.CINECENA_API.endpoint("accounts/me/"),
-          {
-            headers: {
-              "Authorization":
-                `Token ${token}`,
-
-              "Content-Type":
-                "application/json"
-            }
-          }
-        );
-
-      if (response.ok) {
-
-        user =
-          await response.json();
-
-        /*
-         * Atualiza apenas os dados do usuário.
-         */
-        localStorage.setItem(
-          "user",
-          JSON.stringify(
-            user
-          )
-        );
-
-      } else if (
-        response.status === 401
-      ) {
-
-        /*
-         * Token inválido.
-         *
-         * Aqui o localStorage é limpo porque
-         * a sessão inteira está inválida.
-         *
-         * NÃO temos favoritos armazenados aqui.
-         */
-        localStorage.clear();
-
-        window.location.href =
-          "../index.html";
-
-        return;
-      }
-
-    } catch (err) {
-
-      console.warn(
-        "Backend off-line ou erro na requisição. Usando dados locais.",
-        err
-      );
+      const user = await window.CINECENA_API.request("accounts/me/");
+      localStorage.setItem("user", JSON.stringify(user));
+      const App = window.CineCena;
+      App.state.profile = { name: user.username, description: user.bio || "", avatar: user.avatar || "" };
+      // Perfil do usuário e foto só são renderizados após o resultado confirmado.
+      document.querySelectorAll("[data-own-avatar], [data-feed-own-avatar], [data-profile-avatar]").forEach(el => {
+        if (user.avatar) {
+          const img = document.createElement("img"); img.src = user.avatar; img.alt = user.username;
+          img.style.cssText = "width:100%;height:100%;object-fit:cover;border-radius:50%";
+          el.replaceChildren(img);
+        } else el.textContent = App.initials(user.username);
+      });
+      document.querySelectorAll("[data-own-name], [data-profile-name], [data-own-title]").forEach(el => el.textContent = user.username);
+      document.querySelectorAll("[data-profile-description]").forEach(el => el.textContent = user.bio || "");
+      window.dispatchEvent(new Event("cinecena:profile-updated"));
+      await Promise.all([App.loadSocial(), App.loadMovieState()]);
+    } catch (error) {
+      console.error("Falha ao validar sessão:", error);
+      if (error.status === 401 || /401|autentic|credenciais|sessão|invalid token|token inválido/i.test(error.message)) {
+        localStorage.removeItem("token"); localStorage.removeItem("user");
+        window.location.replace("../index.html");
+      } else window.CineCena.toast(error.message);
     }
-
-    /*
-     * Atualização visual do usuário.
-     */
-    if (
-      user &&
-      user.username
-    ) {
-
-      const username =
-        user.username;
-
-      const initials =
-        username
-          .substring(0, 2)
-          .toUpperCase();
-
-      /*
-       * Avatar
-       */
-      document
-        .querySelectorAll(
-          "[data-own-avatar], [data-feed-own-avatar], [data-profile-avatar]"
-        )
-        .forEach(
-          element => {
-
-            if (user.avatar) {
-
-              element.innerHTML = `
-                <img
-                  src="${user.avatar}"
-                  alt="${username}"
-                  style="
-                    width: 100%;
-                    height: 100%;
-                    border-radius: 50%;
-                    object-fit: cover;
-                  "
-                >
-              `;
-
-            } else {
-
-              element.textContent =
-                initials;
-            }
-          }
-        );
-
-      /*
-       * Handle
-       */
-      document
-        .querySelectorAll(
-          "[data-own-name]"
-        )
-        .forEach(
-          element => {
-            element.textContent =
-              `@${username}`;
-          }
-        );
-
-      /*
-       * Nome principal do perfil
-       */
-      document
-        .querySelectorAll(
-          "[data-own-title], [data-profile-name]"
-        )
-        .forEach(
-          element => {
-            element.textContent =
-              username;
-          }
-        );
-    }
-  }
-);
+  })();
+}

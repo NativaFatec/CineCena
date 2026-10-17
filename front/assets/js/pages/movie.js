@@ -60,9 +60,10 @@
       <section class="shell movie-friend-section"><div><h2>Atividade dos amigos</h2><p>Reviews e interações das suas amizades com este filme aparecerão aqui.</p></div></section>`;
 
     target.querySelectorAll("[data-page-movie-action]").forEach(button => {
-      button.addEventListener("click", () => {
-        updateMovieState(movie, button.dataset.pageMovieAction);
-        render(movie, detailed);
+      button.addEventListener("click", async () => {
+        button.disabled = true;
+        if (await updateMovieState(movie, button.dataset.pageMovieAction)) render(movie, detailed);
+        else button.disabled = false;
       });
     });
     target.querySelector("[data-page-review]")?.addEventListener("click", () => UI.openReviewModal(movie.title));
