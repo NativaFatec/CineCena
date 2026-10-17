@@ -560,6 +560,7 @@
   align-self: flex-start;
 }
 
+
 /* Modal de reviews — interface enxuta e responsiva */
 .app-modal:has(.review-modal) {
   position: relative;
