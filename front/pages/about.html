@@ -1,4 +1,4 @@
-<!doctype html>
+ <!doctype html>
 <html lang="pt-BR">
 <head>
   <meta charset="utf-8">
@@ -13,22 +13,45 @@
 </head>
 <body data-page="about" class="about-page">
   <header class="site-header">
-  <div class="shell header-inner">
-    <a class="brand" href="home.html" aria-label="CineCena — Página inicial">
-  <img class="brand-mark" src="../assets/img/Logo/Icon.svg" alt="">
-  <span class="brand-name"><span class="brand-cine">Cine</span><span class="brand-cena">Cena</span></span>
-</a>
-    <nav class="main-nav" aria-label="Navegação principal"><a class="nav-link" href="home.html">Home</a><a class="nav-link active" href="feed.html">Feed</a><a class="nav-link" href="movies.html">Filmes</a><a class="nav-link" href="lists.html">Listas</a><a class="nav-link" href="friends.html">Amizades</a></nav>
-    <a class="profile-shortcut" href="profile.html">
-      <span class="mini-avatar" data-own-avatar>UC</span>
-      <span class="profile-shortcut-copy"><small>Perfil</small><strong data-own-name>Usuário CineCena</strong></span>
-    </a>
-    <button class="mobile-menu-toggle" type="button" data-mobile-menu aria-label="Abrir menu">☰</button>
-  </div>
-  <div class="mobile-nav-panel" data-mobile-panel>
-    <nav><a class="nav-link" href="home.html">Home</a><a class="nav-link active" href="feed.html">Feed</a><a class="nav-link" href="movies.html">Filmes</a><a class="nav-link" href="lists.html">Listas</a><a class="nav-link" href="friends.html">Amizades</a><a class="nav-link" href="profile.html">Perfil</a></nav>
-  </div>
-</header>
+    <div class="shell header-inner">
+      <a class="brand" href="home.html" aria-label="CineCena — Página inicial">
+        <img class="brand-mark" src="../assets/img/Logo/Icon.svg" alt="">
+        <span class="brand-name"><span class="brand-cine">Cine</span><span class="brand-cena">Cena</span></span>
+      </a>
+
+      <nav class="main-nav" aria-label="Navegação principal">
+        <a class="nav-link" href="home.html">Home</a>
+        <a class="nav-link" href="feed.html">Feed</a>
+        <a class="nav-link" href="movies.html">Filmes</a>
+        <a class="nav-link" href="lists.html">Listas</a>
+        <a class="nav-link" href="friends.html">Amizades</a>
+        <a class="nav-link active" href="about.html">Sobre</a>
+      </nav>
+
+      <a class="profile-shortcut" href="profile.html">
+        <span class="mini-avatar" data-own-avatar>UC</span>
+        <span class="profile-shortcut-copy">
+          <small>Perfil</small>
+          <strong data-own-name>Usuário CineCena</strong>
+        </span>
+      </a>
+
+      <button class="mobile-menu-toggle" type="button" data-mobile-menu aria-label="Abrir menu">☰</button>
+    </div>
+
+    <div class="mobile-nav-panel" data-mobile-panel>
+      <nav>
+        <a class="nav-link" href="home.html">Home</a>
+        <a class="nav-link" href="feed.html">Feed</a>
+        <a class="nav-link" href="movies.html">Filmes</a>
+        <a class="nav-link" href="lists.html">Listas</a>
+        <a class="nav-link" href="friends.html">Amizades</a>
+        <a class="nav-link" href="profile.html">Perfil</a>
+        <a class="nav-link active" href="about.html">Sobre</a>
+      </nav>
+    </div>
+  </header>
+
   <main class="site-main">
     <article class="about-article shell">
       <header class="about-hero">
@@ -62,8 +85,8 @@
             <p>Se o cinema também é uma forma de memória, conversar sobre filmes nacionais é uma maneira de conversar sobre nós mesmos. O CineCena existe para tornar essa conversa mais fácil de começar e mais difícil de desaparecer.</p>
           </section>
         </div>
-       <aside class="about-sidebar">
 
+        <aside class="about-sidebar">
           <section class="about-resource-card">
             <h2>Equipe</h2>
             <p>Perfis internos dos quatro criadores do projeto.</p>
@@ -77,21 +100,24 @@
 
           <section class="about-resource-card">
             <h2>Código do projeto</h2>
-            <p>O repositório será o ponto central para acompanhar a evolução técnica do CineCena.</p>
-            <a class="btn btn-secondary w-full pending-link" href="https://github.com/NativaFatec/CineCena" aria-disabled="true">Clique aqui</a>
+            <p>O repositório é o ponto central para acompanhar a evolução técnica do CineCena.</p>
+            <a class="btn btn-secondary w-full" href="https://github.com/NativaFatec/CineCena" target="_blank" rel="noopener noreferrer">Acessar repositório</a>
           </section>
         </aside>
       </div>
     </article>
   </main>
+
   <footer class="site-footer">
-  <div class="shell footer-inner footer-simple">
-    <a class="brand brand-footer" href="about.html"><img class="brand-mark" src="../assets/img/Logo/Icon.svg" alt="">
+    <div class="shell footer-inner footer-simple">
+      <a class="brand brand-footer" href="home.html" aria-label="CineCena — Página inicial">
+        <img class="brand-mark" src="../assets/img/Logo/Icon.svg" alt="">
         <span class="brand-name"><span class="brand-cine">Cine</span><span class="brand-cena">Cena</span></span>
-    </a>
-    <p class="footer-rights">Todos os direitos reservados ao CineCena.</p>
-  </div>
-</footer>
+      </a>
+      <p class="footer-rights">Todos os direitos reservados ao CineCena.</p>
+    </div>
+  </footer>
+
   <div id="portal"></div>
   <script src="../assets/js/config.js"></script>
   <script src="../assets/js/data.js"></script>
