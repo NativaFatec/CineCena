@@ -11,12 +11,16 @@
 }
 
 .brand-name {
-  font-size: 1.42rem;
-  line-height: 1;
+    font-size: 1.42rem;
+    line-height: 1;
 }
 
-.brand-name span {
-  color: var(--blue);
+.brand-name .brand-cine {
+    color: var(--yellow);
+}
+
+.brand-name .brand-cena {
+    color: var(--green);
 }
 
 
