@@ -17,7 +17,7 @@
     cards.forEach(card => {
       const kinds = card.dataset.feedKind.split(" ");
       let visible = filter === "all" || kinds.includes(filter);
-      if (filter === "friend" && !state.friend) visible = false;
+      if (filter === "friend") visible = kinds.includes("friend");
       card.classList.toggle("hidden", !visible);
     });
 
@@ -28,7 +28,10 @@
   function renderSide() {
     const avatar = document.querySelector("[data-feed-glauber-avatar]");
     if (avatar) avatar.innerHTML = UI.profileAvatar("md");
-    document.querySelectorAll("[data-feed-own-avatar]").forEach(node => { node.textContent = initials(state.profile.name); });
+    document.querySelectorAll("[data-feed-own-avatar]").forEach(node => {
+      if (state.profile.avatar) node.innerHTML = `<img src="${App.escapeHTML(state.profile.avatar)}" alt="">`;
+      else node.textContent = initials(state.profile.name);
+    });
   }
 
   document.querySelectorAll("[data-feed-filter]").forEach(button => {

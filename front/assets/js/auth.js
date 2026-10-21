@@ -135,7 +135,7 @@ if (response.ok) {
 
     node.querySelector("[data-forgot-form]")?.addEventListener("submit", event => {
       event.preventDefault();
-      node.querySelector(".modal-form").innerHTML = `<div class="success-message">${icon("check")}<div><strong>Instruções enviadas</strong><p>Se o e-mail estiver registado, receberá um link para redefinir a sua senha.</p></div></div>`;
+      node.querySelector(".modal-form").innerHTML = `<div class="success-message"><div><strong>Recuperação indisponível</strong><p>A recuperação de senha por e-mail ainda não foi configurada no servidor. Entre em contato com a equipe.</p></div></div>`;
     });
   });
 })();

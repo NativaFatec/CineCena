@@ -14,10 +14,16 @@
 }
 
 .app-modal {
-  width: 100%;
-  max-height: 92vh;
-  max-height: 92dvh;
-  border-radius: 18px 18px 0 0;
+  position: relative;
+  width: min(620px, 100%);
+  max-height: calc(100vh - 56px);
+  max-height: min(92dvh, 900px);
+  overflow-y: auto;
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--white);
+  color: var(--ink);
 }
 
 .app-modal.md {
@@ -660,3 +666,17 @@
 .feed-review-reaction span { font-size:1rem; }
 .feed-review-reaction strong { font-weight:750; }
 @media (max-width: 420px) { .review-reactions { grid-template-columns:1fr; } .review-reaction { min-height:56px; flex-direction:row; } }
+
+/* Corrige o formulário de cadastro/edição e comentários sem alterar o restante da interface. */
+.app-modal .modal-form { min-width: 0; }
+.app-modal .modal-form label, .app-modal .modal-form input, .app-modal .modal-form textarea { min-width: 0; }
+.app-modal .form-footer { flex-wrap: wrap; }
+.app-modal .comment-list { max-height: 35vh; overflow-y: auto; margin-top: 15px; }
+.app-modal .comment-row { display: grid; gap: 5px; margin: 0; padding: 12px 0; border-bottom: 1px solid var(--line); }
+.app-modal .comment-row span { white-space: pre-wrap; overflow-wrap: anywhere; font-size: .9rem; line-height: 1.5; }
+@media (max-width: 620px) {
+  .modal-backdrop { padding: 12px; }
+  .app-modal.md { padding: 24px 19px; }
+  .app-modal .form-footer { align-items: stretch; }
+  .app-modal .form-footer .btn { justify-content: center; }
+}

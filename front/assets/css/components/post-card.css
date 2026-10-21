@@ -316,3 +316,15 @@
 .feed-card {
   position: relative;
 }
+
+/* Grid principal de reviews, presente no protótipo e perdido na modularização. */
+.feed-card.feed-review-card { padding: 0; display: grid; grid-template-columns: minmax(0, 7fr) minmax(190px, 3fr); overflow: hidden; }
+.feed-review-main { min-width: 0; }
+.feed-review-movie { min-width: 0; }
+.feed-review-movie .review-movie-card.featured { max-width: 100%; min-width: 0; }
+.feed-review-movie .review-movie-poster img { max-width: 100%; }
+@media (max-width: 620px) {
+  .feed-card.feed-review-card { grid-template-columns: minmax(0, 1fr); }
+  .feed-review-movie { border-left: 0; border-top: 1px solid var(--line); }
+  .feed-review-movie .review-movie-card.featured { max-width: 200px; }
+}

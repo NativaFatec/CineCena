@@ -11,12 +11,16 @@
 }
 
 .brand-name {
-  font-size: 1.42rem;
-  line-height: 1;
+    font-size: 1.42rem;
+    line-height: 1;
 }
 
-.brand-name span {
-  color: var(--blue);
+.brand-name .brand-cine {
+    color: var(--yellow);
+}
+
+.brand-name .brand-cena {
+    color: var(--green);
 }
 
 
@@ -182,3 +186,7 @@
 .mobile-nav-panel .nav-link {
   border-radius: 8px;
 }
+
+/* Logo SVG real do projeto: dimensões estáveis e sem distorção. */
+.brand img.brand-mark { width: 34px; height: 34px; display: block; flex: 0 0 34px; object-fit: contain; }
+.brand img.brand-mark::before { content: none; }

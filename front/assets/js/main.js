@@ -46,7 +46,7 @@ async function adicionarFavorito(tmdbId, title, posterUrl, position = 1) {
     const response = await fetch(`${API_BASE_URL}/api/movies/favorites/`, {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${token}`,
+        'Authorization': `Token ${token}`,
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
@@ -126,7 +126,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     try {
         const response = await fetch(`${API_BASE_URL}/api/auth/me/`, {
             headers: {
-                'Authorization': `Bearer ${token}`,
+                'Authorization': `Token ${token}`,
                 'Content-Type': 'application/json'
             }
         });

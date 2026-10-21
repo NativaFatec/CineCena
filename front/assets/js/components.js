@@ -56,11 +56,11 @@
   }
 
   function reviewActivity(review) {
+    const user = review.username || 'Usuário';
     return `<article class="activity-card">
-      <div class="activity-person">${profileAvatar("sm")}<div><a href="profileusers.html"><strong>${Data.glauber.name}</strong></a><small>${escapeHTML(review.date)}</small></div></div>
+      <div class="activity-person">${userAvatar(review)}<div><a href="profileusers.html?username=${encodeURIComponent(user)}"><strong>${escapeHTML(user)}</strong></a><small>${escapeHTML(review.date || '')}</small></div></div>
       <div class="activity-type">publicou uma review</div>
-      <div class="review-content-layout">${reviewMovieCard(review)}<p>${escapeHTML(review.text)}</p></div>
-      ${review.loved ? `<div class="activity-meta"><span class="loved">${icon("heart")} Curtiu este filme</span></div>` : ""}
+      <div class="review-content-layout">${reviewMovieCard(review)}<p>${escapeHTML(review.text || '')}</p></div>
     </article>`;
   }
 
@@ -77,40 +77,40 @@
     </a>`;
   }
 
-  function feedEntryFromReview(review, own = false) {
-    const avatar = own ? `<span class="person-avatar sm own">${initials(state.profile.name)}</span>` : profileAvatar("sm");
-    const name = own ? state.profile.name : Data.glauber.name;
-    const href = own ? "profile.html" : "profileusers.html";
-    return `<article class="feed-card feed-review-card" data-feed-kind="review ${own ? "own" : "friend"}">
+  function userAvatar(person = {}) {
+    const name = person.username || state.profile.name;
+    const avatar = person.avatar || (person.own ? state.profile.avatar : "");
+    return `<span class="person-avatar sm${person.own ? ' own' : ''}">${avatar
+      ? `<img src="${escapeHTML(avatar)}" alt="${escapeHTML(name)}" loading="lazy">`
+      : escapeHTML(initials(name))}</span>`;
+  }
+  function feedEntryFromReview(review, own = review.own) {
+    const name = review.username || state.profile.name;
+    const href = own ? "profile.html" : `profileusers.html?username=${encodeURIComponent(name)}`;
+    return `<article class="feed-card feed-review-card" data-feed-kind="review ${own ? 'own' : 'community'}${review.friend ? ' friend' : ''}">
       <div class="feed-review-main">
-        <header class="feed-card-head"><a href="${href}" class="feed-author">${avatar}<span><strong>${escapeHTML(name)}</strong><small>${escapeHTML(review.date || "Agora")}</small></span></a><span class="content-badge">Review</span></header>
-        ${review.title ? `<h3 class="feed-review-title">${escapeHTML(review.title)}</h3>` : ""}
-        ${review.reaction ? `<div class="feed-review-reaction reaction-${escapeHTML(review.reaction)}"><span>${review.reaction === "amei" ? "❤️" : review.reaction === "gostei" ? "👍" : "👎"}</span><strong>${review.reaction === "amei" ? "Amei" : review.reaction === "gostei" ? "Gostei" : "Não gostei"}</strong></div>` : (review.rating ? `<div class="feed-review-reaction"><span>${Number(review.rating) >= 4 ? "❤️" : Number(review.rating) >= 3 ? "👍" : "👎"}</span><strong>${Number(review.rating) >= 4 ? "Amei" : Number(review.rating) >= 3 ? "Gostei" : "Não gostei"}</strong></div>` : "")}
-        <p class="feed-text">${escapeHTML(review.text)}</p>
-        <footer class="feed-actions"><button type="button">${icon("heart")} Amei</button><button type="button">${icon("comment")} Comentar</button></footer>
-      </div>
-      <aside class="feed-review-movie">${reviewMovieCard(review, { featured: true })}</aside>
+        <header class="feed-card-head"><a href="${href}" class="feed-author">${userAvatar({...review, own})}<span><strong>${escapeHTML(name)}</strong><small>${escapeHTML(review.date || 'Agora')}</small></span></a><span class="content-badge">Review</span></header>
+        ${review.title ? `<h3 class="feed-review-title">${escapeHTML(review.title)}</h3>` : ''}
+        <div class="feed-review-reaction"><strong>${review.reaction === 'amei' ? '❤️ Amei' : review.reaction === 'nao_gostei' ? '👎 Não gostei' : '👍 Gostei'}</strong></div>
+        <p class="feed-text">${escapeHTML(review.text || '')}</p>
+        <footer class="feed-actions"><button type="button" data-like-review="${Number(review.id)}">${icon('heart')} Amei (${review.likesCount || 0})</button><button type="button" data-comment-review="${Number(review.id)}">${icon('comment')} Comentar</button></footer>
+      </div><aside class="feed-review-movie">${reviewMovieCard(review, { featured: true })}</aside>
     </article>`;
   }
-
-  function feedEntryFromPost(post, own = false) {
-    const avatar = own ? `<span class="person-avatar sm own">${initials(state.profile.name)}</span>` : profileAvatar("sm");
-    const name = own ? state.profile.name : Data.glauber.name;
-    const href = own ? "profile.html" : "profileusers.html";
-    return `<article class="feed-card" data-feed-kind="post ${own ? "own" : "friend"}">
-      <header class="feed-card-head"><a href="${href}" class="feed-author">${avatar}<span><strong>${escapeHTML(name)}</strong><small>${escapeHTML(post.date || "Agora")}</small></span></a><span class="content-badge neutral">Post</span></header>
+  function feedEntryFromPost(post, own = post.own) {
+    const name = post.username || state.profile.name;
+    const href = own ? "profile.html" : `profileusers.html?username=${encodeURIComponent(name)}`;
+    return `<article class="feed-card" data-feed-kind="post ${own ? 'own' : 'community'}${post.friend ? ' friend' : ''}">
+      <header class="feed-card-head"><a href="${href}" class="feed-author">${userAvatar({...post, own})}<span><strong>${escapeHTML(name)}</strong><small>${escapeHTML(post.date || 'Agora')}</small></span></a><span class="content-badge neutral">Post</span></header>
       <p class="feed-text">${escapeHTML(post.text)}</p>
-      <footer class="feed-actions"><button type="button">${icon("heart")} Amei</button><button type="button">${icon("comment")} Comentar</button></footer>
+      <footer class="feed-actions"><button type="button" data-like-post="${Number(post.id)}" aria-pressed="${!!post.liked}">${icon('heart')} ${post.liked ? 'Amado' : 'Amei'} (${post.likesCount || 0})</button><button type="button" data-comment-post="${Number(post.id)}">${icon('comment')} Comentar (${post.commentsCount || 0})</button></footer>
     </article>`;
   }
-
   function feedEntries() {
     return [
-      ...state.posts.map(post => feedEntryFromPost(post, true)),
-      ...state.reviews.map(review => feedEntryFromReview(review, true)),
-      ...Data.glauberPosts.map(post => feedEntryFromPost(post)),
-      ...Data.glauberReviews.map(review => feedEntryFromReview(review))
-    ].join("");
+      ...state.posts.map(post => feedEntryFromPost(post)),
+      ...state.reviews.map(review => feedEntryFromReview(review))
+    ].join('');
   }
 
   function openPostModal() {
@@ -122,14 +122,18 @@
       </form>
     `, "md");
 
-    modal.querySelector("[data-post-form]")?.addEventListener("submit", event => {
+    modal.querySelector("[data-post-form]")?.addEventListener("submit", async event => {
       event.preventDefault();
-      const form = new FormData(event.currentTarget);
-      const text = String(form.get("text") || "").trim();
+      const form = event.currentTarget;
+      const button = form.querySelector('[type="submit"]');
+      const text = String(new FormData(form).get("text") || "").trim();
       if (!text) return;
-      savePost({ text, date: "Agora", type: "post" });
-      closeModal(modal);
-      toast("Post publicado no protótipo.");
+      button.disabled = true;
+      try {
+        const result = await window.CINECENA_API.request("posts/", { method: "POST", body: JSON.stringify({ body: text }) });
+        savePost(result); closeModal(modal); toast("Post publicado.");
+      } catch (error) { toast(error.message); }
+      finally { button.disabled = false; }
     });
   }
 
@@ -179,7 +183,7 @@
   function openReviewModal(preselectedMovie = "") {
     const requestedTitle = typeof preselectedMovie === "string" ? preselectedMovie : preselectedMovie?.title;
     const pageTitle = new URLSearchParams(window.location.search).get("movie");
-    const selectedMovie = state.movies.find(movie =>
+    let selectedMovie = state.movies.find(movie =>
       movie.title === requestedTitle || movie.title === pageTitle
     ) || null;
     const poster = selectedMovie ? posterURL(selectedMovie) : "";
@@ -195,7 +199,7 @@
         ${selectedMovie ? `<div class="review-selected-movie">
           <div class="review-selected-poster">${poster ? `<img src="${escapeHTML(poster)}" alt="Pôster de ${escapeHTML(selectedMovie.title)}">` : `<span>${escapeHTML(selectedMovie.title.slice(0, 1))}</span>`}</div>
           <div class="review-selected-copy"><strong>${escapeHTML(selectedMovie.title)}</strong><span>${escapeHTML(movieYear(selectedMovie))}</span><small>${escapeHTML(genresText(selectedMovie, 3))}</small></div>
-        </div>` : `<div class="review-movie-required">${icon("film")}<span>Abra a página de um filme para avaliá-lo.</span></div>`}
+        </div>` : `<div class="movie-picker-block"><div class="search-field picker-search">${icon("search")}<input type="search" data-picker-search placeholder="Pesquisar filme" autocomplete="off"></div><div class="movie-picker-results" data-picker-results></div><div class="picker-selected hidden" data-picker-selected></div></div>`}
         <form class="modal-form review-form" data-review-form novalidate>
           <fieldset class="review-rating">
             <legend>O que você achou do filme?</legend>
@@ -215,6 +219,12 @@
       </div>
     `, "md");
 
+    if (!selectedMovie) {
+      bindMoviePicker(modal, { onSelect: movie => {
+        selectedMovie = movie;
+        modal.querySelector('[data-review-form] [type="submit"]').disabled = !movie;
+      }});
+    }
     const form = modal.querySelector("[data-review-form]");
     const ratingInput = form.querySelector('[name="rating"]');
     const reactionInput = form.querySelector('[name="reaction"]');
@@ -270,69 +280,14 @@
 
       try {
         const api = window.CINECENA_API;
-        if (!api?.endpoint) throw new Error("A configuração da API do CineCena não foi carregada.");
-        const headers = { "Authorization": `Token ${token}`, "Content-Type": "application/json" };
-        const numericMovieId = Number(selectedMovie.tmdb_id ?? selectedMovie.id);
-        const hasTmdbId = Number.isSafeInteger(numericMovieId) && numericMovieId > 0;
-
-        // Resolve o filme no banco Django. O id usado na review precisa ser a PK do Django,
-        // não o id do TMDB recebido pelo frontend.
-        const searchResponse = await fetch(`${api.endpoint("movies/")}?search=${encodeURIComponent(selectedMovie.title)}`);
-        if (!searchResponse.ok) throw new Error("Não foi possível consultar o catálogo do CineCena.");
-        const searchData = await searchResponse.json();
-        const movies = Array.isArray(searchData) ? searchData : (searchData.results || []);
-        let dbMovie = movies.find(item => hasTmdbId && Number(item.tmdb_id) === numericMovieId)
-          || movies.find(item => String(item.title || "").trim().toLocaleLowerCase("pt-BR") === selectedMovie.title.trim().toLocaleLowerCase("pt-BR"));
-
-        if (!dbMovie) {
-          const releaseDate = /^\d{4}-\d{2}-\d{2}$/.test(selectedMovie.release_date || "")
-            ? selectedMovie.release_date : (selectedMovie.year ? `${selectedMovie.year}-01-01` : null);
-          const poster = posterURL(selectedMovie);
-          const moviePayload = {
-            title: selectedMovie.title,
-            original_title: selectedMovie.original_title || selectedMovie.title,
-            synopsis: selectedMovie.overview || "",
-            release_date: releaseDate,
-            poster_url: /^https?:\/\//i.test(poster || "") ? poster : "",
-            genres: Array.isArray(selectedMovie.genres) ? selectedMovie.genres.map(g => typeof g === "string" ? g : g.name).filter(Boolean) : [],
-            country: "Brasil",
-            ...(hasTmdbId ? { tmdb_id: numericMovieId } : {})
-          };
-          const createMovieResponse = await fetch(api.endpoint("movies/"), {
-            method: "POST", headers, body: JSON.stringify(moviePayload)
-          });
-          const createdMovie = await createMovieResponse.json().catch(() => ({}));
-          if (!createMovieResponse.ok) {
-            const detail = createdMovie.detail || Object.values(createdMovie).flat().find(value => typeof value === "string");
-            throw new Error(detail || "Não foi possível registrar este filme no catálogo.");
-          }
-          dbMovie = createdMovie;
-        }
-
-        const response = await fetch(api.endpoint("reviews/"), {
-          method: "POST",
-          headers,
-          body: JSON.stringify({ movie: dbMovie.id, rating, reaction, body: text, title: "", is_spoiler: false })
+        const dbMovie = await api.ensureMovie(selectedMovie);
+        const existing = await api.list(`reviews/?movie=${dbMovie.id}`);
+        const mine = existing.find(r => Number(r.user) === Number(JSON.parse(localStorage.getItem('user') || 'null')?.id));
+        const result = await api.request(mine ? `reviews/${mine.id}/` : "reviews/", {
+          method: mine ? "PATCH" : "POST",
+          body: JSON.stringify({ movie: dbMovie.id, rating, reaction, body: text, title: mine?.title || "", is_spoiler: false })
         });
-        const result = await response.json().catch(() => ({}));
-        if (!response.ok) {
-          const detail = result.detail || result.movie?.[0] || result.non_field_errors?.[0]
-            || Object.values(result).flat().find(value => typeof value === "string");
-          if (response.status === 401 || response.status === 403) throw new Error("Sua sessão expirou. Entre novamente para publicar.");
-          throw new Error(detail || "Não foi possível salvar sua review. Tente novamente.");
-        }
-
-        // Atualiza o feed da sessão somente depois que o Django confirmar o salvamento.
-        saveReview({
-          id: result.id,
-          movie: selectedMovie.title,
-          movieKey: movieKey(selectedMovie),
-          year: movieYear(selectedMovie),
-          rating: result.rating,
-          reaction: result.reaction,
-          text: result.body,
-          date: "Agora"
-        });
+        await App.loadSocial();
         closeModal(modal);
         toast("Review salva no CineCena com sucesso.");
       } catch (error) {
@@ -363,12 +318,12 @@
     `, "md");
 
     const getSelected = bindMoviePicker(modal, { onSelect: movie => { selectedMovie = movie; } });
-    modal.querySelector("[data-confirm-favorite]")?.addEventListener("click", () => {
+    modal.querySelector("[data-confirm-favorite]")?.addEventListener("click", async event => {
       selectedMovie = getSelected() || selectedMovie;
       if (!selectedMovie) return toast("Selecione um filme primeiro.");
-      if (!addFavorite(selectedMovie, slotIndex)) return toast("Esse filme já está nos favoritos ou a vaga não está disponível.");
-      closeModal(modal);
-      toast("Filme adicionado aos favoritos.");
+      const button = event.currentTarget; button.disabled = true;
+      try { if (await addFavorite(selectedMovie, slotIndex)) closeModal(modal); }
+      finally { button.disabled = false; }
     });
   }
 
@@ -382,15 +337,16 @@
       </form>
     `, "md");
 
-    modal.querySelector("[data-profile-form]")?.addEventListener("submit", event => {
+    modal.querySelector("[data-profile-form]")?.addEventListener("submit", async event => {
       event.preventDefault();
+      const button = event.currentTarget.querySelector('[type="submit"]');
       const form = new FormData(event.currentTarget);
-      saveProfile({
-        name: String(form.get("name") || "Usuário CineCena").trim(),
-        description: String(form.get("description") || "").trim()
-      });
-      closeModal(modal);
-      toast("Perfil atualizado.");
+      button.disabled = true;
+      try {
+        await saveProfile({ name: String(form.get("name") || "").trim(), description: String(form.get("description") || "").trim() });
+        closeModal(modal); toast("Perfil atualizado.");
+      } catch (error) { toast(error.message); }
+      finally { button.disabled = false; }
     });
   }
 
@@ -426,11 +382,13 @@
 
   function bindMovieModalActions(modal, movie, details = movie) {
     modal.querySelectorAll("[data-movie-action]").forEach(button => {
-      button.addEventListener("click", () => {
-        updateMovieState(movie, button.dataset.movieAction);
-        modal.querySelector(".movie-modal-shell").innerHTML = compactMovieModalContent(movie, details);
-        bindMovieModalActions(modal, movie, details);
-        toast("Interação salva localmente.");
+      button.addEventListener("click", async () => {
+        button.disabled = true;
+        if (await updateMovieState(movie, button.dataset.movieAction) && modal.isConnected) {
+          modal.querySelector(".movie-modal-shell").innerHTML = compactMovieModalContent(movie, details);
+          bindMovieModalActions(modal, movie, details);
+          toast("Interação salva.");
+        } else button.disabled = false;
       });
     });
     modal.querySelector("[data-modal-review]")?.addEventListener("click", () => {
@@ -457,12 +415,53 @@
     }
   }
 
+  async function openCommentsModal(kind, id) {
+    const route = kind === "post" ? `posts/${id}/comments/` : `comments/?review=${id}`;
+    const modal = mountModal("comments", `<div class="modal-form-head"><h2>Comentários</h2><p>Participe da conversa.</p></div><div class="comment-list" data-comment-list>Carregando…</div><form class="modal-form" data-comment-form><label>Seu comentário<textarea name="body" maxlength="2000" rows="3" required></textarea></label><div class="form-footer"><span></span><button class="btn btn-primary" type="submit">Comentar</button></div></form>`, "md");
+    const renderComments = async () => {
+      const rows = await window.CINECENA_API.list(route);
+      modal.querySelector("[data-comment-list]").innerHTML = rows.length ? rows.map(c => `<p class="comment-row"><strong>${escapeHTML(c.username)}</strong><span>${escapeHTML(c.body)}</span></p>`).join("") : '<p>Seja a primeira pessoa a comentar.</p>';
+    };
+    try { await renderComments(); } catch (error) { toast(error.message); }
+    modal.querySelector('[data-comment-form]').addEventListener('submit', async event => {
+      event.preventDefault();
+      const button = event.currentTarget.querySelector('button');
+      const body = String(new FormData(event.currentTarget).get('body') || '').trim();
+      if (!body) return;
+      button.disabled = true;
+      try {
+        await window.CINECENA_API.request(kind === 'post' ? `posts/${id}/comments/` : 'comments/', {
+          method: 'POST', body: JSON.stringify(kind === 'post' ? {body} : {review:id, body})
+        });
+        event.currentTarget.reset(); await renderComments();
+        await App.loadSocial(); toast('Comentário enviado.');
+      } catch (error) { toast(error.message); }
+      finally { button.disabled = false; }
+    });
+  }
+
   function bindGlobalEvents() {
-    document.addEventListener("click", event => {
+    document.addEventListener("click", async event => {
+      const likeButton = event.target.closest('[data-like-post], [data-like-review]');
+      if (likeButton) {
+        likeButton.disabled = true;
+        try {
+          const kind = likeButton.hasAttribute('data-like-post') ? 'posts' : 'reviews';
+          const id = kind === 'posts' ? likeButton.dataset.likePost : likeButton.dataset.likeReview;
+          await window.CINECENA_API.request(`${kind}/${id}/like/`, { method: 'POST' });
+          await App.loadSocial();
+        } catch (error) { toast(error.message); }
+        finally { likeButton.disabled = false; }
+        return;
+      }
+      const commentButton = event.target.closest('[data-comment-post], [data-comment-review]');
+      if (commentButton) {
+        openCommentsModal(commentButton.hasAttribute('data-comment-post') ? 'post' : 'review', Number(commentButton.dataset.commentPost || commentButton.dataset.commentReview));
+        return;
+      }
       const removeFavoriteButton = event.target.closest("[data-remove-favorite]");
       if (removeFavoriteButton) {
         removeFavoriteAt(Number(removeFavoriteButton.dataset.removeFavorite));
-        toast("Filme removido dos favoritos.");
         return;
       }
 

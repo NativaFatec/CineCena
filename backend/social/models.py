@@ -124,3 +124,40 @@ class CommunityMembership(models.Model):
 
     def __str__(self):
         return f"{self.user} em {self.community.name}"
+
+class Post(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="posts")
+    body = models.TextField(max_length=600)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+
+
+class PostLike(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="likes")
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="post_likes")
+    class Meta:
+        constraints = [models.UniqueConstraint(fields=["post", "user"], name="unique_post_like")]
+
+
+class PostComment(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="comments")
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="post_comments")
+    body = models.TextField(max_length=2000)
+    created_at = models.DateTimeField(auto_now_add=True)
+    class Meta:
+        ordering = ["created_at"]
+
+
+class MovieInteraction(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="movie_interactions")
+    movie = models.ForeignKey("movies.Movie", on_delete=models.CASCADE, related_name="interactions")
+    watched = models.BooleanField(default=False)
+    loved = models.BooleanField(default=False)
+    listed = models.BooleanField(default=False)
+    watched_at = models.DateTimeField(null=True, blank=True)
+    loved_at = models.DateTimeField(null=True, blank=True)
+    listed_at = models.DateTimeField(null=True, blank=True)
+    class Meta:
+        constraints = [models.UniqueConstraint(fields=["user", "movie"], name="unique_movie_interaction")]
