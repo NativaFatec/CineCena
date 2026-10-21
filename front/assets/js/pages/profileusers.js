@@ -29,8 +29,8 @@
     const PROFILE_API_BASE =
     window.CINECENA_API.endpoint("users/");
 
-    const FRIENDSHIPS_API =
-    window.CINECENA_API.endpoint("friendships/");
+    const FOLLOWS_API =
+    window.CINECENA_API.endpoint("follows/");
 
     let currentProfile = null;
 
@@ -182,9 +182,9 @@
                         ${icon("friends")}
                     </div>
                     <div>
-                        <strong>Nenhuma amizade ainda</strong>
+                        <strong>Ainda não segue ninguém</strong>
                         <p>
-                            Este usuário ainda não tem amizades.
+                            Este usuário ainda não segue ninguém.
                         </p>
                     </div>
                 </div>
@@ -352,18 +352,17 @@ const avatarHTML = avatarSrc
             ? `
                 <button
                     class="btn ${
-                        profile.is_friend
+                        profile.is_following
                             ? "btn-secondary"
                             : "btn-primary"
                     }"
                     type="button"
                     data-public-friend
-                    ${profile.friendship_id ? "" : ""}
                 >
                     ${
-                        profile.is_friend
-                            ? "Remover amizade"
-                            : `${icon("plus")} Adicionar amizade`
+                        profile.is_following
+                            ? "Deixar de seguir"
+                            : `${icon("plus")} Seguir`
                     }
                 </button>
             `
@@ -407,9 +406,9 @@ const avatarHTML = avatarSrc
             <section class="shell profile-stats">
                 <div>
                     <strong>
-                        ${Number(profile.friends_count || 0)}
+                        ${Number(profile.following_count || 0)}
                     </strong>
-                    <span>Amigos</span>
+                    <span>Seguindo</span>
                 </div>
 
                 <div>
@@ -451,14 +450,14 @@ const avatarHTML = avatarSrc
                 <div class="profile-section">
                     <div class="section-heading">
                         <div>
-                            <h2>Amizades</h2>
+                            <h2>Seguindo</h2>
                             <p>
-                                Até três amizades deste usuário.
+                                Até três perfis que este usuário segue.
                             </p>
                         </div>
                     </div>
 
-                    ${renderFriends(profile.friends || [])}
+                    ${renderFriends(profile.following || [])}
                 </div>
 
                 <div class="profile-section">
@@ -496,7 +495,7 @@ const avatarHTML = avatarSrc
         if (!username) {
             renderMessage(
                 "Perfil não identificado",
-                "Abra um perfil selecionando um usuário na página de amizades."
+                "Abra um perfil selecionando um usuário na página Seguindo."
             );
 
             return;
@@ -563,15 +562,15 @@ const avatarHTML = avatarSrc
         try {
             let response;
 
-            if (profile.is_friend) {
-                if (!profile.friendship_id) {
+            if (profile.is_following) {
+                if (!profile.follow_id) {
                     throw new Error(
-                        "Não foi possível identificar a amizade."
+                        "Não foi possível identificar este seguimento."
                     );
                 }
 
                 response = await fetch(
-                    `${FRIENDSHIPS_API}${profile.friendship_id}/`,
+                    `${FOLLOWS_API}${profile.follow_id}/`,
                     {
                         method: "DELETE",
                         headers: getHeaders(),
@@ -580,12 +579,12 @@ const avatarHTML = avatarSrc
 
             } else {
                 response = await fetch(
-                    FRIENDSHIPS_API,
+                    FOLLOWS_API,
                     {
                         method: "POST",
                         headers: getHeaders(true),
                         body: JSON.stringify({
-                            friend: profile.id,
+                            following: profile.id,
                         }),
                     }
                 );
@@ -598,27 +597,28 @@ const avatarHTML = avatarSrc
             if (!response.ok) {
                 throw new Error(
                     data?.detail ||
-                    "Não foi possível atualizar a amizade."
+                    "Não foi possível atualizar quem você segue."
                 );
             }
 
             toast(
-                profile.is_friend
-                    ? "Amizade removida."
-                    : "Amizade adicionada."
+                profile.is_following
+                    ? "Você deixou de seguir este perfil."
+                    : "Agora você segue este perfil."
             );
 
             await loadUserProfile();
+            window.dispatchEvent(new Event("cinecena:friend-updated"));
 
         } catch (error) {
             console.error(
-                "Erro ao atualizar amizade:",
+                "Erro ao atualizar seguimento:",
                 error
             );
 
             toast(
                 error.message ||
-                "Erro ao atualizar amizade."
+                "Erro ao atualizar seguimento."
             );
 
             if (button) button.disabled = false;

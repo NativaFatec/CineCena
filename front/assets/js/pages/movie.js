@@ -57,12 +57,13 @@
           <div><small>Lançamento</small><strong>${escapeHTML(detailed.release_date || String(movieYear(movie)))}</strong></div>
         </aside>
       </section>
-      <section class="shell movie-friend-section"><div><h2>Atividade dos amigos</h2><p>Reviews e interações das suas amizades com este filme aparecerão aqui.</p></div></section>`;
+      <section class="shell movie-friend-section"><div><h2>Atividade de quem você segue</h2><p>Reviews e interações das pessoas que você segue com este filme aparecerão aqui.</p></div></section>`;
 
     target.querySelectorAll("[data-page-movie-action]").forEach(button => {
-      button.addEventListener("click", () => {
-        updateMovieState(movie, button.dataset.pageMovieAction);
-        render(movie, detailed);
+      button.addEventListener("click", async () => {
+        button.disabled = true;
+        if (await updateMovieState(movie, button.dataset.pageMovieAction)) render(movie, detailed);
+        else button.disabled = false;
       });
     });
     target.querySelector("[data-page-review]")?.addEventListener("click", () => UI.openReviewModal(movie.title));

@@ -55,9 +55,10 @@
   function renderActivity() {
     const target = document.querySelector("[data-home-activity]");
     if (!target) return;
-    target.innerHTML = state.friend
-      ? `<div class="activity-grid">${Data.glauberReviews.slice(0, 3).map(UI.reviewActivity).join("")}</div>`
-      : `<div class="empty-state social-empty"><div class="empty-icon">${icon("friends")}</div><div><strong>Sua atividade de amigos começa aqui</strong><p>Adicione Glauber Rocha em Amizades para ver as reviews recentes dele nesta área.</p></div><a class="btn btn-secondary" href="friends.html">Encontrar amizades ${icon("arrow")}</a></div>`;
+    const friendReviews = state.reviews.filter(review => review.friend).slice(0, 3);
+    target.innerHTML = friendReviews.length
+      ? `<div class="activity-grid">${friendReviews.map(review => UI.reviewActivity(review)).join("")}</div>`
+      : `<div class="empty-state social-empty"><div class="empty-icon">${icon("friends")}</div><div><strong>Acompanhe quem você segue</strong><p>Siga pessoas em Seguindo para ver as reviews recentes delas nesta área.</p></div><a class="btn btn-secondary" href="friends.html">Encontrar pessoas ${icon("arrow")}</a></div>`;
   }
 
   function renderLists() {
@@ -89,4 +90,5 @@
   render();
   window.addEventListener("cinecena:movies-updated", render);
   window.addEventListener("cinecena:friend-updated", renderActivity);
+  window.addEventListener("cinecena:social-updated", renderActivity);
 })();

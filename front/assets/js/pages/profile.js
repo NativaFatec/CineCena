@@ -156,6 +156,7 @@
     }
 
     function render() {
+        const ownReviews = state.reviews.filter(review => review.own);
         const watched = collectionMovies("watched");
         const loved = collectionMovies("loved");
         const listed = collectionMovies("listed");
@@ -165,7 +166,8 @@
         );
 
         if (avatar) {
-            avatar.textContent = initials(state.profile.name);
+            if (state.profile.avatar) avatar.innerHTML = `<img src="${escapeHTML(state.profile.avatar)}" alt="Foto do perfil">`;
+            else avatar.textContent = initials(state.profile.name);
         }
 
         const name = document.querySelector(
@@ -191,8 +193,8 @@
         if (counters) {
             counters.innerHTML = `
                 <div>
-                    <strong>${state.friend ? 1 : 0}</strong>
-                    <span>Amigos</span>
+                    <strong>${state.friendIds.length}</strong>
+                    <span>Seguindo</span>
                 </div>
 
                 <div>
@@ -201,7 +203,7 @@
                 </div>
 
                 <div>
-                    <strong>${state.reviews.length}</strong>
+                    <strong>${ownReviews.length}</strong>
                     <span>Reviews</span>
                 </div>
 
@@ -223,10 +225,10 @@
         );
 
         if (reviews) {
-            reviews.innerHTML = state.reviews.length
+            reviews.innerHTML = ownReviews.length
                 ? `
                     <div class="feed-stream">
-                        ${state.reviews
+                        ${ownReviews
                             .map(review =>
                                 UI.feedEntryFromReview(
                                     review,
@@ -561,5 +563,5 @@ document.addEventListener(
 window.CineCenaLogout = function CineCenaLogout() {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
-    window.location.href = "login.html";
+    window.location.href = "../index.html";
 };

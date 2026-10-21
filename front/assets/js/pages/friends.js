@@ -6,7 +6,7 @@
     const { escapeHTML, icon, toast } = App;
 
     const API_URL =
-        window.CINECENA_API.endpoint("friendships/");
+        window.CINECENA_API.endpoint("follows/");
 
     const target = document.querySelector(
         "[data-friend-results]"
@@ -100,8 +100,10 @@
     function renderUsers() {
         if (!users.length) {
             renderMessage(
-                "Nenhum perfil encontrado",
-                "Tente pesquisar com outro nome de usuário."
+                search.value.trim() ? "Nenhum perfil encontrado" : "Você ainda não segue ninguém",
+                search.value.trim()
+                    ? "Tente pesquisar com outro nome de usuário."
+                    : "Pesquise pessoas pelo nome de usuário para começar a seguir."
             );
 
             return;
@@ -112,12 +114,12 @@
                 escapeHTML(user.username);
 
             const buttonLabel =
-                user.is_friend
-                    ? "Remover amizade"
-                    : `${icon("plus")} Adicionar amizade`;
+                user.is_following
+                    ? "Deixar de seguir"
+                    : `${icon("plus")} Seguir`;
 
             const buttonClass =
-                user.is_friend
+                user.is_following
                     ? "btn-secondary"
                     : "btn-primary";
 
@@ -152,10 +154,10 @@
                             </p>
 
                             ${
-                                user.is_friend
+                                user.is_following
                                     ? `
                                         <span>
-                                            Vocês são amigos.
+                                            Você segue este perfil.
                                         </span>
                                     `
                                     : ""
@@ -192,7 +194,7 @@
 
         const term = search.value.trim();
 
-        if (term.length < 2) {
+        if (term.length === 1) {
             users = [];
 
             renderMessage(
@@ -213,11 +215,25 @@
         }
 
         renderMessage(
-            "Buscando usuários",
+            term ? "Buscando usuários" : "Carregando quem você segue",
             "Aguarde enquanto procuramos contas no CineCena."
         );
 
         try {
+            if (!term) {
+                const follows = await window.CINECENA_API.list("follows/?follower=me");
+                if (currentRequest !== requestNumber) return;
+                users = follows.map(follow => ({
+                    id: follow.following,
+                    username: follow.following_username,
+                    avatar: follow.following_avatar,
+                    is_following: true,
+                    follow_id: follow.id,
+                }));
+                renderUsers();
+                return;
+            }
+
             const url =
                 `${API_URL}search-users/?search=` +
                 encodeURIComponent(term);
@@ -245,6 +261,7 @@
             users = Array.isArray(data) ? data : [];
 
             renderUsers();
+            window.dispatchEvent(new Event("cinecena:friend-updated"));
 
         } catch (error) {
             console.error(
@@ -281,15 +298,15 @@
         try {
             let response;
 
-            if (user.is_friend) {
-                if (!user.friendship_id) {
+            if (user.is_following) {
+                if (!user.follow_id) {
                     throw new Error(
-                        "Não foi possível identificar esta amizade. Atualize a pesquisa."
+                        "Não foi possível identificar este seguimento. Atualize a pesquisa."
                     );
                 }
 
                 response = await fetch(
-                    `${API_URL}${user.friendship_id}/`,
+                    `${API_URL}${user.follow_id}/`,
                     {
                         method: "DELETE",
                         headers: getHeaders(),
@@ -303,7 +320,7 @@
                         method: "POST",
                         headers: getHeaders(true),
                         body: JSON.stringify({
-                            friend: user.id,
+                            following: user.id,
                         }),
                     }
                 );
@@ -316,34 +333,38 @@
             if (!response.ok) {
                 throw new Error(
                     data?.detail ||
-                    "Não foi possível atualizar a amizade."
+                    "Não foi possível atualizar quem você segue."
                 );
             }
 
-            if (user.is_friend) {
-                user.is_friend = false;
-                user.friendship_id = null;
+            if (user.is_following) {
+                user.is_following = false;
+                user.follow_id = null;
+                if (!search.value.trim()) {
+                    users = users.filter(item => item.id !== user.id);
+                }
 
-                toast("Amizade removida.");
+                toast("Você deixou de seguir este perfil.");
 
             } else {
-                user.is_friend = true;
-                user.friendship_id = data.id;
+                user.is_following = true;
+                user.follow_id = data.id;
 
-                toast("Amizade adicionada.");
+                toast("Agora você segue este perfil.");
             }
 
             renderUsers();
+            window.dispatchEvent(new Event("cinecena:friend-updated"));
 
         } catch (error) {
             console.error(
-                "CineCena: erro ao atualizar amizade:",
+                "CineCena: erro ao atualizar seguimento:",
                 error
             );
 
             toast(
                 error.message ||
-                "Não foi possível atualizar a amizade."
+                "Não foi possível atualizar quem você segue."
             );
 
         } finally {
@@ -375,8 +396,5 @@
         );
     });
 
-    renderMessage(
-        "Encontre pessoas",
-        "Pesquise pelo nome de usuário de alguém cadastrado no CineCena."
-    );
+    searchUsers();
 })();
