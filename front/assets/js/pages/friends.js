@@ -189,6 +189,74 @@
         }).join("");
     }
 
+    // Confere o dono das relações para funcionar mesmo com versões antigas
+    // do backend que ainda ignoram ?follower=me.
+    async function loadOwnFollows() {
+        const [currentUser, follows] = await Promise.all([
+            window.CINECENA_API.request("auth/me/"),
+            window.CINECENA_API.list("follows/?follower=me"),
+        ]);
+
+        return follows.filter(follow =>
+            Number(follow.follower) === Number(currentUser.id)
+        );
+    }
+
+    async function searchProfiles(term) {
+        const query = "search=" + encodeURIComponent(term);
+        const response = await fetch(`${API_URL}search-users/?${query}`, {
+            method: "GET",
+            headers: getHeaders(),
+        });
+        const data = await response.json().catch(() => null);
+
+        if (response.ok) {
+            return Array.isArray(data) ? data : (data?.results || []);
+        }
+
+        // O backend publicado pode ainda não ter a nova ação de busca.
+        // Reaproveita SOMENTE a pesquisa de usuários legada, não amizades.
+        if (response.status === 404) {
+            const legacyUrl = window.CINECENA_API.endpoint(
+                `friendships/search-users/?${query}`
+            );
+            const legacyResponse = await fetch(legacyUrl, {
+                method: "GET",
+                headers: getHeaders(),
+            });
+            const legacyData = await legacyResponse.json().catch(() => null);
+
+            if (!legacyResponse.ok) {
+                throw new Error(
+                    legacyData?.detail ||
+                    `Não foi possível pesquisar usuários (HTTP ${legacyResponse.status}).`
+                );
+            }
+
+            const found = Array.isArray(legacyData)
+                ? legacyData
+                : (legacyData?.results || []);
+            const follows = await loadOwnFollows();
+            const followByUser = new Map(
+                follows.map(follow => [Number(follow.following), follow.id])
+            );
+
+            return found.map(user => ({
+                id: user.id,
+                username: user.username,
+                avatar: user.avatar,
+                is_following: followByUser.has(Number(user.id)),
+                follow_id: followByUser.get(Number(user.id)) || null,
+            }));
+        }
+
+        throw new Error(
+            data?.detail ||
+            data?.error ||
+            `Não foi possível pesquisar usuários (HTTP ${response.status}).`
+        );
+    }
+
     async function searchUsers() {
         const currentRequest = ++requestNumber;
 
@@ -221,7 +289,7 @@
 
         try {
             if (!term) {
-                const follows = await window.CINECENA_API.list("follows/?follower=me");
+                const follows = await loadOwnFollows();
                 if (currentRequest !== requestNumber) return;
                 users = follows.map(follow => ({
                     id: follow.following,
@@ -234,31 +302,12 @@
                 return;
             }
 
-            const url =
-                `${API_URL}search-users/?search=` +
-                encodeURIComponent(term);
-
-            const response = await fetch(url, {
-                method: "GET",
-                headers: getHeaders(),
-            });
-
-            const data = await response.json()
-                .catch(() => null);
+            const found = await searchProfiles(term);
 
             // Ignora resultados de pesquisas anteriores.
-            if (currentRequest !== requestNumber) {
-                return;
-            }
+            if (currentRequest !== requestNumber) return;
 
-            if (!response.ok) {
-                throw new Error(
-                    data?.detail ||
-                    "Não foi possível pesquisar usuários."
-                );
-            }
-
-            users = Array.isArray(data) ? data : [];
+            users = found;
 
             renderUsers();
             window.dispatchEvent(new Event("cinecena:friend-updated"));
