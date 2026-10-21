@@ -491,6 +491,45 @@ const avatarHTML = avatarSrc
         );
     }
 
+    // A API de perfis publicos pode estar em uma versao anterior no Render.
+    // O relacionamento e conferido diretamente na tabela Follow via API,
+    // em vez de depender de is_following/follow_id presentes no perfil.
+    async function resolveFollowingFromDatabase(profile) {
+        const token = localStorage.getItem("token");
+        if (!token) {
+            return {
+                ...profile,
+                is_following: false,
+                follow_id: null,
+            };
+        }
+
+        const [me, follows] = await Promise.all([
+            window.CINECENA_API.request("auth/me/"),
+            window.CINECENA_API.list("follows/?follower=me"),
+        ]);
+
+        const viewerId = Number(me.id);
+        const profileId = Number(profile.id);
+        if (!Number.isSafeInteger(viewerId) || !Number.isSafeInteger(profileId)) {
+            throw new Error("A API nao retornou os identificadores dos usuarios.");
+        }
+
+        // Alguns deploys anteriores ignoram follower=me. Por isso
+        // conferimos tambem o ID do proprietario de cada relacionamento.
+        const ownFollow = follows.find(item =>
+            Number(item.follower) === viewerId &&
+            Number(item.following) === profileId
+        );
+
+        return {
+            ...profile,
+            is_self: viewerId === profileId,
+            is_following: Boolean(ownFollow),
+            follow_id: ownFollow?.id ?? null,
+        };
+    }
+
     async function loadUserProfile() {
         if (!username) {
             renderMessage(
@@ -525,7 +564,11 @@ const avatarHTML = avatarSrc
                 );
             }
 
-            renderProfile(data);
+            // O botao sempre reflete o registro salvo no banco, inclusive
+            // depois de recarregar a pagina ou seguir em outra aba.
+            const profileWithFollow = await resolveFollowingFromDatabase(data);
+            renderProfile(profileWithFollow);
+            return profileWithFollow;
 
         } catch (error) {
             console.error(
@@ -534,10 +577,11 @@ const avatarHTML = avatarSrc
             );
 
             renderMessage(
-                "Erro ao carregar perfil",
+                "Erro ao conferir perfil no banco",
                 error.message ||
-                "Não foi possível conectar ao servidor."
+                "Não foi possível confirmar seu relacionamento com este usuário."
             );
+            return null;
         }
     }
 
@@ -601,13 +645,21 @@ const avatarHTML = avatarSrc
                 );
             }
 
+            // Nao mostrar sucesso apenas porque o POST/DELETE retornou 2xx:
+            // o novo estado precisa aparecer em outra consulta ao banco.
+            const updatedProfile = await loadUserProfile();
+            if (!updatedProfile ||
+                updatedProfile.is_following === Boolean(profile.is_following)) {
+                throw new Error(
+                    "A API respondeu, mas nao confirmou a mudanca no banco. Atualize a pagina e tente novamente."
+                );
+            }
+
             toast(
                 profile.is_following
                     ? "Você deixou de seguir este perfil."
                     : "Agora você segue este perfil."
             );
-
-            await loadUserProfile();
             window.dispatchEvent(new Event("cinecena:friend-updated"));
 
         } catch (error) {
