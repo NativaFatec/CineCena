@@ -33,6 +33,8 @@
     window.CINECENA_API.endpoint("follows/");
 
     let currentProfile = null;
+    let profileLoadSequence = 0;
+    let loadedToken = localStorage.getItem("token");
 
 
 
@@ -406,9 +408,12 @@ const avatarHTML = avatarSrc
             <section class="shell profile-stats">
                 <div>
                     <strong>
-                        ${Number(profile.following_count || 0)}
+                        ${profile.followers_count == null ? "—" : Number(profile.followers_count)}
                     </strong>
-                    <span>Seguindo</span>
+                    <span>Seguidores</span>
+                    <small style="font-size: .8rem; color: var(--muted); margin-top: 7px;">
+                        ${Number(profile.following_count || 0)} seguindo
+                    </small>
                 </div>
 
                 <div>
@@ -452,7 +457,7 @@ const avatarHTML = avatarSrc
                         <div>
                             <h2>Seguindo</h2>
                             <p>
-                                Até três perfis que este usuário segue.
+                                Até três perfis que @${escapeHTML(profile.username)} segue.
                             </p>
                         </div>
                     </div>
@@ -494,8 +499,7 @@ const avatarHTML = avatarSrc
     // A API de perfis publicos pode estar em uma versao anterior no Render.
     // O relacionamento e conferido diretamente na tabela Follow via API,
     // em vez de depender de is_following/follow_id presentes no perfil.
-    async function resolveFollowingFromDatabase(profile) {
-        const token = localStorage.getItem("token");
+    async function resolveFollowingFromDatabase(profile, token) {
         if (!token) {
             return {
                 ...profile,
@@ -530,14 +534,72 @@ const avatarHTML = avatarSrc
         };
     }
 
+    // A lista de "Seguindo" deve pertencer ao dono do perfil visitado,
+    // e NAO ao usuario autenticado. A resposta /users/ de alguns deploys
+    // ainda usa dados antigos de amizade ou nao traz "following".
+    // O endpoint /follows/ e a fonte dos relacionamentos Follow no Django.
+    async function resolvePublicFollowingFromDatabase(profile, token) {
+        // A listagem de Follow no backend atual exige autenticacao.
+        // Quando visitante nao esta logado, preserva os dados publicos
+        // retornados pela rota de perfil (se disponiveis).
+        if (!token) return profile;
+
+        const profileId = Number(profile.id);
+        if (!Number.isSafeInteger(profileId)) {
+            throw new Error("A API nao retornou o ID do perfil visitado.");
+        }
+
+        // Nao usar ?follower=me: isso traria quem a conta logada segue
+        // (ex.: 1000), e nao quem gustavelino segue.
+        // O backend filtra relacoes em que o perfil aparece como seguidor
+        // ou seguido. O filtro por ID abaixo distingue os dois sentidos.
+        const relationships = await window.CINECENA_API.list(
+            `follows/?username=${encodeURIComponent(profile.username)}`
+        );
+        const following = relationships
+            .filter(item => Number(item.follower) === profileId)
+            .sort((a, b) => String(b.created_at || "").localeCompare(String(a.created_at || "")));
+        const followersCount = relationships.filter(item =>
+            Number(item.following) === profileId
+        ).length;
+
+        const preview = following.slice(0, 3).map(item => {
+            // Nas versoes atuais e anteriores do serializer Follow, este
+            // campo ja vem diretamente do usuario seguido.
+            const username = item.following_username ||
+                (profile.following || []).find(user => Number(user.id) === Number(item.following))?.username;
+
+            if (!username) {
+                throw new Error("A API Follow nao retornou o nome do usuario seguido.");
+            }
+
+            return {
+                id: item.following,
+                username,
+                avatar: normalizeAvatarURL(item.following_avatar ||
+                    (profile.following || []).find(user => Number(user.id) === Number(item.following))?.avatar),
+            };
+        });
+
+        return {
+            ...profile,
+            following_count: following.length,
+            followers_count: followersCount,
+            following: preview,
+        };
+    }
+
     async function loadUserProfile() {
+        const sequence = ++profileLoadSequence;
+        const token = localStorage.getItem("token");
+        loadedToken = token;
+
         if (!username) {
             renderMessage(
                 "Perfil não identificado",
                 "Abra um perfil selecionando um usuário na página Seguindo."
             );
-
-            return;
+            return null;
         }
 
         renderMessage(
@@ -549,13 +611,16 @@ const avatarHTML = avatarSrc
             const response = await fetch(
                 `${PROFILE_API_BASE}${encodeURIComponent(username)}/`,
                 {
-                    headers: getHeaders(),
+                    headers: token ? { "Authorization": `Token ${token}` } : {},
+                    cache: "no-store",
                 }
             );
+            const data = await response.json().catch(() => null);
 
-            const data = await response.json()
-                .catch(() => null);
-
+            // Trocar de conta em outra guia invalida resultados pendentes.
+            if (sequence !== profileLoadSequence || token !== localStorage.getItem("token")) {
+                return null;
+            }
             if (!response.ok) {
                 throw new Error(
                     data?.error ||
@@ -564,18 +629,23 @@ const avatarHTML = avatarSrc
                 );
             }
 
-            // O botao sempre reflete o registro salvo no banco, inclusive
-            // depois de recarregar a pagina ou seguir em outra aba.
-            const profileWithFollow = await resolveFollowingFromDatabase(data);
-            renderProfile(profileWithFollow);
-            return profileWithFollow;
+            const profileWithFollow = await resolveFollowingFromDatabase(data, token);
+            if (sequence !== profileLoadSequence || token !== localStorage.getItem("token")) {
+                return null;
+            }
 
+            const profileWithPublicFollowing = await resolvePublicFollowingFromDatabase(profileWithFollow, token);
+            if (sequence !== profileLoadSequence || token !== localStorage.getItem("token")) {
+                return null;
+            }
+
+            renderProfile(profileWithPublicFollowing);
+            return profileWithPublicFollowing;
         } catch (error) {
-            console.error(
-                "Erro ao carregar perfil público:",
-                error
-            );
-
+            if (sequence !== profileLoadSequence || token !== localStorage.getItem("token")) {
+                return null;
+            }
+            console.error("Erro ao carregar perfil público:", error);
             renderMessage(
                 "Erro ao conferir perfil no banco",
                 error.message ||
@@ -638,6 +708,11 @@ const avatarHTML = avatarSrc
                 ? null
                 : await response.json().catch(() => null);
 
+            if (token !== localStorage.getItem("token")) {
+                await loadUserProfile();
+                throw new Error("A conta conectada mudou. Confira o perfil antes de tentar novamente.");
+            }
+
             if (!response.ok) {
                 throw new Error(
                     data?.detail ||
@@ -689,6 +764,20 @@ const avatarHTML = avatarSrc
 
         await loadUserProfile();
     }
+
+    // Uma troca de conta em outra guia deve atualizar o estado do botao.
+    window.addEventListener("storage", event => {
+        if (event.key === "token" || event.key === "user" || event.key === null) {
+            if (!creatorKey) loadUserProfile();
+        }
+    });
+
+    // Atualiza quando a guia volta a ter foco (ex.: login em outra guia).
+    window.addEventListener("focus", () => {
+        if (!creatorKey && loadedToken !== localStorage.getItem("token")) {
+            loadUserProfile();
+        }
+    });
 
     render();
 
