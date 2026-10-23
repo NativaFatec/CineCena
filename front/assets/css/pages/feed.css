@@ -1,6 +1,8 @@
+
 /* Página de feed (feed.html): layout de colunas, abas e barra lateral */
 
-/* ---- Layout do feed, abas de filtro e composer (original: linhas 893-946) ---- */
+/* Layout do feed, abas de filtro e composer */
+
 .feed-layout {
   padding: 14px 0 86px;
   display: grid;
@@ -46,7 +48,7 @@
   background: white;
 }
 
-.quick-composer>button:nth-of-type(1) {
+.quick-composer > button:nth-of-type(1) {
   flex: 1;
   border: 0;
   padding: 10px 4px;
@@ -56,8 +58,8 @@
   cursor: text;
 }
 
+/* Barra lateral do feed */
 
-/* ---- Barra lateral do feed (original: linhas 1053-1097) ---- */
 .feed-side {
   position: sticky;
   top: 100px;
@@ -91,7 +93,7 @@
   gap: 11px;
 }
 
-.suggested-user>div {
+.suggested-user > div {
   display: grid;
 }
 
@@ -104,19 +106,36 @@
   margin-top: 18px;
 }
 
+/* Botões de curtida */
 
-.like-button {
+.feed-actions .like-button {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 6px;
   color: inherit;
 }
 
-.like-button.is-liked {
+.feed-actions .like-button.is-liked {
   color: #e53950;
 }
 
-.like-button.is-liked svg {
+.feed-actions .like-button svg {
+  fill: none;
+  stroke: currentColor;
+  transition: color .2s ease, fill .2s ease, transform .2s ease;
+}
+
+.feed-actions .like-button.is-liked svg {
   fill: currentColor;
   stroke: currentColor;
+}
+
+.feed-actions .like-button:active svg {
+  transform: scale(.9);
+}
+
+.feed-actions .like-button:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
 }
