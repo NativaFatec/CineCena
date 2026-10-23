@@ -18,8 +18,8 @@
     return `<button class="movie-card${compact}" type="button" data-movie-key="${escapeHTML(movieKey(movie))}" aria-label="Abrir ${escapeHTML(movie.title)}">
       <span class="movie-poster">
         ${poster
-          ? `<img src="${poster}" alt="Pôster de ${escapeHTML(movie.title)}" loading="lazy">`
-          : `<span class="poster-fallback"><small>CineCena</small><strong>${escapeHTML(movie.title)}</strong><i>${escapeHTML(movieYear(movie))}</i></span>`}
+        ? `<img src="${poster}" alt="Pôster de ${escapeHTML(movie.title)}" loading="lazy">`
+        : `<span class="poster-fallback"><small>CineCena</small><strong>${escapeHTML(movie.title)}</strong><i>${escapeHTML(movieYear(movie))}</i></span>`}
       </span>
       <span class="movie-card-copy">
         <strong>${escapeHTML(movie.title)}</strong>
@@ -68,9 +68,9 @@
     const listMovies = list.movies.map(title => state.movies.find(movie => movie.title === title)).filter(Boolean).slice(0, 4);
     return `<a class="list-card accent-${list.accent}" href="list.html?list=${encodeURIComponent(list.slug)}">
       <div class="poster-stack">${listMovies.map(movie => {
-        const url = posterURL(movie);
-        return url ? `<img src="${url}" alt="" loading="lazy">` : `<span>${escapeHTML(movie.title.slice(0, 1))}</span>`;
-      }).join("") || `<span>C</span><span>C</span><span>B</span>`}</div>
+      const url = posterURL(movie);
+      return url ? `<img src="${url}" alt="" loading="lazy">` : `<span>${escapeHTML(movie.title.slice(0, 1))}</span>`;
+    }).join("") || `<span>C</span><span>C</span><span>B</span>`}</div>
       <h3>${escapeHTML(list.title)}</h3>
       <p>${escapeHTML(list.description)}</p>
       <span class="list-link">Explorar lista ${icon("arrow")}</span>
@@ -89,7 +89,7 @@
     const href = own ? "profile.html" : `profileusers.html?username=${encodeURIComponent(name)}`;
     return `<article class="feed-card feed-review-card" data-feed-kind="review ${own ? 'own' : 'community'}${review.friend ? ' friend' : ''}">
       <div class="feed-review-main">
-        <header class="feed-card-head"><a href="${href}" class="feed-author">${userAvatar({...review, own})}<span><strong>${escapeHTML(name)}</strong><small>${escapeHTML(review.date || 'Agora')}</small></span></a><span class="content-badge">Review</span></header>
+        <header class="feed-card-head"><a href="${href}" class="feed-author">${userAvatar({ ...review, own })}<span><strong>${escapeHTML(name)}</strong><small>${escapeHTML(review.date || 'Agora')}</small></span></a><span class="content-badge">Review</span></header>
         ${review.title ? `<h3 class="feed-review-title">${escapeHTML(review.title)}</h3>` : ''}
         <div class="feed-review-reaction"><strong>${review.reaction === 'amei' ? '❤️ Amei' : review.reaction === 'nao_gostei' ? '👎 Não gostei' : '👍 Gostei'}</strong></div>
         <p class="feed-text">${escapeHTML(review.text || '')}</p>
@@ -101,9 +101,10 @@
     const name = post.username || state.profile.name;
     const href = own ? "profile.html" : `profileusers.html?username=${encodeURIComponent(name)}`;
     return `<article class="feed-card" data-feed-kind="post ${own ? 'own' : 'community'}${post.friend ? ' friend' : ''}">
-      <header class="feed-card-head"><a href="${href}" class="feed-author">${userAvatar({...post, own})}<span><strong>${escapeHTML(name)}</strong><small>${escapeHTML(post.date || 'Agora')}</small></span></a><span class="content-badge neutral">Post</span></header>
+      <header class="feed-card-head"><a href="${href}" class="feed-author">${userAvatar({ ...post, own })}<span><strong>${escapeHTML(name)}</strong><small>${escapeHTML(post.date || 'Agora')}</small></span></a><span class="content-badge neutral">Post</span></header>
       <p class="feed-text">${escapeHTML(post.text)}</p>
-      <footer class="feed-actions"><button type="button" data-like-post="${Number(post.id)}" aria-pressed="${!!post.liked}">${icon('heart')} ${post.liked ? 'Amado' : 'Amei'} (${post.likesCount || 0})</button><button type="button" data-comment-post="${Number(post.id)}">${icon('comment')} Comentar (${post.commentsCount || 0})</button></footer>
+      <footer class="feed-actions">
+      <button type="button" class="like-button ${post.liked ? 'is-liked' : ''}" data-like-post="${Number(post.id)}" aria-pressed="${!!post.liked}" aria-label="${post.liked ? 'Remover curtida' : 'Curtir post'}">${icon('heart')} <span>${post.likesCount || 0}</span></button>      <button type="button" data-comment-post="${Number(post.id)}">${icon('comment')} Comentar (${post.commentsCount || 0})</button></footer>
     </article>`;
   }
   function feedEntries() {
@@ -220,10 +221,12 @@
     `, "md");
 
     if (!selectedMovie) {
-      bindMoviePicker(modal, { onSelect: movie => {
-        selectedMovie = movie;
-        modal.querySelector('[data-review-form] [type="submit"]').disabled = !movie;
-      }});
+      bindMoviePicker(modal, {
+        onSelect: movie => {
+          selectedMovie = movie;
+          modal.querySelector('[data-review-form] [type="submit"]').disabled = !movie;
+        }
+      });
     }
     const form = modal.querySelector("[data-review-form]");
     const ratingInput = form.querySelector('[name="rating"]');
@@ -431,7 +434,7 @@
       button.disabled = true;
       try {
         await window.CINECENA_API.request(kind === 'post' ? `posts/${id}/comments/` : 'comments/', {
-          method: 'POST', body: JSON.stringify(kind === 'post' ? {body} : {review:id, body})
+          method: 'POST', body: JSON.stringify(kind === 'post' ? { body } : { review: id, body })
         });
         event.currentTarget.reset(); await renderComments();
         await App.loadSocial(); toast('Comentário enviado.');

@@ -103,3 +103,20 @@
 .profile-suggestion .btn {
   margin-top: 18px;
 }
+
+
+.like-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: inherit;
+}
+
+.like-button.is-liked {
+  color: #e53950;
+}
+
+.like-button.is-liked svg {
+  fill: currentColor;
+  stroke: currentColor;
+}
