@@ -26,17 +26,27 @@
     async function loadConnectionStats() {
         const username = state.profile.name;
         const token = localStorage.getItem("token");
-        if (!token || username === "Usuário CineCena") return;
+        if (!token || !username || username === "Usuário CineCena") return;
         const sequence = ++statsRequest;
+
         try {
-            // Esta API lê Follow diretamente do banco, inclusive seguidores.
-            const profile = await window.CINECENA_API.request(`users/${encodeURIComponent(username)}/`);
+            // Usa a mesma tabela Follow e a mesma consulta dos modais
+            // Seguindo/Seguidores, evitando contadores desatualizados.
+            const relationships = await window.CINECENA_API.list(
+                `follows/?username=${encodeURIComponent(username)}`
+            );
             if (sequence !== statsRequest || token !== localStorage.getItem("token") ||
                 username !== state.profile.name) return;
+
+            const normalizedUsername = username.toLocaleLowerCase("pt-BR");
             connectionStats = {
                 username,
-                following: Number(profile.following_count) || 0,
-                followers: Number(profile.followers_count) || 0
+                following: relationships.filter(item =>
+                    String(item.follower_username || "").toLocaleLowerCase("pt-BR") === normalizedUsername
+                ).length,
+                followers: relationships.filter(item =>
+                    String(item.following_username || "").toLocaleLowerCase("pt-BR") === normalizedUsername
+                ).length
             };
             render();
         } catch (error) {
@@ -218,7 +228,7 @@
             counters.innerHTML = `
                 <div>
                     <button class="profile-stat-button" type="button" data-profile-connections="following" aria-label="Ver pessoas que você segue">
-                        <strong>${currentStats ? currentStats.following : state.friendIds.length}</strong>
+                        <strong>${currentStats ? currentStats.following : "—"}</strong>
                         <span>Seguindo</span>
                     </button>
                 </div>
@@ -359,6 +369,7 @@
     });
 
     render();
+    loadConnectionStats();
 
     window.addEventListener("cinecena:profile-updated", () => {
         render();
