@@ -121,6 +121,8 @@
             <span>${review.likesCount || 0}</span>
           </button>
           <button type="button" data-comment-review="${Number(review.id)}">${icon("comment")} Comentar</button>
+          ${own ? `<button type="button" data-edit-review="${Number(review.id)}">Editar</button>
+          <button type="button" data-delete-review="${Number(review.id)}">Apagar</button>` : ""}
         </footer>
       </div>
       <aside class="feed-review-movie">${reviewMovieCard(review, { featured: true })}</aside>
@@ -266,13 +268,16 @@
     return () => selectedMovie;
   }
 
-  function openReviewModal(preselectedMovie = "") {
-    const requestedTitle = typeof preselectedMovie === "string" ? preselectedMovie : preselectedMovie?.title;
+  function openReviewModal(preselectedMovie = "", reviewToEdit = null) {
+    const editing = Boolean(reviewToEdit);
+    const requestedTitle = editing ? reviewToEdit.movie : (typeof preselectedMovie === "string" ? preselectedMovie : preselectedMovie?.title);
     const pageTitle = new URLSearchParams(window.location.search).get("movie");
 
+    // Uma review antiga pode se referir a um filme que não está mais no catálogo local.
+    // A edição usa o ID da review original, sem recriar ou trocar o filme.
     let selectedMovie = state.movies.find(movie =>
-      movie.title === requestedTitle || movie.title === pageTitle
-    ) || null;
+      movie.title === requestedTitle || (!editing && movie.title === pageTitle)
+    ) || (editing ? { title: requestedTitle, year: reviewToEdit.year || "" } : null);
 
     const poster = selectedMovie ? posterURL(selectedMovie) : "";
 
@@ -281,7 +286,7 @@
         <div class="review-modal-heading">
           <span class="review-eyebrow">${icon("clapperboard")} CINECENA</span>
           <div class="modal-form-head">
-            <h2>Como foi sua experiência?</h2>
+            <h2>${editing ? "Editar review" : "Como foi sua experiência?"}</h2>
             <p>Sua opinião sobre o filme, em poucas palavras.</p>
           </div>
         </div>
@@ -301,9 +306,9 @@
             <input type="hidden" name="reaction" value="">
             <p class="review-field-error" data-rating-error role="alert"></p>
           </fieldset>
-          <label class="review-body-field">Seu comentário<textarea name="text" rows="5" maxlength="1200" required placeholder="O que você achou do filme? Fale sobre a história, atuações ou o que sentiu…"></textarea><span class="review-char-count"><span data-review-count>0</span>/1200</span></label>
+          <label class="review-body-field">Seu comentário<textarea name="text" rows="5" maxlength="1200" required placeholder="O que você achou do filme? Fale sobre a história, atuações ou o que sentiu…">${editing ? escapeHTML(reviewToEdit.text || "") : ""}</textarea><span class="review-char-count"><span data-review-count>0</span>/1200</span></label>
           <p class="review-field-error" data-body-error role="alert"></p>
-          <div class="review-form-footer"><small>Respeite outras opiniões e evite spoilers sem aviso.</small><button class="btn btn-primary" type="submit" ${selectedMovie ? "" : "disabled"}>Publicar review ${icon("arrow")}</button></div>
+          <div class="review-form-footer"><small>Respeite outras opiniões e evite spoilers sem aviso.</small><button class="btn btn-primary" type="submit" ${selectedMovie ? "" : "disabled"}>${editing ? "Salvar alterações" : "Publicar review"} ${icon("arrow")}</button></div>
         </form>
       </div>
     `, "md");
@@ -345,6 +350,16 @@
       modal.querySelector("[data-body-error]").textContent = "";
     });
 
+    if (editing) {
+      const selectedReaction = reviewToEdit.reaction || (
+        Number(reviewToEdit.rating) <= 2 ? "nao_gostei" :
+        Number(reviewToEdit.rating) >= 4 ? "amei" : "gostei"
+      );
+      const button = reactions.find(item => item.dataset.reaction === selectedReaction);
+      button?.click();
+      count.textContent = String(textarea.value.length);
+    }
+
     form.addEventListener("submit", async event => {
       event.preventDefault();
 
@@ -378,30 +393,39 @@
       const originalButton = submitButton.innerHTML;
 
       submitButton.disabled = true;
-      submitButton.textContent = "Publicando…";
+      submitButton.textContent = editing ? "Salvando…" : "Publicando…";
       form.setAttribute("aria-busy", "true");
 
       try {
         const api = window.CINECENA_API;
-        const dbMovie = await api.ensureMovie(selectedMovie);
-        const existing = await api.list(`reviews/?movie=${dbMovie.id}`);
-        const mine = existing.find(r => Number(r.user) === Number(JSON.parse(localStorage.getItem("user") || "null")?.id));
+        if (editing) {
+          // O Django valida que a review pertence ao usuário autenticado.
+          await api.request(`reviews/${Number(reviewToEdit.id)}/`, {
+            method: "PATCH",
+            body: JSON.stringify({ rating, reaction, body: text })
+          });
+        } else {
+          const dbMovie = await api.ensureMovie(selectedMovie);
+          const existing = await api.list(`reviews/?movie=${dbMovie.id}`);
+          const mine = existing.find(r => Number(r.user) === Number(JSON.parse(localStorage.getItem("user") || "null")?.id));
 
-        await api.request(mine ? `reviews/${mine.id}/` : "reviews/", {
-          method: mine ? "PATCH" : "POST",
-          body: JSON.stringify({
-            movie: dbMovie.id,
-            rating,
-            reaction,
-            body: text,
-            title: mine?.title || "",
-            is_spoiler: false
-          })
-        });
+          await api.request(mine ? `reviews/${mine.id}/` : "reviews/", {
+            method: mine ? "PATCH" : "POST",
+            body: JSON.stringify({
+              movie: dbMovie.id,
+              rating,
+              reaction,
+              body: text,
+              title: mine?.title || "",
+              is_spoiler: false
+            })
+          });
+        }
 
+        // Renderiza os dados persistidos no Django, inclusive no perfil e feed.
         await App.loadSocial();
         closeModal(modal);
-        toast("Review salva no CineCena com sucesso.");
+        toast(editing ? "Review atualizada." : "Review salva no CineCena com sucesso.");
       } catch (error) {
         console.error("CineCena: falha ao publicar review", error);
 
@@ -629,6 +653,51 @@
     });
   }
 
+  // Lista integral e atualizada do Django, sem depender das 3 prévias do perfil público.
+  async function openConnectionsModal(username, kind = "following") {
+    if (!username || !["following", "followers"].includes(kind)) return;
+    const following = kind === "following";
+    const label = following ? "Seguindo" : "Seguidores";
+    const modal = mountModal("connections", `
+      <div class="modal-form-head"><h2>${label}</h2><p>Perfis de @${escapeHTML(username)} no CineCena.</p></div>
+      <div class="profile-connection-list" data-connection-list role="status">Carregando perfis…</div>
+      ${following ? '<a class="btn btn-secondary profile-find-people" href="friends.html">Encontrar pessoas</a>' : ""}
+    `, "md");
+
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) throw new Error("Entre na sua conta para consultar os perfis.");
+      const relationships = await window.CINECENA_API.list(`follows/?username=${encodeURIComponent(username)}`);
+      if (!modal.isConnected || token !== localStorage.getItem("token")) return;
+
+      const matching = relationships.filter(item => String(
+        following ? item.follower_username : item.following_username
+      ).toLocaleLowerCase("pt-BR") === username.toLocaleLowerCase("pt-BR"));
+
+      const people = matching.map(item => ({
+        username: following ? item.following_username : item.follower_username,
+        avatar: following ? item.following_avatar : ""
+      })).filter(person => person.username);
+
+      modal.querySelector("[data-connection-list]").innerHTML = people.length
+        ? people.map(person => `
+            <a class="profile-connection-person" href="profileusers.html?username=${encodeURIComponent(person.username)}">
+              <span class="person-avatar sm">${person.avatar
+                ? `<img src="${escapeHTML(person.avatar)}" alt="" loading="lazy">`
+                : escapeHTML(initials(person.username))}</span>
+              <span class="profile-connection-name">@${escapeHTML(person.username)}</span>
+              ${icon("arrow")}
+            </a>
+          `).join("")
+        : `<p class="profile-connection-empty">${following ? "Este usuário ainda não segue ninguém." : "Este usuário ainda não tem seguidores."}</p>`;
+      modal.querySelector("[data-connection-list]").removeAttribute("role");
+    } catch (error) {
+      if (modal.isConnected) {
+        modal.querySelector("[data-connection-list]").textContent = error.message || "Não foi possível carregar os perfis.";
+      }
+    }
+  }
+
   function bindGlobalEvents() {
     document.addEventListener("click", async event => {
       const likeButton = event.target.closest("[data-like-post], [data-like-review]");
@@ -662,6 +731,34 @@
           Number(commentButton.dataset.commentPost || commentButton.dataset.commentReview)
         );
 
+        return;
+      }
+
+      const editReviewButton = event.target.closest("[data-edit-review]");
+
+      if (editReviewButton) {
+        const review = state.reviews.find(item => Number(item.id) === Number(editReviewButton.dataset.editReview));
+        if (review?.own) openReviewModal(review.movie, review);
+        return;
+      }
+
+      const deleteReviewButton = event.target.closest("[data-delete-review]");
+
+      if (deleteReviewButton) {
+        const review = state.reviews.find(item => Number(item.id) === Number(deleteReviewButton.dataset.deleteReview));
+        if (!review?.own || !window.confirm("Tem certeza que deseja apagar esta review?")) return;
+
+        deleteReviewButton.disabled = true;
+        try {
+          await window.CINECENA_API.request(`reviews/${Number(review.id)}/`, { method: "DELETE" });
+          state.reviews = state.reviews.filter(item => Number(item.id) !== Number(review.id));
+          window.dispatchEvent(new Event("cinecena:social-updated"));
+          toast("Review apagada.");
+        } catch (error) {
+          toast(error.message);
+        } finally {
+          deleteReviewButton.disabled = false;
+        }
         return;
       }
 
@@ -755,6 +852,7 @@
     feedEntries,
     openPostModal,
     openReviewModal,
+    openConnectionsModal,
     openFavoriteModal,
     openEditProfileModal,
     openMovieModal

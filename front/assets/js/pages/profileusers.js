@@ -405,36 +405,26 @@ const avatarHTML = avatarSrc
                 }
             </section>
 
-            <section class="shell profile-stats">
+            <section class="shell profile-stats" data-public-profile-counters>
                 <div>
-                    <strong>
-                        ${profile.followers_count == null ? "—" : Number(profile.followers_count)}
-                    </strong>
-                    <span>Seguidores</span>
-                    <small style="font-size: .8rem; color: var(--muted); margin-top: 7px;">
-                        ${Number(profile.following_count || 0)} seguindo
-                    </small>
+                    <button class="profile-stat-button" type="button" data-profile-connections="following" aria-label="Ver quem este usuário segue">
+                        <strong>${Number(profile.following_count || 0)}</strong>
+                        <span>Seguindo</span>
+                    </button>
                 </div>
-
                 <div>
-                    <strong>
-                        ${Number(profile.watched_count || 0)}
-                    </strong>
+                    <button class="profile-stat-button" type="button" data-profile-connections="followers" aria-label="Ver seguidores deste usuário">
+                        <strong>${Number(profile.followers_count || 0)}</strong>
+                        <span>Seguidores</span>
+                    </button>
+                </div>
+                <div>
+                    <strong>${Number(profile.watched_count || 0)}</strong>
                     <span>Filmes assistidos</span>
                 </div>
-
                 <div>
-                    <strong>
-                        ${Number(profile.reviews_count || 0)}
-                    </strong>
+                    <strong>${Number(profile.reviews_count || 0)}</strong>
                     <span>Reviews</span>
-                </div>
-
-                <div>
-                    <strong>
-                        ${Number(profile.lists_count || 0)}
-                    </strong>
-                    <span>Listas públicas</span>
                 </div>
             </section>
 
@@ -494,6 +484,11 @@ const avatarHTML = avatarSrc
             "click",
             toggleFriend
         );
+
+        container.querySelector("[data-public-profile-counters]")?.addEventListener("click", event => {
+            const button = event.target.closest("[data-profile-connections]");
+            if (button) UI.openConnectionsModal(profile.username, button.dataset.profileConnections);
+        });
     }
 
     // A API de perfis publicos pode estar em uma versao anterior no Render.

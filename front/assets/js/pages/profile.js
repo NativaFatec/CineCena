@@ -20,6 +20,29 @@
     } = App;
 
     const LIMIT = 15;
+    let connectionStats = null;
+    let statsRequest = 0;
+
+    async function loadConnectionStats() {
+        const username = state.profile.name;
+        const token = localStorage.getItem("token");
+        if (!token || username === "Usuário CineCena") return;
+        const sequence = ++statsRequest;
+        try {
+            // Esta API lê Follow diretamente do banco, inclusive seguidores.
+            const profile = await window.CINECENA_API.request(`users/${encodeURIComponent(username)}/`);
+            if (sequence !== statsRequest || token !== localStorage.getItem("token") ||
+                username !== state.profile.name) return;
+            connectionStats = {
+                username,
+                following: Number(profile.following_count) || 0,
+                followers: Number(profile.followers_count) || 0
+            };
+            render();
+        } catch (error) {
+            console.warn("CineCena: falha ao carregar seguidores do Django.", error);
+        }
+    }
 
     function sectionMovies(
         target,
@@ -160,6 +183,7 @@
         const watched = collectionMovies("watched");
         const loved = collectionMovies("loved");
         const listed = collectionMovies("listed");
+        const currentStats = connectionStats?.username === state.profile.name ? connectionStats : null;
 
         const avatar = document.querySelector(
             "[data-profile-avatar]"
@@ -193,8 +217,17 @@
         if (counters) {
             counters.innerHTML = `
                 <div>
-                    <strong>${state.friendIds.length}</strong>
-                    <span>Seguindo</span>
+                    <button class="profile-stat-button" type="button" data-profile-connections="following" aria-label="Ver pessoas que você segue">
+                        <strong>${currentStats ? currentStats.following : state.friendIds.length}</strong>
+                        <span>Seguindo</span>
+                    </button>
+                </div>
+
+                <div>
+                    <button class="profile-stat-button" type="button" data-profile-connections="followers" aria-label="Ver seus seguidores">
+                        <strong>${currentStats ? currentStats.followers : "—"}</strong>
+                        <span>Seguidores</span>
+                    </button>
                 </div>
 
                 <div>
@@ -205,11 +238,6 @@
                 <div>
                     <strong>${ownReviews.length}</strong>
                     <span>Reviews</span>
-                </div>
-
-                <div>
-                    <strong>${listed.length ? 1 : 0}</strong>
-                    <span>Listas</span>
                 </div>
             `;
         }
@@ -325,12 +353,17 @@
         `;
     }
 
+    document.querySelector("[data-profile-counters]")?.addEventListener("click", event => {
+        const button = event.target.closest("[data-profile-connections]");
+        if (button) UI.openConnectionsModal(state.profile.name, button.dataset.profileConnections);
+    });
+
     render();
 
-    window.addEventListener(
-        "cinecena:profile-updated",
-        render
-    );
+    window.addEventListener("cinecena:profile-updated", () => {
+        render();
+        loadConnectionStats();
+    });
 
     window.addEventListener(
         "cinecena:social-updated",
@@ -352,10 +385,10 @@
         render
     );
 
-    window.addEventListener(
-        "cinecena:friend-updated",
-        render
-    );
+    window.addEventListener("cinecena:friend-updated", () => {
+        render();
+        loadConnectionStats();
+    });
 })();
 
 document.addEventListener(
