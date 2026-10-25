@@ -146,6 +146,8 @@
           <span>${post.likesCount || 0}</span>
         </button>
         <button type="button" data-comment-post="${Number(post.id)}">${icon("comment")} Comentar (${post.commentsCount || 0})</button>
+        ${own ? `<button type="button" data-edit-post="${Number(post.id)}">Editar</button>
+        <button type="button" data-delete-post="${Number(post.id)}">Apagar</button>` : ""}
       </footer>
     </article>`;
   }
@@ -157,12 +159,13 @@
     ].join("");
   }
 
-  function openPostModal() {
+  function openPostModal(post = null) {
+    const editing = Boolean(post);
     const modal = mountModal("post", `
-      <div class="modal-form-head"><h2>Novo post</h2><p>Compartilhe uma ideia, descoberta ou conversa relacionada ao cinema.</p></div>
+      <div class="modal-form-head"><h2>${editing ? "Editar post" : "Novo post"}</h2><p>Compartilhe uma ideia, descoberta ou conversa relacionada ao cinema.</p></div>
       <form class="modal-form" data-post-form>
-        <label>Publicação<textarea name="text" rows="5" maxlength="600" required placeholder="O que você quer compartilhar?"></textarea></label>
-        <div class="form-footer"><small>Máximo de 600 caracteres.</small><button class="btn btn-primary" type="submit">Publicar ${icon("arrow")}</button></div>
+        <label>Publicação<textarea name="text" rows="5" maxlength="600" required placeholder="O que você quer compartilhar?">${editing ? escapeHTML(post.text) : ""}</textarea></label>
+        <div class="form-footer"><small>Máximo de 600 caracteres.</small><button class="btn btn-primary" type="submit">${editing ? "Salvar alterações" : "Publicar"} ${icon("arrow")}</button></div>
       </form>
     `, "md");
 
@@ -173,19 +176,25 @@
       const button = form.querySelector('[type="submit"]');
       const text = String(new FormData(form).get("text") || "").trim();
 
-      if (!text) return;
+      if (!text || text.length > 600) return;
 
       button.disabled = true;
 
       try {
-        const result = await window.CINECENA_API.request("posts/", {
-          method: "POST",
+        const result = await window.CINECENA_API.request(editing ? `posts/${post.id}/` : "posts/", {
+          method: editing ? "PATCH" : "POST",
           body: JSON.stringify({ body: text })
         });
 
-        savePost(result);
+        if (editing) {
+          const currentPost = state.posts.find(item => Number(item.id) === Number(post.id));
+          if (currentPost) currentPost.text = result.body;
+          window.dispatchEvent(new Event("cinecena:social-updated"));
+        } else {
+          savePost(result);
+        }
         closeModal(modal);
-        toast("Post publicado.");
+        toast(editing ? "Post atualizado." : "Post publicado.");
       } catch (error) {
         toast(error.message);
       } finally {
@@ -653,6 +662,34 @@
           Number(commentButton.dataset.commentPost || commentButton.dataset.commentReview)
         );
 
+        return;
+      }
+
+      const editPostButton = event.target.closest("[data-edit-post]");
+
+      if (editPostButton) {
+        const post = state.posts.find(item => Number(item.id) === Number(editPostButton.dataset.editPost));
+        if (post?.own) openPostModal(post);
+        return;
+      }
+
+      const deletePostButton = event.target.closest("[data-delete-post]");
+
+      if (deletePostButton) {
+        const post = state.posts.find(item => Number(item.id) === Number(deletePostButton.dataset.deletePost));
+        if (!post?.own || !window.confirm("Tem certeza que deseja apagar este post?")) return;
+
+        deletePostButton.disabled = true;
+        try {
+          await window.CINECENA_API.request(`posts/${post.id}/`, { method: "DELETE" });
+          state.posts = state.posts.filter(item => Number(item.id) !== Number(post.id));
+          window.dispatchEvent(new Event("cinecena:social-updated"));
+          toast("Post apagado.");
+        } catch (error) {
+          toast(error.message);
+        } finally {
+          deletePostButton.disabled = false;
+        }
         return;
       }
 
