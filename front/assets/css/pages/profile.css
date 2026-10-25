@@ -235,3 +235,46 @@
   display: flex;
   justify-content: center;
 }
+
+
+/* Indicadores clicáveis: mesma tipografia e dimensões do perfil original. */
+.profile-stat-button {
+  display: grid;
+  justify-items: start;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  border-radius: 6px;
+  color: inherit;
+  background: transparent;
+  text-align: left;
+  font: inherit;
+  cursor: pointer;
+}
+
+.profile-stat-button:hover span,
+.profile-stat-button:focus-visible span { color: var(--blue); }
+.profile-stat-button:focus-visible { outline: 2px solid var(--blue); outline-offset: 5px; }
+
+/* Lista de seguindo / seguidores no modal padrão do CineCena. */
+.profile-connection-list { display: grid; gap: 8px; max-height: 48vh; overflow-y: auto; margin-top: 20px; }
+.profile-connection-person {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  padding: 11px 12px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--paper);
+  color: var(--ink);
+  text-decoration: none;
+}
+.profile-connection-person:hover, .profile-connection-person:focus-visible {
+  border-color: var(--blue);
+  background: var(--paper-blue);
+}
+.profile-connection-name { flex: 1; min-width: 0; overflow-wrap: anywhere; font-weight: 650; }
+.profile-connection-person > .icon { color: var(--muted); width: 17px; }
+.profile-connection-empty { color: var(--muted); text-align: center; padding: 22px 10px; }
+.profile-find-people { display: inline-flex; margin-top: 16px; }
