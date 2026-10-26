@@ -176,58 +176,85 @@
         `;
     }
 
-    function renderFriends(friends) {
-        if (!friends.length) {
-            return `
-                <div class="empty-state slim">
-                    <div class="empty-icon">
-                        ${icon("friends")}
-                    </div>
-                    <div>
-                        <strong>Ainda não segue ninguém</strong>
-                        <p>
-                            Este usuário ainda não segue ninguém.
-                        </p>
-                    </div>
-                </div>
-            `;
-        }
-
+ 
+function renderFriends(friends) {
+    if (!friends.length) {
         return `
-            <div class="profile-friends-preview">
-                ${friends.map(friend => {
-                    const avatar = friend.avatar
-                        ? `
-                            <img
-                                src="${escapeHTML(friend.avatar)}"
-                                alt="${escapeHTML(friend.username)}"
-                                loading="lazy"
-                            >
-                        `
-                        : `
-                            <span>
-                                ${escapeHTML(initials(friend.username))}
-                            </span>
-                        `;
-
-                    return `
-                        <a
-                            class="profile-list-summary"
-                            href="profileusers.html?username=${encodeURIComponent(friend.username)}"
-                        >
-                            <span class="person-avatar">
-                                ${avatar}
-                            </span>
-
-                            <strong>
-                                @${escapeHTML(friend.username)}
-                            </strong>
-                        </a>
-                    `;
-                }).join("")}
+            <div class="empty-state slim">
+                <div class="empty-icon">
+                    ${icon("friends")}
+                </div>
+                <div>
+                    <strong>Ainda não segue ninguém</strong>
+                    <p>Este usuário ainda não segue ninguém.</p>
+                </div>
             </div>
         `;
     }
+
+    return `
+        <div class="profile-friends-preview">
+            ${friends.map(friend => {
+                const avatar = friend.avatar
+                    ? `
+                        <img
+                            src="${escapeHTML(friend.avatar)}"
+                            alt="Foto de ${escapeHTML(friend.username)}"
+                            loading="lazy"
+                            style="
+                                display: block;
+                                width: 100%;
+                                height: 100%;
+                                object-fit: cover;
+                                border-radius: 50%;
+                            "
+                        >
+                    `
+                    : `
+                        <span
+                            aria-hidden="true"
+                            style="
+                                display: flex;
+                                width: 100%;
+                                height: 100%;
+                                align-items: center;
+                                justify-content: center;
+                            "
+                        >
+                            ${icon("user")}
+                        </span>
+                    `;
+
+                return `
+                    <a
+                        class="profile-list-summary"
+                        href="profileusers.html?username=${encodeURIComponent(friend.username)}"
+                    >
+                        <span
+                            class="person-avatar"
+                            style="
+                                display: inline-flex;
+                                flex: 0 0 48px;
+                                width: 48px;
+                                height: 48px;
+                                overflow: hidden;
+                                align-items: center;
+                                justify-content: center;
+                                border-radius: 50%;
+                            "
+                        >
+                            ${avatar}
+                        </span>
+
+                        <strong>
+                            @${escapeHTML(friend.username)}
+                        </strong>
+                    </a>
+                `;
+            }).join("")}
+        </div>
+    `;
+}
 
     function renderReviews(reviews) {
         if (!reviews.length) {
