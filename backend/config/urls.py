@@ -21,6 +21,8 @@ from movies.views import (
     FavoriteMovieViewSet,
 )
 
+from satisfaction.views import SatisfactionView
+
 from social.views import (
     CommentViewSet,
     MovieListViewSet,
@@ -92,6 +94,9 @@ urlpatterns = [
         }),
         name="favorite-movie-detail",
     ),
+
+    # Pesquisa de satisfação (requere login por token)
+    path("api/satisfaction/", SatisfactionView.as_view(), name="satisfaction"),
 
     # Router genérico: fica depois das rotas específicas
     path("api/", include(router.urls)),

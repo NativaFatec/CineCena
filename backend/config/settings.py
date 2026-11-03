@@ -79,6 +79,7 @@ INSTALLED_APPS = [
     "accounts",
     "movies",
     "social",
+    "satisfaction",
 
     # Mantenha o django-cleanup por último.
     "django_cleanup.apps.CleanupConfig",
