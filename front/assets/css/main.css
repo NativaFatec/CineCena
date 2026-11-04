@@ -24,6 +24,9 @@
 @import url("components/post-card.css");
 @import url("components/modal.css");
 
+/* Tema escuro: exceções que os tokens não cobrem */
+@import url("base/theme-dark.css");
+
 /* Páginas específicas */
 @import url("pages/login.css");
 @import url("pages/home.css");

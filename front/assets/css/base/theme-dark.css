@@ -1,0 +1,67 @@
+/* =========================================================
+   Tema escuro — apenas o que NÃO dá para resolver só com tokens
+   (variáveis do tema ficam em base/variables.css).
+   Mantenha este arquivo pequeno: se uma regra aqui virar comum,
+   transforme-a em token.
+   ========================================================= */
+
+/* Logo: o traço azul (#0858A8) perde contraste no fundo escuro */
+html[data-theme="dark"] .brand img.brand-mark {
+  filter: brightness(1.45) saturate(1.1);
+}
+
+/* Imagens de pôster: suaviza o brilho para não "estourar" no escuro */
+html[data-theme="dark"] .movie-poster img,
+html[data-theme="dark"] .favorite-poster img {
+  filter: brightness(.94);
+}
+
+/* Estrelas / reações / erro (tons quentes que eram pensados para fundo claro) */
+html[data-theme="dark"] .review-star.is-active {
+  color: #f0b93f;
+  background: #2e2510;
+  border-color: #7a5d1d;
+}
+html[data-theme="dark"] .review-star:hover { border-color: #b88a2c; }
+html[data-theme="dark"] .feed-review-rating span.is-active { color: #f0b93f; }
+html[data-theme="dark"] .review-field-error { color: #ff8a93; }
+
+html[data-theme="dark"] .review-reaction:hover { border-color: var(--line-accent); }
+html[data-theme="dark"] .review-reaction[data-reaction="nao_gostei"].is-active {
+  color: #f08a8a; border-color: #8a3f3f; background: #2e1717;
+}
+html[data-theme="dark"] .review-reaction[data-reaction="amei"].is-active {
+  color: #f27a9b; border-color: #8a3a55; background: #2e1520;
+}
+
+/* Mensagem de sucesso do login */
+html[data-theme="dark"] .success-message { border-color: #1f5a3a; }
+html[data-theme="dark"] .success-message p { color: #9cc7ae; }
+
+/* ---------- Botão de alternar tema (#themeToggle / #mobileThemeToggle) ---------- */
+.theme-toggle {
+  width: 40px;
+  height: 40px;
+  display: inline-grid;
+  place-items: center;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: var(--surface);
+  color: var(--ink-soft);
+  cursor: pointer;
+  transition: background .15s, border-color .15s, color .15s;
+}
+.theme-toggle:hover {
+  color: var(--blue-text);
+  border-color: var(--line-strong);
+  background: var(--paper-blue);
+}
+.theme-toggle-icon { font-size: 1.1rem; line-height: 1; }
+
+/* Evita "piscada" de transição na primeira pintura, mas suaviza ao alternar */
+html.theme-transition,
+html.theme-transition *,
+html.theme-transition *::before,
+html.theme-transition *::after {
+  transition: background-color .2s ease, border-color .2s ease, color .2s ease !important;
+}
