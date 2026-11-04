@@ -1,44 +1,104 @@
-/* =========================================================
-   Tema escuro — apenas o que NÃO dá para resolver só com tokens
-   (variáveis do tema ficam em base/variables.css).
-   Mantenha este arquivo pequeno: se uma regra aqui virar comum,
-   transforme-a em token.
-   ========================================================= */
 
-/* Logo: o traço azul (#0858A8) perde contraste no fundo escuro */
-html[data-theme="dark"] .brand img.brand-mark {
-  filter: brightness(1.45) saturate(1.1);
+/* =====================================================
+   CINECENA — CORREÇÕES DO TEMA ESCURO
+   ===================================================== */
+
+html[data-theme="dark"] {
+  background: var(--bg);
 }
 
-/* Imagens de pôster: suaviza o brilho para não "estourar" no escuro */
-html[data-theme="dark"] .movie-poster img,
-html[data-theme="dark"] .favorite-poster img {
-  filter: brightness(.94);
+html[data-theme="dark"] body {
+  color: var(--ink);
+  background: var(--bg);
 }
 
-/* Estrelas / reações / erro (tons quentes que eram pensados para fundo claro) */
-html[data-theme="dark"] .review-star.is-active {
-  color: #f0b93f;
-  background: #2e2510;
-  border-color: #7a5d1d;
-}
-html[data-theme="dark"] .review-star:hover { border-color: #b88a2c; }
-html[data-theme="dark"] .feed-review-rating span.is-active { color: #f0b93f; }
-html[data-theme="dark"] .review-field-error { color: #ff8a93; }
-
-html[data-theme="dark"] .review-reaction:hover { border-color: var(--line-accent); }
-html[data-theme="dark"] .review-reaction[data-reaction="nao_gostei"].is-active {
-  color: #f08a8a; border-color: #8a3f3f; background: #2e1717;
-}
-html[data-theme="dark"] .review-reaction[data-reaction="amei"].is-active {
-  color: #f27a9b; border-color: #8a3a55; background: #2e1520;
+/* Cabeçalho e rodapé */
+html[data-theme="dark"] .site-header,
+html[data-theme="dark"] .mobile-menu-toggle,
+html[data-theme="dark"] .mobile-nav-panel {
+  background: var(--surface);
+  color: var(--ink);
 }
 
-/* Mensagem de sucesso do login */
-html[data-theme="dark"] .success-message { border-color: #1f5a3a; }
-html[data-theme="dark"] .success-message p { color: #9cc7ae; }
+html[data-theme="dark"] .site-footer {
+  background: var(--paper);
+  color: var(--ink);
+}
 
-/* ---------- Botão de alternar tema (#themeToggle / #mobileThemeToggle) ---------- */
+/* Estruturas principais das páginas */
+html[data-theme="dark"] main,
+html[data-theme="dark"] .main-content,
+html[data-theme="dark"] .page-content,
+html[data-theme="dark"] .page-main,
+html[data-theme="dark"] .feed-layout,
+html[data-theme="dark"] .movie-page-body,
+html[data-theme="dark"] .satisfaction-main {
+  color: var(--ink);
+}
+
+/* Cartões e áreas de conteúdo */
+html[data-theme="dark"] .quick-composer,
+html[data-theme="dark"] .side-card,
+html[data-theme="dark"] .post-card,
+html[data-theme="dark"] .feed-card,
+html[data-theme="dark"] .movie-card,
+html[data-theme="dark"] .list-card,
+html[data-theme="dark"] .empty-state,
+html[data-theme="dark"] .carousel-card,
+html[data-theme="dark"] .profile-card,
+html[data-theme="dark"] .suggested-user,
+html[data-theme="dark"] .friend-card,
+html[data-theme="dark"] .list-showcase,
+html[data-theme="dark"] .page-header {
+  background-color: var(--surface);
+  color: var(--ink);
+  border-color: var(--line);
+}
+
+/* Formulários e campos */
+html[data-theme="dark"] input,
+html[data-theme="dark"] textarea,
+html[data-theme="dark"] select {
+  background-color: var(--surface);
+  color: var(--ink);
+  border-color: var(--line);
+}
+
+html[data-theme="dark"] input::placeholder,
+html[data-theme="dark"] textarea::placeholder {
+  color: var(--muted);
+}
+
+/* Elementos que usam o fundo secundário */
+html[data-theme="dark"] .feed-tabs,
+html[data-theme="dark"] .side-card,
+html[data-theme="dark"] .profile-panel,
+html[data-theme="dark"] .list-panel {
+  background-color: var(--paper);
+}
+
+/* Botões e filtros */
+html[data-theme="dark"] .feed-filter.active {
+  background: var(--surface-soft);
+  color: var(--blue-text);
+}
+
+/* Textos */
+html[data-theme="dark"] h1,
+html[data-theme="dark"] h2,
+html[data-theme="dark"] h3,
+html[data-theme="dark"] h4,
+html[data-theme="dark"] strong,
+html[data-theme="dark"] label {
+  color: var(--ink);
+}
+
+html[data-theme="dark"] p,
+html[data-theme="dark"] small {
+  color: var(--muted);
+}
+
+/* Botão de tema */
 .theme-toggle {
   width: 40px;
   height: 40px;
@@ -49,19 +109,71 @@ html[data-theme="dark"] .success-message p { color: #9cc7ae; }
   background: var(--surface);
   color: var(--ink-soft);
   cursor: pointer;
-  transition: background .15s, border-color .15s, color .15s;
 }
+
 .theme-toggle:hover {
   color: var(--blue-text);
   border-color: var(--line-strong);
   background: var(--paper-blue);
 }
-.theme-toggle-icon { font-size: 1.1rem; line-height: 1; }
 
-/* Evita "piscada" de transição na primeira pintura, mas suaviza ao alternar */
-html.theme-transition,
-html.theme-transition *,
-html.theme-transition *::before,
-html.theme-transition *::after {
-  transition: background-color .2s ease, border-color .2s ease, color .2s ease !important;
+.theme-toggle-icon {
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+/* Logo */
+html[data-theme="dark"] .brand img.brand-mark {
+  filter: brightness(1.45) saturate(1.1);
+}
+
+/* Pôsteres */
+html[data-theme="dark"] .movie-poster img,
+html[data-theme="dark"] .favorite-poster img {
+  filter: brightness(.94);
+}
+
+/* Avaliações */
+html[data-theme="dark"] .review-star.is-active {
+  color: #f0b93f;
+  background: #2e2510;
+  border-color: #7a5d1d;
+}
+
+html[data-theme="dark"] .review-star:hover {
+  border-color: #b88a2c;
+}
+
+html[data-theme="dark"] .feed-review-rating span.is-active {
+  color: #f0b93f;
+}
+
+html[data-theme="dark"] .review-field-error {
+  color: #ff8a93;
+}
+
+html[data-theme="dark"] .review-reaction[data-reaction="nao_gostei"].is-active {
+  color: #f08a8a;
+  border-color: #8a3f3f;
+  background: #2e1717;
+}
+
+html[data-theme="dark"] .review-reaction[data-reaction="amei"].is-active {
+  color: #f27a9b;
+  border-color: #8a3a55;
+  background: #2e1520;
+}
+
+/* Curtidas */
+html[data-theme="dark"] .feed-actions .like-button.is-liked {
+  color: #f27a9b;
+}
+
+/* Mensagens */
+html[data-theme="dark"] .success-message {
+  border-color: #1f5a3a;
+}
+
+html[data-theme="dark"] .success-message p {
+  color: #9cc7ae;
 }

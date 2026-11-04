@@ -1,21 +1,20 @@
-/* Variáveis globais (cores, raio, largura máxima do container)
-   Tema claro = padrão (:root). Tema escuro = html[data-theme="dark"].
-   Regra de ouro: nenhum componente deve usar cor fixa; use sempre um token. */
 
+/* Variáveis globais do CineCena */
+
+/* TEMA CLARO */
 :root {
   color-scheme: light;
 
-  /* Cores literais (não mudam com o tema) */
   --white: #ffffff;
 
-  /* Superfícies */
-  --bg: #ffffff;              /* fundo da página, header, login */
-  --surface: #ffffff;         /* cards, inputs, modais, toasts */
-  --surface-soft: #f1f4f8;    /* chips, placeholders de pôster, badges neutros */
+  /* Fundos e superfícies */
+  --bg: #ffffff;
+  --surface: #ffffff;
+  --surface-soft: #f1f4f8;
   --paper: #f6f8fb;
   --paper-blue: #eef5ff;
 
-  /* Texto */
+  /* Textos */
   --ink: #0b1728;
   --ink-soft: #2f4058;
   --muted-strong: #5f6e84;
@@ -25,58 +24,69 @@
   /* Bordas */
   --line: #dce4ed;
   --line-soft: #edf1f5;
-  --line-strong: #b9cce1;     /* borda de hover/destaque neutro */
-  --line-accent: #9bb9d8;     /* borda de foco/hover azulada */
+  --line-strong: #b9cce1;
+  --line-accent: #9bb9d8;
 
-  /* Marca */
-  --blue: #0b5fc6;            /* preenchimento (botões, avatar) */
-  --blue-text: #0b5fc6;       /* azul usado como COR DE TEXTO/ÍCONE */
+  /* Cores da marca */
+  --blue: #0b5fc6;
+  --blue-text: #0b5fc6;
   --blue-strong: #074c9d;
-  --blue-deep: #0a315f;       /* fundos "hero" escuros (texto branco por cima) */
+  --blue-deep: #0a315f;
+
   --green: #168b4c;
   --green-soft: #eaf6ee;
+
   --yellow: #e3b926;
   --yellow-soft: #fff7d8;
+
   --red: #bd3550;
 
-  /* Aliases para nomes que já eram usados no modal.css sem estar definidos */
+  /* Compatibilidade com CSS antigo */
   --border: var(--line);
   --text-muted: var(--muted);
 
+  /* Dimensões */
   --radius-sm: 10px;
   --radius: 16px;
   --radius-lg: 24px;
   --shell: 1240px;
 }
 
-/* ===== Tema escuro ===== */
+/* TEMA ESCURO */
 html[data-theme="dark"] {
-  color-scheme: dark;         /* scrollbars, inputs nativos, autofill */
+  color-scheme: dark;
 
+  /* Fundos e superfícies */
   --bg: #0b121b;
   --surface: #121d2b;
   --surface-soft: #1a283a;
   --paper: #0f1824;
   --paper-blue: #172a42;
 
+  /* Textos */
   --ink: #e8eef6;
   --ink-soft: #c3cfdd;
   --muted-strong: #aab8c9;
   --muted: #8a9bb0;
   --muted-soft: #74859b;
 
+  /* Bordas */
   --line: #25344a;
   --line-soft: #1a283a;
   --line-strong: #35506f;
   --line-accent: #3f6591;
 
-  --blue: #1a6dd6;            /* texto branco por cima: contraste 5.0:1 */
-  --blue-text: #6db0f7;       /* sobre --surface: contraste 7.3:1 */
+  /* Cores da marca */
+  --blue: #1a6dd6;
+  --blue-text: #6db0f7;
   --blue-strong: #5aa2f2;
   --blue-deep: #0c3a6e;
+
   --green: #35b46f;
   --green-soft: #12301f;
+
   --yellow: #e8c13a;
   --yellow-soft: #2e2810;
+
   --red: #ee6f89;
 }
