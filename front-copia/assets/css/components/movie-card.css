@@ -1,0 +1,191 @@
+/* Card de filme (pôster, fallback) + barra de busca/ferramentas do catálogo.
+   Renderizado dinamicamente pelo components.js e usado em várias páginas
+   (home, movies, list, feed, profile...). */
+
+/* ---- Filmes: card, pôster, fallback, busca e status (original: linhas 534-719) ---- */
+.movie-tools {
+  margin: 10px auto 34px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.search-field {
+  min-height: 50px;
+  width: min(670px, 100%);
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 0 15px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: white;
+}
+
+.search-field>span {
+  color: var(--blue);
+  font-size: 1.25rem;
+}
+
+.search-field input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  color: var(--ink);
+  background: transparent;
+}
+
+.search-field input::placeholder {
+  color: #98a5b4;
+}
+
+.movie-tool-status {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.search-count {
+  color: var(--muted);
+  font-size: .76rem;
+  white-space: nowrap;
+}
+
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 10px;
+  border-radius: 999px;
+  background: #f1f4f8;
+  color: #65748a;
+  font-size: .72rem;
+  font-weight: 750;
+  white-space: nowrap;
+}
+
+.status-pill i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #98a5b4;
+}
+
+.status-pill.success {
+  background: var(--green-soft);
+  color: var(--green);
+}
+
+.status-pill.success i {
+  background: var(--green);
+}
+
+.movie-catalog {
+  padding-bottom: 84px;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 30px 20px;
+}
+
+.movie-card {
+  width: 100%;
+  display: block;
+  border: 0;
+  padding: 0;
+  text-align: left;
+  background: transparent;
+  cursor: pointer;
+}
+
+.movie-poster {
+  position: relative;
+  aspect-ratio: 2 / 3;
+  display: block;
+  overflow: hidden;
+  border-radius: 13px;
+  background: #eaf1f8;
+  border: 1px solid var(--line);
+}
+
+.movie-poster img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.movie-card-copy {
+  padding: 11px 2px 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 4px 10px;
+}
+
+.movie-card-copy strong {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: .91rem;
+  letter-spacing: -.015em;
+}
+
+.movie-card-copy small {
+  color: var(--muted);
+  font-size: .75rem;
+}
+
+.movie-card-genres {
+  grid-column: 1 / -1;
+  color: #728196;
+  font-size: .7rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.poster-fallback {
+  width: 100%;
+  height: 100%;
+  padding: 17px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  color: white;
+  background: var(--blue-deep);
+}
+
+.poster-fallback::before {
+  content: "";
+  width: 42px;
+  height: 4px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--green) 0 34%, var(--yellow) 34% 67%, white 67%);
+}
+
+.poster-fallback small {
+  margin-top: auto;
+  margin-bottom: 8px;
+  opacity: .78;
+  font-size: .65rem;
+  text-transform: uppercase;
+  letter-spacing: .12em;
+}
+
+.poster-fallback strong {
+  font-size: clamp(.95rem, 2vw, 1.35rem);
+  line-height: 1;
+  letter-spacing: -.045em;
+}
+
+.poster-fallback i {
+  margin-top: 12px;
+  font-style: normal;
+  font-size: .72rem;
+  opacity: .8;
+}
+
+.movie-card.compact .movie-poster {
+  border-radius: 10px;
+}

@@ -7,9 +7,9 @@
   display: flex;
   align-items: center;
   gap: 18px;
-  border: 1px dashed #c5d1de;
+  border: 1px dashed var(--line-strong);
   border-radius: var(--radius);
-  background: white;
+  background: var(--surface);
 }
 
 .empty-state.social-empty {
@@ -32,7 +32,7 @@
   place-items: center;
   flex: 0 0 auto;
   border-radius: 13px;
-  color: var(--blue);
+  color: var(--blue-text);
   background: var(--paper-blue);
 }
 

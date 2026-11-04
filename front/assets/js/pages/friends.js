@@ -6,7 +6,7 @@
     const { escapeHTML, icon, toast } = App;
 
     const API_URL =
-        window.CINECENA_API.endpoint("follows/");
+        window.CINECENA_API.endpoint("friendships/");
 
     const target = document.querySelector(
         "[data-friend-results]"
@@ -18,11 +18,9 @@
 
     if (!target || !search) return;
 
-        let users = [];
-        let suggestedUsers = [];
-        let showingSuggestions = false;
-        let searchTimeout = null;
-        let requestNumber = 0;
+    let users = [];
+    let searchTimeout = null;
+    let requestNumber = 0;
 
     function getToken() {
         return localStorage.getItem("token");
@@ -47,123 +45,6 @@
             .slice(0, 2)
             .toUpperCase();
     }
-
-
-    function getRelationId(value) {
-    if (value && typeof value === "object") {
-        return value.id ?? value.pk ?? null;
-    }
-
-    return value ?? null;
-}
-
-function normalizeProfile(user = {}) {
-    const nestedUser =
-        user.user && typeof user.user === "object"
-            ? user.user
-            : {};
-
-    const profile =
-        user.profile && typeof user.profile === "object"
-            ? user.profile
-            : (nestedUser.profile || {});
-
-    const description = [
-        user.description,
-        user.bio,
-        user.about,
-        user.profile_description,
-        profile.description,
-        profile.bio,
-        profile.about
-    ].find(value =>
-        typeof value === "string" && value.trim()
-    ) || "";
-
-    return {
-        id: Number(
-            user.id ??
-            user.user_id ??
-            nestedUser.id
-        ),
-
-        username:
-            user.username ??
-            nestedUser.username ??
-            "",
-
-        avatar:
-            user.avatar ||
-            user.avatar_url ||
-            user.profile_avatar ||
-            profile.avatar ||
-            profile.avatar_url ||
-            null,
-
-        description: description.trim(),
-
-        is_following: Boolean(user.is_following),
-
-        follow_id:
-            user.follow_id ??
-            user.follow_relation_id ??
-            null
-    };
-}
-
-function normalizeFollow(follow) {
-    const followed =
-        follow.following &&
-        typeof follow.following === "object"
-            ? follow.following
-            : (follow.following_user || {});
-
-    const profile = followed.profile || {};
-
-    return normalizeProfile({
-        id:
-            follow.following_id ??
-            getRelationId(follow.following) ??
-            followed.id,
-
-        username:
-            follow.following_username ??
-            followed.username,
-
-        avatar:
-            follow.following_avatar ||
-            followed.avatar ||
-            followed.avatar_url ||
-            profile.avatar ||
-            profile.avatar_url,
-
-        description:
-            follow.following_description ||
-            follow.following_bio ||
-            followed.description ||
-            followed.bio ||
-            profile.description ||
-            profile.bio,
-
-        is_following: true,
-        follow_id: follow.id
-    });
-}
-
-function shuffleArray(items) {
-    const shuffled = [...items];
-
-    for (let i = shuffled.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-
-        [shuffled[i], shuffled[j]] =
-            [shuffled[j], shuffled[i]];
-    }
-
-    return shuffled;
-}
-
-
 
     function avatarHTML(user) {
         if (user.avatar) {
@@ -191,8 +72,8 @@ function shuffleArray(items) {
                     align-items: center;
                     justify-content: center;
                     border-radius: 50%;
-                    background: #eaf2ff;
-                    color: #075bc9;
+                    background: var(--paper-blue);
+                    color: var(--blue-text);
                     font-weight: 700;
                 "
             >
@@ -216,351 +97,174 @@ function shuffleArray(items) {
         `;
     }
 
-function renderUserCard(user) {
-    const username = escapeHTML(user.username);
-
-    const description = String(
-        user.description || ""
-    ).trim() || "Este usuário não tem descrição.";
-
-    const buttonLabel = user.is_following
-        ? "Deixar de seguir"
-        : `${icon("plus")} Seguir`;
-
-    const buttonClass = user.is_following
-        ? "btn-secondary"
-        : "btn-primary";
-
-    const profileHref =
-        "profileusers.html?username=" +
-        encodeURIComponent(user.username);
-
-    return `
-        <article class="friend-card">
-            <div class="friend-card-main">
-                <div
-                    class="friend-avatar"
-                    style="
-                        width: 92px;
-                        height: 92px;
-                        flex-shrink: 0;
-                        overflow: hidden;
-                        border-radius: 50%;
-                    "
-                >
-                    ${avatarHTML(user)}
-                </div>
-
-                <div>
-                    <h2>${username}</h2>
-
-                    <small>@${username}</small>
-
-                    <p>${escapeHTML(description)}</p>
-
-                    ${
-                        user.is_following
-                            ? `
-                                <span>
-                                    Você segue este perfil.
-                                </span>
-                            `
-                            : ""
-                    }
-                </div>
-            </div>
-
-            <div class="friend-card-actions">
-                <button
-                    class="btn ${buttonClass}"
-                    type="button"
-                    data-toggle-friend
-                    data-user-id="${Number(user.id)}"
-                >
-                    ${buttonLabel}
-                </button>
-
-                <a
-                    class="btn btn-ghost"
-                    href="${escapeHTML(profileHref)}"
-                >
-                    Ver perfil
-                </a>
-            </div>
-        </article>
-    `;
-}
-
-function renderUsers() {
-    if (showingSuggestions) {
-        if (!users.length && !suggestedUsers.length) {
+    function renderUsers() {
+        if (!users.length) {
             renderMessage(
-                "Nenhum perfil disponível",
-                "Pesquise pelo nome de usuário para encontrar pessoas no CineCena."
+                "Nenhum perfil encontrado",
+                "Tente pesquisar com outro nome de usuário."
             );
 
             return;
         }
 
-        target.innerHTML = `
-            ${
-                users.length
-                    ? `
-                        <h2 style="grid-column: 1 / -1;">
-                            Pessoas que você segue
-                        </h2>
+        target.innerHTML = users.map(user => {
+            const username =
+                escapeHTML(user.username);
 
-                        ${users.map(renderUserCard).join("")}
-                    `
-                    : ""
-            }
+            const buttonLabel =
+                user.is_friend
+                    ? "Remover amizade"
+                    : `${icon("plus")} Adicionar amizade`;
 
-            ${
-                suggestedUsers.length
-                    ? `
-                        <h2 style="grid-column: 1 / -1;">
-                            Perfis para conhecer
-                        </h2>
+            const buttonClass =
+                user.is_friend
+                    ? "btn-secondary"
+                    : "btn-primary";
 
-                        ${suggestedUsers
-                            .map(renderUserCard)
-                            .join("")}
-                    `
-                    : `
-                        <p style="grid-column: 1 / -1;">
-                            Não encontramos outros perfis para sugerir no momento.
-                        </p>
-                    `
-            }
-        `;
+            const profileHref =
+                "profileusers.html?username=" +
+                encodeURIComponent(user.username);
 
-        return;
+            return `
+                <article class="friend-card">
+                    <div class="friend-card-main">
+
+                        <div
+                            class="friend-avatar"
+                            style="
+                                width: 92px;
+                                height: 92px;
+                                flex-shrink: 0;
+                                overflow: hidden;
+                                border-radius: 50%;
+                            "
+                        >
+                            ${avatarHTML(user)}
+                        </div>
+
+                        <div>
+                            <h2>${username}</h2>
+
+                            <small>@${username}</small>
+
+                            <p>
+                                Usuário cadastrado no CineCena.
+                            </p>
+
+                            ${
+                                user.is_friend
+                                    ? `
+                                        <span>
+                                            Vocês são amigos.
+                                        </span>
+                                    `
+                                    : ""
+                            }
+                        </div>
+                    </div>
+
+                    <div class="friend-card-actions">
+
+                        <button
+                            class="btn ${buttonClass}"
+                            type="button"
+                            data-toggle-friend
+                            data-user-id="${Number(user.id)}"
+                        >
+                            ${buttonLabel}
+                        </button>
+
+                        <a
+                            class="btn btn-ghost"
+                            href="${escapeHTML(profileHref)}"
+                        >
+                            Ver perfil
+                        </a>
+
+                    </div>
+                </article>
+            `;
+        }).join("");
     }
 
-    if (!users.length) {
-        renderMessage(
-            search.value.trim()
-                ? "Nenhum perfil encontrado"
-                : "Nenhum perfil disponível",
+    async function searchUsers() {
+        const currentRequest = ++requestNumber;
 
-            search.value.trim()
-                ? "Tente pesquisar com outro nome de usuário."
-                : "Pesquise pessoas pelo nome de usuário para começar a seguir."
-        );
+        const term = search.value.trim();
 
-        return;
-    }
+        if (term.length < 2) {
+            users = [];
 
-    target.innerHTML = users.map(renderUserCard).join("");
-}
+            renderMessage(
+                "Encontre pessoas",
+                "Digite pelo menos dois caracteres para pesquisar usuários."
+            );
 
-    // Confere o dono das relações para funcionar mesmo com versões antigas
-    // do backend que ainda ignoram ?follower=me.
-    async function loadOwnFollows() {
-        const [currentUser, follows] = await Promise.all([
-            window.CINECENA_API.request("auth/me/"),
-            window.CINECENA_API.list("follows/?follower=me"),
-        ]);
-
-                return follows.filter(follow =>
-            Number(getRelationId(follow.follower)) ===
-            Number(currentUser.id)
-        );
-    }
-
-    async function searchProfiles(term) {
-        const query = "search=" + encodeURIComponent(term);
-        const response = await fetch(`${API_URL}search-users/?${query}`, {
-            method: "GET",
-            headers: getHeaders(),
-        });
-        const data = await response.json().catch(() => null);
-
-        if (response.ok) {
-            return Array.isArray(data) ? data : (data?.results || []);
+            return;
         }
 
-        // O backend publicado pode ainda não ter a nova ação de busca.
-        // Reaproveita SOMENTE a pesquisa de usuários legada, não amizades.
-        if (response.status === 404) {
-            const legacyUrl = window.CINECENA_API.endpoint(
-                `friendships/search-users/?${query}`
+        if (!getToken()) {
+            renderMessage(
+                "Sessão não encontrada",
+                "Entre na sua conta para pesquisar pessoas."
             );
-            const legacyResponse = await fetch(legacyUrl, {
+
+            return;
+        }
+
+        renderMessage(
+            "Buscando usuários",
+            "Aguarde enquanto procuramos contas no CineCena."
+        );
+
+        try {
+            const url =
+                `${API_URL}search-users/?search=` +
+                encodeURIComponent(term);
+
+            const response = await fetch(url, {
                 method: "GET",
                 headers: getHeaders(),
             });
-            const legacyData = await legacyResponse.json().catch(() => null);
 
-            if (!legacyResponse.ok) {
+            const data = await response.json()
+                .catch(() => null);
+
+            // Ignora resultados de pesquisas anteriores.
+            if (currentRequest !== requestNumber) {
+                return;
+            }
+
+            if (!response.ok) {
                 throw new Error(
-                    legacyData?.detail ||
-                    `Não foi possível pesquisar usuários (HTTP ${legacyResponse.status}).`
+                    data?.detail ||
+                    "Não foi possível pesquisar usuários."
                 );
             }
 
-            const found = Array.isArray(legacyData)
-                ? legacyData
-                : (legacyData?.results || []);
-            const follows = await loadOwnFollows();
-            
-const followByUser = new Map(
-    follows.map(follow => [
-        Number(getRelationId(follow.following)),
-        follow.id
-    ])
-);
-
-return found.map(user => {
-    const profile = normalizeProfile(user);
-    const followId = followByUser.get(
-        Number(profile.id)
-    );
-
-    return {
-        ...profile,
-        is_following: followByUser.has(
-            Number(profile.id)
-        ),
-        follow_id: followId ?? null
-    };
-});
-
-        }
-
-        throw new Error(
-            data?.detail ||
-            data?.error ||
-            `Não foi possível pesquisar usuários (HTTP ${response.status}).`
-        );
-    }
-
-async function searchUsers() {
-    const currentRequest = ++requestNumber;
-    const term = search.value.trim();
-
-    showingSuggestions = false;
-    suggestedUsers = [];
-
-    if (term.length === 1) {
-        users = [];
-
-        renderMessage(
-            "Encontre pessoas",
-            "Digite pelo menos dois caracteres para pesquisar usuários."
-        );
-
-        return;
-    }
-
-    if (!getToken()) {
-        users = [];
-
-        renderMessage(
-            "Sessão não encontrada",
-            "Entre na sua conta para pesquisar pessoas."
-        );
-
-        return;
-    }
-
-    renderMessage(
-        term
-            ? "Buscando usuários"
-            : "Descobrindo perfis",
-
-        "Aguarde enquanto procuramos contas no CineCena."
-    );
-
-    try {
-        // Sem pesquisa: mostra quem você segue e sugere novas pessoas.
-        if (!term) {
-            const [currentUser, follows] = await Promise.all([
-                window.CINECENA_API.request("auth/me/"),
-                loadOwnFollows()
-            ]);
-
-            if (currentRequest !== requestNumber) return;
-
-            users = follows.map(normalizeFollow);
-
-            const followingIds = new Set(
-                users.map(user => Number(user.id))
-            );
-
-            let found = [];
-
-            // A busca vazia deve retornar os perfis disponíveis na API.
-            try {
-                found = await searchProfiles("");
-            } catch (error) {
-                console.warn(
-                    "CineCena: não foi possível carregar sugestões:",
-                    error
-                );
-            }
-
-            if (currentRequest !== requestNumber) return;
-
-            const uniqueProfiles = new Map();
-
-            found
-                .map(normalizeProfile)
-                .filter(user =>
-                    Number.isFinite(user.id) &&
-                    user.id !== Number(currentUser.id) &&
-                    Boolean(user.username) &&
-                    !followingIds.has(user.id)
-                )
-                .forEach(user => {
-                    uniqueProfiles.set(user.id, user);
-                });
-
-            suggestedUsers = shuffleArray(
-                [...uniqueProfiles.values()]
-            ).slice(0, 8);
-
-            showingSuggestions = true;
+            users = Array.isArray(data) ? data : [];
 
             renderUsers();
+            window.dispatchEvent(new Event("cinecena:friend-updated"));
 
-            window.dispatchEvent(
-                new Event("cinecena:friend-updated")
+        } catch (error) {
+            console.error(
+                "CineCena: erro ao pesquisar usuários:",
+                error
             );
 
-            return;
-        }
-
-        // Com texto na pesquisa, mostra os resultados encontrados.
-        const found = await searchProfiles(term);
-
-        if (currentRequest !== requestNumber) return;
-
-        users = found.map(normalizeProfile);
-
-        renderUsers();
-
-        window.dispatchEvent(
-            new Event("cinecena:friend-updated")
-        );
-
-    } catch (error) {
-        console.error(
-            "CineCena: erro ao pesquisar usuários:",
-            error
-        );
-
-        if (currentRequest === requestNumber) {
-            renderMessage(
-                "Erro ao pesquisar",
-                error.message ||
-                "Não foi possível conectar à API."
-            );
+            if (currentRequest === requestNumber) {
+                renderMessage(
+                    "Erro ao pesquisar",
+                    error.message ||
+                    "Não foi possível conectar à API."
+                );
+            }
         }
     }
-}
+
     async function toggleFriend(userId, button) {
-            const user = [...users, ...suggestedUsers].find(
+        const user = users.find(
             item => Number(item.id) === Number(userId)
         );
 
@@ -578,15 +282,15 @@ async function searchUsers() {
         try {
             let response;
 
-            if (user.is_following) {
-                if (!user.follow_id) {
+            if (user.is_friend) {
+                if (!user.friendship_id) {
                     throw new Error(
-                        "Não foi possível identificar este seguimento. Atualize a pesquisa."
+                        "Não foi possível identificar esta amizade. Atualize a pesquisa."
                     );
                 }
 
                 response = await fetch(
-                    `${API_URL}${user.follow_id}/`,
+                    `${API_URL}${user.friendship_id}/`,
                     {
                         method: "DELETE",
                         headers: getHeaders(),
@@ -600,7 +304,7 @@ async function searchUsers() {
                         method: "POST",
                         headers: getHeaders(true),
                         body: JSON.stringify({
-                            following: user.id,
+                            friend: user.id,
                         }),
                     }
                 );
@@ -613,61 +317,35 @@ async function searchUsers() {
             if (!response.ok) {
                 throw new Error(
                     data?.detail ||
-                    "Não foi possível atualizar quem você segue."
+                    "Não foi possível atualizar a amizade."
                 );
             }
 
-            
-if (user.is_following) {
-    // Deixou de seguir o perfil
-    user.is_following = false;
-    user.follow_id = null;
+            if (user.is_friend) {
+                user.is_friend = false;
+                user.friendship_id = null;
 
-    if (!search.value.trim()) {
-        users = users.filter(
-            item => Number(item.id) !== Number(user.id)
-        );
+                toast("Amizade removida.");
 
-        suggestedUsers = suggestedUsers.filter(
-            item => Number(item.id) !== Number(user.id)
-        );
-    }
+            } else {
+                user.is_friend = true;
+                user.friendship_id = data.id;
 
-    toast("Você deixou de seguir este perfil.");
-
-} else {
-    // Começou a seguir o perfil
-    user.is_following = true;
-    user.follow_id = data?.id ?? null;
-
-    if (!search.value.trim()) {
-        suggestedUsers = suggestedUsers.filter(
-            item => Number(item.id) !== Number(user.id)
-        );
-
-        if (!users.some(
-            item => Number(item.id) === Number(user.id)
-        )) {
-            users.push(user);
-        }
-    }
-
-    toast("Agora você segue este perfil.");
-}
-
+                toast("Amizade adicionada.");
+            }
 
             renderUsers();
             window.dispatchEvent(new Event("cinecena:friend-updated"));
 
         } catch (error) {
             console.error(
-                "CineCena: erro ao atualizar seguimento:",
+                "CineCena: erro ao atualizar amizade:",
                 error
             );
 
             toast(
                 error.message ||
-                "Não foi possível atualizar quem você segue."
+                "Não foi possível atualizar a amizade."
             );
 
         } finally {
@@ -699,5 +377,8 @@ if (user.is_following) {
         );
     });
 
-    searchUsers();
+    renderMessage(
+        "Encontre pessoas",
+        "Pesquise pelo nome de usuário de alguém cadastrado no CineCena."
+    );
 })();

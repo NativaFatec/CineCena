@@ -58,7 +58,7 @@
     const friendReviews = state.reviews.filter(review => review.friend).slice(0, 3);
     target.innerHTML = friendReviews.length
       ? `<div class="activity-grid">${friendReviews.map(review => UI.reviewActivity(review)).join("")}</div>`
-      : `<div class="empty-state social-empty"><div class="empty-icon">${icon("friends")}</div><div><strong>Acompanhe quem você segue</strong><p>Siga pessoas em Seguindo para ver as reviews recentes delas nesta área.</p></div><a class="btn btn-secondary" href="friends.html">Encontrar pessoas ${icon("arrow")}</a></div>`;
+      : `<div class="empty-state social-empty"><div class="empty-icon">${icon("friends")}</div><div><strong>Sua atividade de amigos começa aqui</strong><p>Adicione pessoas em Amizades para ver as reviews recentes delas nesta área.</p></div><a class="btn btn-secondary" href="friends.html">Encontrar amizades ${icon("arrow")}</a></div>`;
   }
 
   function renderLists() {

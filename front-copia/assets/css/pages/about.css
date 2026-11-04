@@ -1,0 +1,110 @@
+/* Página sobre (about.html) */
+
+/* ---- Sobre (original: linhas 1464-1570) ---- */
+.about-article {
+  padding: 70px 0 100px;
+}
+
+.about-hero {
+  max-width: 970px;
+  padding-bottom: 44px;
+  border-bottom: 1px solid var(--line);
+}
+
+.about-hero h1 {
+  margin: 0;
+  font-size: clamp(3rem, 7vw, 6.7rem);
+  line-height: .91;
+  letter-spacing: -.07em;
+}
+
+.about-hero p {
+  max-width: 850px;
+  margin: 26px 0 0;
+  color: var(--ink-soft);
+  font-size: 1.12rem;
+  line-height: 1.8;
+}
+
+.about-layout {
+  padding-top: 48px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 330px;
+  gap: 70px;
+  align-items: start;
+}
+
+.about-text {
+  display: grid;
+  gap: 46px;
+}
+
+.about-text section {
+  padding-bottom: 38px;
+  border-bottom: 1px solid var(--line-soft);
+}
+
+.about-text h2 {
+  margin: 0 0 16px;
+  font-size: clamp(1.8rem, 4vw, 3rem);
+  letter-spacing: -.05em;
+}
+
+.about-text p {
+  margin: 0 0 17px;
+  color: var(--ink-soft);
+  font-size: 1rem;
+  line-height: 1.85;
+}
+
+.about-sidebar {
+  position: sticky;
+  top: 100px;
+  display: grid;
+  gap: 18px;
+}
+
+.about-resource-card {
+  padding: 23px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--paper);
+}
+
+.about-resource-card h2 {
+  margin: 0;
+  font-size: 1.35rem;
+  letter-spacing: -.04em;
+}
+
+.about-resource-card p {
+  margin: 10px 0 18px;
+  color: var(--muted);
+  line-height: 1.6;
+  font-size: .84rem;
+}
+
+.creator-links {
+  display: grid;
+}
+
+.creator-links a {
+  padding: 13px 0;
+  display: grid;
+  border-bottom: 1px solid var(--line);
+}
+
+.creator-links a:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+.creator-links strong {
+  font-size: .88rem;
+}
+
+.creator-links span {
+  margin-top: 3px;
+  color: var(--blue);
+  font-size: .72rem;
+}

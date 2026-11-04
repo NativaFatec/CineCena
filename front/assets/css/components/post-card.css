@@ -6,7 +6,7 @@
   padding: 22px;
   border: 1px solid var(--line);
   border-radius: var(--radius);
-  background: white;
+  background: var(--surface);
 }
 
 .activity-person {
@@ -33,7 +33,7 @@
 /* ---- Atividade: tipo e metadados (original: linhas 853-891) ---- */
 .activity-type {
   margin-top: 18px;
-  color: #627187;
+  color: var(--muted-strong);
   font-size: .78rem;
 }
 
@@ -82,7 +82,7 @@
   padding: 22px;
   border: 1px solid var(--line);
   border-radius: var(--radius);
-  background: white;
+  background: var(--surface);
 }
 
 .feed-card-head {
@@ -115,15 +115,15 @@
 .content-badge {
   padding: 6px 9px;
   border-radius: 999px;
-  color: var(--blue);
+  color: var(--blue-text);
   background: var(--paper-blue);
   font-size: .68rem;
   font-weight: 800;
 }
 
 .content-badge.neutral {
-  color: #607088;
-  background: #f2f4f7;
+  color: var(--muted-strong);
+  background: var(--surface-soft);
 }
 
 .review-movie-line {
@@ -131,7 +131,7 @@
   display: flex;
   align-items: center;
   gap: 7px;
-  color: var(--blue);
+  color: var(--blue-text);
   font-size: .82rem;
 }
 
@@ -171,7 +171,7 @@
 }
 
 .feed-actions button:hover {
-  color: var(--blue);
+  color: var(--blue-text);
 }
 
 .feed-actions .icon {
@@ -223,8 +223,8 @@
   place-items: center;
   overflow: hidden;
   border-radius: 6px;
-  background: #e8eef5;
-  color: var(--blue-deep);
+  background: var(--surface-soft);
+  color: var(--ink-soft);
   font-weight: 800;
 }
 
@@ -288,7 +288,7 @@
   aspect-ratio: 2/3;
   border-radius: 10px;
   border: 1px solid var(--line);
-  background: #e8eef5;
+  background: var(--surface-soft);
 }
 
 .review-movie-card.featured .review-movie-copy {

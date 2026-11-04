@@ -70,7 +70,7 @@
   position: sticky;
   top: 0;
   z-index: 80;
-  background: var(--white);
+  background: var(--bg);
   border-bottom: 1px solid var(--line-soft);
 }
 
@@ -94,18 +94,18 @@
   min-height: 40px;
   padding: 0 12px;
   border-radius: 999px;
-  color: #5c6a7d;
+  color: var(--muted-strong);
   font-size: .9rem;
   font-weight: 650;
 }
 
 .nav-link:hover {
-  color: var(--blue);
+  color: var(--blue-text);
   background: var(--paper-blue);
 }
 
 .nav-link.active {
-  color: var(--blue);
+  color: var(--blue-text);
   background: var(--paper-blue);
 }
 
@@ -121,7 +121,7 @@
 
 .profile-shortcut:hover,
 .profile-shortcut.active {
-  border-color: #b9cce1;
+  border-color: var(--line-strong);
   background: var(--paper-blue);
 }
 
@@ -162,14 +162,14 @@
   border: 1px solid var(--line);
   border-radius: 10px;
   padding: 8px 11px;
-  background: white;
+  background: var(--surface);
   cursor: pointer;
 }
 
 .mobile-nav-panel {
   display: none;
   border-top: 1px solid var(--line-soft);
-  background: white;
+  background: var(--surface);
 }
 
 .mobile-nav-panel.open {

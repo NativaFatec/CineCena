@@ -1,0 +1,39 @@
+/* Página de termos (terms.html) */
+
+/* ---- Termos (original: linhas 1573-1608) ---- */
+.legal-page {
+  max-width: 880px;
+  padding: 70px 0 100px;
+}
+
+.legal-page>header {
+  padding-bottom: 32px;
+  border-bottom: 1px solid var(--line);
+}
+
+.legal-page h1 {
+  margin: 0;
+  font-size: clamp(3rem, 7vw, 5.5rem);
+  letter-spacing: -.065em;
+  line-height: .94;
+}
+
+.legal-page header p {
+  color: var(--muted);
+}
+
+.legal-page section {
+  padding: 30px 0;
+  border-bottom: 1px solid var(--line-soft);
+}
+
+.legal-page h2 {
+  margin: 0 0 10px;
+  font-size: 1.35rem;
+}
+
+.legal-page p {
+  margin: 0;
+  color: var(--ink-soft);
+  line-height: 1.75;
+}
