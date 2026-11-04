@@ -2,7 +2,7 @@
 
 /* ---- Login (original: linhas 1931-2165) ---- */
 .login-body {
-  background: var(--bg);
+  background: white;
 }
 
 .login-page {
@@ -137,7 +137,7 @@
   padding: 36px;
   border: 1px solid var(--line);
   border-radius: 20px;
-  background: var(--surface);
+  background: white;
 }
 
 .login-card h2 {
@@ -166,7 +166,7 @@
 .link-button {
   border: 0;
   padding: 0;
-  color: var(--blue-text);
+  color: var(--blue);
   background: transparent;
   font-size: .72rem;
   font-weight: 700;
@@ -204,12 +204,12 @@
 }
 
 .login-legal a:hover {
-  color: var(--blue-text);
+  color: var(--blue);
 }
 
 .prototype-note {
   margin: 18px 0 0;
-  color: var(--muted-soft);
+  color: #8a97a7;
   font-size: .7rem;
 }
 

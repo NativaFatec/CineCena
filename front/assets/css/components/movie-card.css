@@ -20,11 +20,11 @@
   padding: 0 15px;
   border: 1px solid var(--line);
   border-radius: 12px;
-  background: var(--surface);
+  background: white;
 }
 
 .search-field>span {
-  color: var(--blue-text);
+  color: var(--blue);
   font-size: 1.25rem;
 }
 
@@ -38,7 +38,7 @@
 }
 
 .search-field input::placeholder {
-  color: var(--muted-soft);
+  color: #98a5b4;
 }
 
 .movie-tool-status {
@@ -59,8 +59,8 @@
   gap: 6px;
   padding: 7px 10px;
   border-radius: 999px;
-  background: var(--surface-soft);
-  color: var(--muted-strong);
+  background: #f1f4f8;
+  color: #65748a;
   font-size: .72rem;
   font-weight: 750;
   white-space: nowrap;
@@ -70,7 +70,7 @@
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background: var(--muted-soft);
+  background: #98a5b4;
 }
 
 .status-pill.success {
@@ -105,7 +105,7 @@
   display: block;
   overflow: hidden;
   border-radius: 13px;
-  background: var(--surface-soft);
+  background: #eaf1f8;
   border: 1px solid var(--line);
 }
 
@@ -138,7 +138,7 @@
 
 .movie-card-genres {
   grid-column: 1 / -1;
-  color: var(--muted-soft);
+  color: #728196;
   font-size: .7rem;
   white-space: nowrap;
   overflow: hidden;

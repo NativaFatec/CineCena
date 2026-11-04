@@ -21,7 +21,7 @@
 }
 
 .home-hero-copy h1 span {
-  color: var(--blue-text);
+  color: var(--blue);
 }
 
 .home-hero-copy>p {
@@ -44,7 +44,7 @@
   display: flex;
   gap: 20px;
   flex-wrap: wrap;
-  color: var(--muted-strong);
+  color: #5d6f86;
   font-size: .8rem;
   font-weight: 650;
 }
@@ -198,7 +198,7 @@
   height: 5px;
   border: 0;
   border-radius: 999px;
-  background: var(--line-strong);
+  background: #ccd5df;
   cursor: pointer;
 }
 

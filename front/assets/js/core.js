@@ -391,8 +391,10 @@
   async function loadSocial() {
     try {
       const currentId = Number(JSON.parse(localStorage.getItem("user") || "null")?.id);
-      const friends = await window.CINECENA_API.list("friendships/").catch(() => []);
-      state.friendIds = friends.map(f => Number(f.user) === currentId ? Number(f.friend) : Number(f.user));
+      const follows = await window.CINECENA_API.list("follows/?follower=me");
+      state.friendIds = follows
+        .filter(f => Number(f.follower) === currentId)
+        .map(f => Number(f.following));
       state.friend = state.friendIds.length > 0;
       window.dispatchEvent(new Event("cinecena:friend-updated"));
       const [posts, reviews] = await Promise.all([
@@ -1360,10 +1362,14 @@
 
 
 // Sessão validada pelo Django; no localStorage permanecem apenas token e dados da sessão.
-if (!["about", "terms"].includes(document.body.dataset.page)) {
+if (document.body.dataset.page !== "terms") {
   (async () => {
+    const isAbout = document.body.dataset.page === "about";
     const token = localStorage.getItem("token");
-    if (!token) { window.location.replace("../index.html"); return; }
+    if (!token) {
+      if (!isAbout) window.location.replace("../index.html");
+      return;
+    }
     try {
       const user = await window.CINECENA_API.request("accounts/me/");
       localStorage.setItem("user", JSON.stringify(user));
@@ -1380,13 +1386,13 @@ if (!["about", "terms"].includes(document.body.dataset.page)) {
       document.querySelectorAll("[data-own-name], [data-profile-name], [data-own-title]").forEach(el => el.textContent = user.username);
       document.querySelectorAll("[data-profile-description]").forEach(el => el.textContent = user.bio || "");
       window.dispatchEvent(new Event("cinecena:profile-updated"));
-      await Promise.all([App.loadSocial(), App.loadMovieState()]);
+      if (!isAbout) await Promise.all([App.loadSocial(), App.loadMovieState()]);
     } catch (error) {
       console.error("Falha ao validar sessão:", error);
       if (error.status === 401 || /401|autentic|credenciais|sessão|invalid token|token inválido/i.test(error.message)) {
         localStorage.removeItem("token"); localStorage.removeItem("user");
-        window.location.replace("../index.html");
-      } else window.CineCena.toast(error.message);
+        if (!isAbout) window.location.replace("../index.html");
+      } else if (!isAbout) window.CineCena.toast(error.message);
     }
   })();
 }

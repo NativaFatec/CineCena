@@ -14,7 +14,7 @@
   font-weight: 750;
   font-size: .86rem;
   cursor: pointer;
-  background: var(--surface);
+  background: white;
 }
 
 .btn-primary {
@@ -29,9 +29,9 @@
 }
 
 .btn-secondary {
-  color: var(--blue-text);
-  background: var(--surface);
-  border-color: var(--line-strong);
+  color: var(--blue);
+  background: white;
+  border-color: #b9cee4;
 }
 
 .btn-secondary:hover {
@@ -40,7 +40,7 @@
 
 .btn-ghost {
   color: var(--ink-soft);
-  background: var(--surface);
+  background: white;
   border-color: var(--line);
 }
 
@@ -53,7 +53,7 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  color: var(--blue-text);
+  color: var(--blue);
   font-weight: 750;
   font-size: .83rem;
 }
@@ -84,6 +84,6 @@
   place-items: center;
   border: 1px solid var(--line);
   border-radius: 10px;
-  background: var(--surface);
+  background: white;
   cursor: pointer;
 }

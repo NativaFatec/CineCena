@@ -16,6 +16,8 @@ backend/staticfiles/
 backend/media/
 backend/chave.txt
 
+front-copia/
+
 # Frontend
 front/node_modules/
 front/.vscode/

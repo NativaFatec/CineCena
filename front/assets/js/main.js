@@ -1,3 +1,7 @@
+const body = document.body;
+const themeToggle = document.getElementById("themeToggle");
+const mobileThemeToggle = document.getElementById("mobileThemeToggle");
+
 // Configuração centralizada da URL da API (Garante que começa com https://)
 let rawBaseUrl = window.CINECENA_API?.baseUrl || 'https://cinecena.onrender.com';
 if (!rawBaseUrl.startsWith('http://') && !rawBaseUrl.startsWith('https://')) {
@@ -5,65 +9,30 @@ if (!rawBaseUrl.startsWith('http://') && !rawBaseUrl.startsWith('https://')) {
 }
 const API_BASE_URL = rawBaseUrl.replace(/\/$/, '');
 
-// ===== Tema claro/escuro =====
-// O tema inicial é aplicado por assets/js/theme-init.js (no <head>).
-// Aqui ficam: o botão de alternar, a persistência e a reação ao tema do sistema.
-const THEME_KEY = "cinecena-theme";
-const themeRoot = document.documentElement;
-const themeButtons = [
-  document.getElementById("themeToggle"),
-  document.getElementById("mobileThemeToggle"),
-].filter(Boolean);
-
-function getTheme() {
-  return themeRoot.getAttribute("data-theme") === "dark" ? "dark" : "light";
-}
-
 function updateThemeButtons() {
-  const isDark = getTheme() === "dark";
-  themeButtons.forEach((btn) => {
-    const icon = btn.querySelector(".theme-toggle-icon");
-    if (icon) icon.textContent = isDark ? "☼" : "☽";   // mostra a ação, não o estado
-    btn.setAttribute("aria-pressed", String(isDark));
-    btn.setAttribute("aria-label", isDark ? "Ativar tema claro" : "Ativar tema escuro");
-    btn.title = isDark ? "Tema claro" : "Tema escuro";
-  });
-}
+  const isDark = body.classList.contains("theme-dark");
 
-function applyTheme(theme, { persist = false, animate = false } = {}) {
-  if (animate) {
-    themeRoot.classList.add("theme-transition");
-    setTimeout(() => themeRoot.classList.remove("theme-transition"), 250);
+  if (themeToggle) {
+    const icon = themeToggle.querySelector(".theme-toggle-icon");
+    if (icon) icon.textContent = isDark ? "☼" : "☽";
   }
-  themeRoot.setAttribute("data-theme", theme);
-  if (persist) {
-    try { localStorage.setItem(THEME_KEY, theme); } catch (e) { /* modo privado: ignora */ }
+
+  if (mobileThemeToggle) {
+    const icon = mobileThemeToggle.querySelector(".theme-toggle-icon");
+    if (icon) icon.textContent = isDark ? "☼" : "☽";
   }
-  updateThemeButtons();
 }
 
 function toggleTheme() {
-  applyTheme(getTheme() === "dark" ? "light" : "dark", { persist: true, animate: true });
+  body.classList.toggle("theme-light");
+  body.classList.toggle("theme-dark");
+  updateThemeButtons();
 }
 
-themeButtons.forEach((btn) => btn.addEventListener("click", toggleTheme));
-
-// Se a pessoa nunca escolheu manualmente, acompanha o tema do sistema operacional.
-if (window.matchMedia) {
-  window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", (e) => {
-    let saved = null;
-    try { saved = localStorage.getItem(THEME_KEY); } catch (err) {}
-    if (!saved) applyTheme(e.matches ? "dark" : "light");
-  });
-}
+if (themeToggle) themeToggle.addEventListener("click", toggleTheme);
+if (mobileThemeToggle) mobileThemeToggle.addEventListener("click", toggleTheme);
 
 updateThemeButtons();
-
-// Limpa a sessão SEM apagar preferências (tema). Use no lugar de localStorage.clear().
-function clearSession() {
-  localStorage.removeItem("token");
-  localStorage.removeItem("user");
-}
 
 // FUNÇÃO PARA ADICIONAR UM FILME AOS FAVORITOS (TRATANDO ERRO 400 DE DUPLICIDADE)
 async function adicionarFavorito(tmdbId, title, posterUrl, position = 1) {
@@ -167,7 +136,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             localStorage.setItem('user', JSON.stringify(user));
         } else if (response.status === 401) {
             // Token inválido ou expirado
-            clearSession();
+            localStorage.clear();
             window.location.href = '../index.html';
             return;
         }
@@ -194,7 +163,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const logoutBtn = document.getElementById('logout-btn');
     if (logoutBtn) {
         logoutBtn.addEventListener('click', () => {
-            clearSession();
+            localStorage.clear();
             window.location.href = '../index.html';
         });
     }

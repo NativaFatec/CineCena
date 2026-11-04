@@ -31,8 +31,8 @@
   place-items: center;
   border: 1px solid var(--line);
   border-radius: 50%;
-  color: var(--blue-text);
-  background: var(--surface);
+  color: var(--blue);
+  background: white;
   cursor: pointer;
 }
 

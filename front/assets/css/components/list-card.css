@@ -8,7 +8,7 @@
   flex-direction: column;
   border: 1px solid var(--line);
   border-radius: var(--radius-lg);
-  background: var(--surface);
+  background: white;
 }
 
 .list-card.accent-blue {
@@ -36,7 +36,7 @@
   width: 84px;
   aspect-ratio: 2/3;
   margin-left: -20px;
-  border: 3px solid var(--surface);
+  border: 3px solid white;
   border-radius: 9px;
   object-fit: cover;
   background: var(--blue-deep);
@@ -67,7 +67,7 @@
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  color: var(--blue-text);
+  color: var(--blue);
   font-size: .84rem;
   font-weight: 750;
 }
