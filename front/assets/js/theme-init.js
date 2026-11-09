@@ -1,11 +1,17 @@
-(function() {
-    const key = "cinecena-theme";
-    // Pega o tema salvo. Se não houver nenhum salvo, define explicitamente como 'light' (claro).
-    const savedTheme = localStorage.getItem(key) || 'light';
+/* Aplica o tema ANTES da primeira pintura (evita "flash" de tema claro/escuro).
+   Incluir no <head> de TODAS as páginas, sem defer/async:
+   <script src="assets/js/theme-init.js"></script> */
+(function () {
+  var KEY = "cinecena-theme";
+  var theme = "light"; // Define o branco/claro como padrão absoluto
 
-    if (savedTheme === 'dark') {
-        document.documentElement.setAttribute('data-theme', 'dark');
-    } else {
-        document.documentElement.setAttribute('data-theme', 'light');
+  try {
+    var saved = localStorage.getItem(KEY);
+    // Se o usuário já tiver escolhido explicitamente antes, respeitamos a escolha
+    if (saved === "dark" || saved === "light") {
+      theme = saved;
     }
+  } catch (e) {}
+
+  document.documentElement.setAttribute("data-theme", theme);
 })();
