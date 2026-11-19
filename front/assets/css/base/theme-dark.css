@@ -1,8 +1,3 @@
-
-/* =====================================================
-   CINECENA — CORREÇÕES DO TEMA ESCURO
-   ===================================================== */
-
 html[data-theme="dark"] {
   background: var(--bg);
 }
@@ -12,7 +7,6 @@ html[data-theme="dark"] body {
   background: var(--bg);
 }
 
-/* Cabeçalho e rodapé */
 html[data-theme="dark"] .site-header,
 html[data-theme="dark"] .mobile-menu-toggle,
 html[data-theme="dark"] .mobile-nav-panel {
@@ -25,7 +19,6 @@ html[data-theme="dark"] .site-footer {
   color: var(--ink);
 }
 
-/* Estruturas principais das páginas */
 html[data-theme="dark"] main,
 html[data-theme="dark"] .main-content,
 html[data-theme="dark"] .page-content,
@@ -36,7 +29,6 @@ html[data-theme="dark"] .satisfaction-main {
   color: var(--ink);
 }
 
-/* Cartões e áreas de conteúdo */
 html[data-theme="dark"] .quick-composer,
 html[data-theme="dark"] .side-card,
 html[data-theme="dark"] .post-card,
@@ -55,7 +47,6 @@ html[data-theme="dark"] .page-header {
   border-color: var(--line);
 }
 
-/* Formulários e campos */
 html[data-theme="dark"] input,
 html[data-theme="dark"] textarea,
 html[data-theme="dark"] select {
@@ -69,7 +60,6 @@ html[data-theme="dark"] textarea::placeholder {
   color: var(--muted);
 }
 
-/* Elementos que usam o fundo secundário */
 html[data-theme="dark"] .feed-tabs,
 html[data-theme="dark"] .side-card,
 html[data-theme="dark"] .profile-panel,
@@ -77,13 +67,11 @@ html[data-theme="dark"] .list-panel {
   background-color: var(--paper);
 }
 
-/* Botões e filtros */
 html[data-theme="dark"] .feed-filter.active {
   background: var(--surface-soft);
   color: var(--blue-text);
 }
 
-/* Textos */
 html[data-theme="dark"] h1,
 html[data-theme="dark"] h2,
 html[data-theme="dark"] h3,
@@ -98,7 +86,6 @@ html[data-theme="dark"] small {
   color: var(--muted);
 }
 
-/* Botão de tema */
 .theme-toggle {
   width: 40px;
   height: 40px;
@@ -176,4 +163,165 @@ html[data-theme="dark"] .success-message {
 
 html[data-theme="dark"] .success-message p {
   color: #9cc7ae;
+}
+
+html[data-theme="dark"] .app-modal {
+  background-color: var(--surface);
+  color: var(--ink);
+  border-color: var(--line);
+}
+
+html[data-theme="dark"] .quick-movie-card {
+  background-color: var(--surface);
+  color: var(--ink);
+}
+
+html[data-theme="dark"] .quick-movie-main,
+html[data-theme="dark"] .quick-movie-main h2,
+html[data-theme="dark"] .quick-movie-info dd {
+  color: var(--ink);
+}
+
+html[data-theme="dark"] .quick-movie-meta,
+html[data-theme="dark"] .quick-movie-info dt {
+  color: var(--muted);
+}
+
+html[data-theme="dark"] .quick-movie-info div {
+  border-color: var(--line);
+}
+
+html[data-theme="dark"] .quick-movie-actions .movie-action {
+  color: var(--ink-soft);
+  background: var(--surface-soft);
+  border-color: var(--line-strong);
+}
+
+html[data-theme="dark"] .quick-movie-actions .movie-action.active {
+  color: var(--blue-text);
+  background: var(--paper-blue);
+  border-color: var(--blue);
+}
+
+html[data-theme="dark"] .quick-movie-actions .movie-action.active.love {
+  color: var(--red);
+}
+
+html[data-theme="dark"] .app-modal.md .modal-close {
+  color: var(--ink);
+  background: var(--surface-soft);
+  border-color: var(--line);
+}
+
+/* Mantém a imagem de fundo original do filme */
+html[data-theme="dark"] .quick-movie-backdrop {
+  border-color: var(--line);
+}
+
+
+/* 2. CARDS DE REVIEWS E ATIVIDADE NA HOME */
+
+html[data-theme="dark"] .activity-card,
+html[data-theme="dark"] .feed-card,
+html[data-theme="dark"] .feed-review-card {
+  color: var(--ink);
+  background-color: var(--surface);
+  border-color: var(--line);
+}
+
+html[data-theme="dark"] .activity-type {
+  color: var(--muted);
+}
+
+html[data-theme="dark"] .activity-type strong,
+html[data-theme="dark"] .activity-person strong,
+html[data-theme="dark"] .feed-author strong,
+html[data-theme="dark"] .feed-review-title {
+  color: var(--ink);
+}
+
+html[data-theme="dark"] .activity-card > p,
+html[data-theme="dark"] .feed-card .feed-text {
+  color: var(--ink-soft);
+}
+
+html[data-theme="dark"] .activity-meta,
+html[data-theme="dark"] .activity-person small {
+  color: var(--muted);
+}
+
+html[data-theme="dark"] .feed-review-movie {
+  background-color: var(--paper);
+  border-color: var(--line);
+}
+
+html[data-theme="dark"] .review-movie-card.featured .review-movie-poster {
+  background-color: var(--surface-soft);
+  border-color: var(--line);
+}
+
+
+/* 3. PESQUISA DE FILMES */
+
+html[data-theme="dark"] .search-field {
+  background-color: var(--surface);
+  border-color: var(--line-strong);
+}
+
+html[data-theme="dark"] .search-field input {
+  color: var(--ink);
+  background-color: transparent;
+}
+
+html[data-theme="dark"] .search-field input::placeholder {
+  color: var(--muted);
+}
+
+html[data-theme="dark"] .search-field > span {
+  color: var(--blue-text);
+}
+
+html[data-theme="dark"] .status-pill {
+  background-color: var(--surface-soft);
+  color: var(--muted-strong);
+}
+
+html[data-theme="dark"] .status-pill.success {
+  background-color: var(--green-soft);
+  color: var(--green);
+}
+
+
+/* 4. BOTÕES E TEXTOS DOS COMPONENTES */
+
+html[data-theme="dark"] .movie-action:not(.primary) {
+  background-color: var(--surface-soft);
+  color: var(--ink-soft);
+  border-color: var(--line);
+}
+
+html[data-theme="dark"] .movie-action.primary {
+  color: #ffffff;
+  background-color: var(--blue);
+  border-color: var(--blue);
+}
+
+
+/* 5. GARANTE CONTRASTE DOS TEXTOS DENTRO DOS MODAIS */
+
+html[data-theme="dark"] .app-modal .modal-form-head h2,
+html[data-theme="dark"] .app-modal .modal-form label {
+  color: var(--ink);
+}
+
+html[data-theme="dark"] .app-modal .modal-form-head p {
+  color: var(--muted);
+}
+
+html[data-theme="dark"] .app-modal input,
+html[data-theme="dark"] .app-modal textarea,
+html[data-theme="dark"] .app-modal select {
+  color: var(--ink);
+  background-color: var(--surface-soft);
+  border-color: var(--line);
 }
