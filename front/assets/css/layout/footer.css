@@ -1,78 +1,140 @@
-/* Rodapé (usado em todas as páginas internas) */
 
-/* ---- Rodapé padrão (original: linhas 2168-2204) ---- */
-.site-footer {
-  border-top: 1px solid var(--line);
-  background: var(--paper);
-}
+/* =====================================================
+   CINECENA — RODAPÉ
+   ===================================================== */
 
-.footer-inner {
-  min-height: 210px;
-  padding: 42px 0;
-  display: grid;
-  grid-template-columns: 1.2fr .7fr 1fr;
-  gap: 44px;
-  align-items: start;
-}
-
-.brand-footer {
-  margin-bottom: 13px;
-}
-
-.footer-inner>div:first-child>p,
-.tmdb-credit {
-  margin: 0;
-  max-width: 420px;
-  color: var(--muted);
-  font-size: .78rem;
-  line-height: 1.65;
-}
-
-.footer-links {
-  display: grid;
-  gap: 10px;
-  font-size: .8rem;
-  font-weight: 650;
-}
-
-.footer-links a:hover {
-  color: var(--blue);
-}
-
-
-/* ---- .pending-link (link "em breve" usado no rodapé/about) (original: linhas 2535-2541) ---- */
-.pending-link {
-  color: var(--muted);
-  background: var(--paper);
-  border-color: var(--line);
-  cursor: not-allowed;
-  pointer-events: none;
-}
-
-
-/* ---- Variante "footer-simple" (rodapé enxuto usado em páginas internas) (original: linhas 3302-3319) ---- */
-.footer-inner.footer-simple {
-  min-width: 0;
-}
-
-.footer-rights {
-  max-width: 100%;
-  margin: 0;
-  justify-self: end;
-  overflow-wrap: anywhere;
-  color: var(--muted);
-  font-size: .75rem;
-  text-align: right;
-}
-
-
-.footer-simple .brand-footer {
-  margin: 0;
-}
-
-
-/* ---- .site-footer (ajuste de empilhamento/z-index) (original: linhas 3449-3452) ---- */
 .site-footer {
   position: relative;
   z-index: 2;
+  margin-top: 50px;
+  border-top: 1px solid var(--line);
+  background: var(--paper);
+  color: var(--ink);
+}
+
+.footer-container {
+  padding-top: 42px;
+  padding-bottom: 20px;
+}
+
+/* Área principal */
+
+.footer-main {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 60px;
+  padding-bottom: 38px;
+}
+
+/* Marca e descrição */
+
+.footer-brand {
+  max-width: 390px;
+}
+
+.brand-footer {
+  display: inline-flex;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.footer-brand p {
+  max-width: 350px;
+  margin: 0;
+  color: var(--muted);
+  font-size: .88rem;
+  line-height: 1.75;
+}
+
+/* Colunas de links */
+
+.footer-column {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.footer-column h3 {
+  margin: 5px 0 7px;
+  color: var(--ink);
+  font-size: .95rem;
+  font-weight: 800;
+}
+
+.footer-column a {
+  color: var(--muted);
+  font-size: .85rem;
+  transition: color .2s ease, transform .2s ease;
+}
+
+.footer-column a:hover {
+  color: var(--blue);
+  transform: translateX(3px);
+}
+
+/* Área inferior */
+
+.footer-bottom {
+  min-height: 58px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding-top: 17px;
+  border-top: 1px solid var(--line);
+}
+
+.footer-bottom p,
+.footer-bottom span {
+  margin: 0;
+  color: var(--muted);
+  font-size: .76rem;
+  line-height: 1.5;
+}
+
+/* =====================================================
+   RESPONSIVIDADE
+   ===================================================== */
+
+@media (max-width: 700px) {
+  .site-footer {
+    margin-top: 35px;
+  }
+
+  .footer-container {
+    padding-top: 32px;
+  }
+
+  .footer-main {
+    grid-template-columns: 1fr 1fr;
+    gap: 30px 20px;
+  }
+
+  .footer-brand {
+    grid-column: 1 / -1;
+    max-width: 100%;
+  }
+
+  .footer-brand p {
+    max-width: 100%;
+  }
+
+  .footer-bottom {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 6px;
+    padding-top: 16px;
+  }
+}
+
+@media (max-width: 380px) {
+  .footer-main {
+    grid-template-columns: 1fr 1fr;
+    gap: 25px 12px;
+  }
+
+  .footer-column a {
+    font-size: .8rem;
+  }
 }
