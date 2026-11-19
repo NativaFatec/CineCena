@@ -1,17 +1,17 @@
-/* Aplica o tema ANTES da primeira pintura e limpa estados presos */
 (function () {
-  var KEY = "cinecena-theme";
-  var theme = "light"; // Força o claro como padrão absoluto
+  const KEY = "cinecena-theme";
+  let theme = "light";
 
   try {
-    var saved = localStorage.getItem(KEY);
-    // Se o usuário escolheu explicitamente claro, mantemos. Se estava dark, resetamos para light.
-    if (saved === "light") {
-      theme = "light";
+    const savedTheme = localStorage.getItem(KEY);
+
+    if (savedTheme === "dark" || savedTheme === "light") {
+      theme = savedTheme;
     } else {
-      localStorage.setItem(KEY, "light");
+      localStorage.setItem(KEY, theme);
     }
-  } catch (e) {}
+  } catch (error) {
+  }
 
   document.documentElement.setAttribute("data-theme", theme);
 })();
