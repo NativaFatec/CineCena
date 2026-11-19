@@ -325,3 +325,7 @@ html[data-theme="dark"] .app-modal select {
   background-color: var(--surface-soft);
   border-color: var(--line);
 }
+
+html[data-theme="dark"] .login-card h2 {
+  color: #172033;
+}
