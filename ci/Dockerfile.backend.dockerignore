@@ -1,0 +1,13 @@
+.git
+.github
+.vscode
+.venv
+**/.venv
+**/venv
+**/.env
+**/.env.*
+**/__pycache__
+**/*.pyc
+**/*.sqlite3
+**/media
+**/node_modules
