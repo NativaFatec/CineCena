@@ -101,7 +101,7 @@ class Review(models.Model):
     rating = models.PositiveSmallIntegerField(
         validators=[
             MinValueValidator(1),
-            MaxValueValidator(6)
+            MaxValueValidator(5)
         ]
     )
 
