@@ -1,0 +1,93 @@
+name: CineCena CI/CD
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+env:
+  REGISTRY: ghcr.io
+  VERSION: sha-${{ github.sha }}
+
+jobs:
+  ci:
+    name: CI - testes e build
+    runs-on: ubuntu-latest
+
+    env:
+      DJANGO_DEBUG: 'True'
+      DATABASE_URL: 'sqlite:///:memory:'
+
+    steps:
+      - name: Obter codigo
+        uses: actions/checkout@v6
+
+      - name: Preparar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: backend/requirements.txt
+
+      - name: Instalar dependencias
+        run: python -m pip install -r backend/requirements.txt
+
+      - name: Validar configuracao Django
+        run: python backend/manage.py check
+
+      - name: Executar testes automatizados
+        working-directory: backend
+        run: python manage.py test movies.test_ci_rules --verbosity 2
+
+      - name: Construir imagens Docker
+        run: |
+          IMAGE="$REGISTRY/${GITHUB_REPOSITORY,,}"
+          docker build -f ci/Dockerfile.backend -t "$IMAGE-backend:$VERSION" .
+          docker build -f ci/Dockerfile.frontend -t "$IMAGE-frontend:$VERSION" .
+          mkdir -p dist
+          docker save "$IMAGE-backend:$VERSION" "$IMAGE-frontend:$VERSION" | gzip > dist/cinecena-images.tar.gz
+
+      - name: Armazenar artefato
+        uses: actions/upload-artifact@v4
+        with:
+          name: cinecena-${{ github.sha }}
+          path: dist/cinecena-images.tar.gz
+          if-no-files-found: error
+          retention-days: 7
+          compression-level: 0
+
+  cd:
+    name: CD - publicar no GHCR
+    needs: ci
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Recuperar artefato aprovado
+        uses: actions/download-artifact@v5
+        with:
+          name: cinecena-${{ github.sha }}
+          path: dist
+
+      - name: Carregar imagens
+        run: docker load -i dist/cinecena-images.tar.gz
+
+      - name: Autenticar no GHCR
+        env:
+          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: echo "$GHCR_TOKEN" | docker login "$REGISTRY" -u "$GITHUB_ACTOR" --password-stdin
+
+      - name: Publicar versao
+        run: |
+          IMAGE="$REGISTRY/${GITHUB_REPOSITORY,,}"
+          docker push "$IMAGE-backend:$VERSION"
+          docker push "$IMAGE-frontend:$VERSION"
+          printf 'Backend: `%s`\n\nFrontend: `%s`\n' "$IMAGE-backend:$VERSION" "$IMAGE-frontend:$VERSION" >> "$GITHUB_STEP_SUMMARY"
